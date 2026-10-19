@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: apps-guinea
+
+namePrefix: guinea-
+
+resources:
+- ../../base
+- env-config.yaml
+- ingress.yaml
+
+images:
+- name: dfav6-dm
+  newName: me-dubai-1.ocir.io/axrfhwznxtja/dtk-devops/dm-adap
+  newTag: IMAGE_TAG
+
+patches:
+- patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/envFrom
+      value:
+      - configMapRef:
+          name: dfav6-dm-env
+      - secretRef:
+          name: guinea-dfav6-dm-secrets
+  target:
+    kind: Deployment
+    name: dfav6-dm

@@ -1,0 +1,46 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+<!-- =========================================== -->
+<!-- Hero (from Home Slider content type – only when content exists) -->
+{% if hero_slides is not empty %}
+{% set hero_fallback_img = base_path ~ directory ~ '/img/div.slick-list.png' %}
+<section class="position-relative hero-section w-100" data-hero-default-image="{{ hero_fallback_img }}" data-hero-slides="{{ hero_slides|json_encode|e('html_attr') }}">
+	<img src="{{ hero_slides[0].image_url is defined and hero_slides[0].image_url ? hero_slides[0].image_url : hero_fallback_img }}" alt="" class="hero-slide-image position-absolute top-0 start-0 w-100 h-100 object-fit-cover" />
+	<div class="position-absolute top-0 start-0 w-100 h-100 hero-overlay"></div>
+	<div class="hero-panel d-flex flex-column gap-2 px-4 py-5 justify-content-center">
+		<h1 class="fw-medium text-white lh-tight mb-0 index-hero-title hero-slide-title">{{ hero_slides[0].title|default('') }}</h1>
+		<h2 class="hero-slide-title-2 text-white mb-0">{{ hero_slides[0]['title_2']|default('') }}</h2>
+		<p class="hero-slide-subtitle text-white mb-0">{{ hero_slides[0]['subtitle']|default('') }}</p>
+		<p class="hero-slide-subtitle-2 text-white mb-0">{{ hero_slides[0]['subtitle_2']|default('') }}</p>
+	</div>
+	<div class="position-absolute bottom-0 start-50 translate-middle-x mb-4 d-flex align-items-center gap-2 hero-dots" role="tablist" aria-label="{{ 'Hero slider'|t }}">
+		{% for slide in hero_slides %}
+		<button type="button" class="hero-dot {{ loop.first ? 'dot-active' : 'dot' }}" data-hero-index="{{ loop.index0 }}" aria-label="{{ 'Slide'|t }} {{ loop.index }}" aria-selected="{{ loop.first ? 'true' : 'false' }}"></button>
+		{% endfor %}
+	</div>
+</section>
+{% endif %}
+
+<!-- =========================================== -->
+<!-- Ce que permet ce portail -->
+{{ drupal_entity('block_content', '1') }}
+
+<!-- =========================================== -->
+<!-- Impact en temps réel -->
+{{ drupal_entity('block_content', '2') }}
+
+<!-- =========================================== -->
+<!-- Domaines d'intervention prioritaires -->
+{{ drupal_entity('block_content', '3') }}
+
+<!-- =========================================== -->
+<!-- Outils et fonctionnalités -->
+{{ drupal_entity('block_content', '4') }}
+
+<!-- =========================================== -->
+<!-- Gouvernance et qualité des données -->
+{{ drupal_entity('block_content', '5') }}
+
+<!-- =========================================== -->
+
+{% include directory ~ '/templates/footer.html.twig' %}

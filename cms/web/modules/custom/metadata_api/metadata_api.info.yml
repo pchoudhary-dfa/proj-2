@@ -1,0 +1,4 @@
+name: Metadata API Handler
+type: module
+description: Custom module to build Metadata page
+core_version_requirement: ^11

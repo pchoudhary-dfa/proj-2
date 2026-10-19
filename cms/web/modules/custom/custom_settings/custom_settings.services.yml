@@ -1,0 +1,10 @@
+services:
+  custom_settings.user_mail_formatter:
+    class: Drupal\custom_settings\Mail\UserMailFormatter
+    arguments: ['@config.factory', '@language_manager', '@renderer']
+
+  custom_settings.user_activation_subscriber:
+    class: Drupal\custom_settings\EventSubscriber\UserActivationSubscriber
+    tags:
+      - { name: event_subscriber }
+

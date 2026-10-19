@@ -1,0 +1,34 @@
+{#
+  Header: matches static HTML design with Drupal best practices.
+  - Logo and ministry text link to front page.
+  - Main navigation from Main menu (Structure > Menus > Main navigation).
+  - Uses path(), base_path, directory for portability and subdirectory installs.
+#}
+<header class="site-header bg-white position-relative" role="banner">
+  <div class="container-fluid py-3 py-lg-4 px-3" style="max-width: 1440px;">
+    <div class="d-flex align-items-center justify-content-between gap-3">
+      {# Logo + Ministry name (link to front) #}
+      <div class="d-flex align-items-center gap-3">
+        <div class="flex-shrink-0">
+          <a href="{{ path('<front>') }}" class="d-block" title="{{ 'Home'|t }}">
+            <img
+              src="{{ base_path }}{{ directory }}/guinea_logo.png"
+              alt="{{ 'MFFS'|t }}"
+              class="object-fit-contain header-logo-img"
+              loading="eager"
+            />
+          </a>
+        </div>
+      </div>
+
+      {# Main navigation: rendered from Main menu block #}
+      <nav class="header-menu" aria-label="{{ 'Main navigation'|t }}">
+        {{ page.main_menu }}
+      </nav>
+      <div class="open-menu">
+        <i class="fa fa-bars"></i>
+      </div>
+    </div>
+  </div>
+  <div class="header-green-line w-100" aria-hidden="true"></div>
+</header>

@@ -1,0 +1,20 @@
+.oauth2-server--auth-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+.oauth2-server--auth-dialog-header .item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5em;
+  height: 5em;
+}
+.oauth2-server--auth-dialog-header .check-mark {
+  margin-bottom: 3em;
+  border-bottom: 1px dashed lightblue;
+}
+.oauth2-server--auth-dialog-header .check-mark {
+  background-repeat: no-repeat;
+  background-position: center center;
+}

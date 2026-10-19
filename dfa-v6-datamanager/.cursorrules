@@ -1,0 +1,82 @@
+# DFA v6 Data Manager — Cursor rules
+
+## DFA v6 styleguide (shared CSS)
+
+- **Source of truth:** `dfa-v6-styleguide` repo, copied into `packages/dfa-v6-styleguide/` and imported as `@dfa-v6/styleguide`.
+- **Do not** add `dm-` / `viz-` prefixes to new component classes. Use shared BEM names from the styleguide (`app-header`, `btn-comp-*`, `card`, etc.).
+- **App header (Datamanager):** `app-header app-header--brand` + `app-header__*` elements.
+- **Modals:** `modal-overlay`, `modal-panel`, `modal-header`, `modal-body`, `modal-footer`, `modal-lead`, `modal-impact*` — via `@/components/Modal`.
+- **Cards:** `card`, `card__header` (not `dm-card`).
+- **Grid icon buttons:** bordered `btn-comp-icon` / `btn-comp-ghost--grid-icon`; transparent toolbar icons use `btn-comp-ghost` modifiers.
+- **Admin config panel:** `sys-config`, `sys-config__*` classes.
+
+## Side navigation list (narrow column pickers)
+
+- Use **`SideNavListColumn`**, **`SideNavList`**, and **`SideNavItem`** from `@/components/SideNavListColumn` for a fixed-width sidebar with a scrollable list of selectable rows (same pattern as metadata categories and compute subgroup pickers).
+- Use **`SideNavTruncatingLabel`** for a single-line row title with ellipsis and tooltip only when truncated.
+- Shared styles use the `.side-nav-*` classes in `globals.css`. Pass **`className`** on the column or items for one-off layout (e.g. `min-w-[160px] max-w-[420px]`), and add feature-specific hooks only when needed (e.g. metadata rows also use **`meta-cat-item`** for edit/delete affordances).
+- Do **not** introduce parallel `*-col` / `*-list` / `*-item` class families for the same UX; extend this component or add a small `className` instead.
+
+## Row / tree expand chevrons
+
+- For any **expand-in-place** control in grids, nested tables, or tree rows (chevron toggles `chevron_right` ↔ `expand_more`), use **`ExpandChevronButton`** from `@/components/ExpandChevronButton` instead of ad hoc `<button>` + Material icon markup. Pass **`expanded`**, **`onClick`**, and localized **`expandAriaLabel` / `collapseAriaLabel`** (and optional **`title`**, **`disabled`**, **`iconClassName`** when the icon should stay muted until selected).
+
+## Grid row Configure (settings) button
+
+- For the compact bordered **Configure** control in sticky actions columns (`TV_GRID_CONFIGURE_BTN` = `btn-comp-ghost--grid-icon` + primary tone), use **`GridConfigureButton`** from `@/components/GridConfigureButton` — not `btn-comp-secondary` or hand-rolled settings markup.
+- For **grid column sort** controls, use `kind: "sort"` on `EditableGridColumnDef` with `sortActive` + `sortDirection` (rendered via **`GridSortButton`** in `renderEditableGridHeader`) — not raw `btn-comp-ghost--sort` in column files.
+- For other small transparent icon controls (clear, metadata row edit/delete, enum delete, warning hint), use **`btn-comp-ghost`** + size/tone modifiers (`--xs`, `--meta`, `--configure`, `--lg`, `--primary`, `--danger`, `--warning`) from `globals.css` — not ad hoc `meta-cat-edit` classes.
+- Pass localized **`ariaLabel`** (and optional **`title`**). Set **`wrapInActionBtns`** when the button sits in a sticky grid actions cell (wraps `.add-row-action-btns`). Omit the wrapper when the button shares a flex row with other actions (e.g. dataset list Open).
+
+## Editable grid column filters and inline text
+
+- Header filter row: declarative **`filter: { kind: "search" | "select", ... }`** on **`EditableGridColumnDef`** — **`TableView`** renders via **`renderEditableGridFilter`**. Do **not** import **`SearchInputBar`** / **`SelectField`** in `*GridColumns` for standard filters.
+- Body inline text edit: **`viewCell`** + **`editField: { kind: "text", ... }`** — **`TableView`** renders via **`renderEditableGridBodyCell`** (default input is **`GridAutoSuggestInput`** when auto-suggestions are enabled; off only when `NEXT_PUBLIC_ENABLE_AUTO_SUGGESTIONS=false`). Do **not** import grid text input components in column files for standard inline text.
+- Body inline single-select edit: **`viewCell`** + **`editField: { kind: "select", value, onChange, options, ... }`** — rendered via **`GridInlineSelectField`** (`gridSelectFieldClassName`). Do **not** import **`SelectField`** in column files for standard inline dropdowns.
+- Reserve **`filterCell`**, custom **`cell`**, **`GridInlineTextField`**, and **`SearchableListCombobox`** only for non-standard UI (multi-control filters, tree rows, typeahead comboboxes, embedded draft inputs).
+
+## Single-choice dropdowns
+
+- Use **`SelectField`** from `@/components/SelectField` for standard single-value dropdowns (custom listbox + `field-comp--md` trigger — not a native `<select>`, so options use theme surfaces and optional search is available).
+- Put layout classes on **`className`** of the root wrapper (e.g. `w-full`, `min-w-0`). Default field styling is **`field-comp--md`** in `globals.css`. Use `className` on the wrapper with a text utility only when you need a different size.
+- Enable **`searchEnabled`** when the list may grow and users need filtering (option labels should be plain text for matching).
+- For **multi-select** or **typeahead combobox** UIs, use **`MultiSelectDropdown`**, **`SearchableListCombobox`**, etc., rather than `SelectField`.
+- For **editable grid header filters** that should offer API-backed or distinct options, use **`GridTableFilterCombobox`** from `@/components/GridTableFilterCombobox` (wraps **`SearchableListCombobox`** with `pick` vs `text` modes) instead of raw `<input type="search">` cells.
+- Combobox / settings list UI: **`drop-panel`** + **`drop-panel--anchored`** / **`--anchored-ac`** / **`--anchored-sp`** / **`--inline`** for panels; **`list-opt`** + **`--grid`** / **`--panel`** / **`--create`** / **`hl`** for rows (not `ac-opt` / `sp-combo-item` / `ac-drop`).
+
+## Text inputs and textareas
+
+- Use **`TextField`** from `@/components/TextField` for single-line native text inputs (or **`textFieldClassName()`** when the control is not a plain `<input>`).
+- Use **`TextAreaField`** from `@/components/TextAreaField` for multi-line native textareas (or **`textareaFieldClassName()`** for the same styling on a custom wrapper). Sizes **`sm` | `md` | `lg`** match **`TextField`**; pass layout or variant tweaks via **`className`** (e.g. monospace JSON, error borders, chat-style rounding).
+- Do **not** hand-roll `<textarea>` with duplicate border/focus classes; extend **`TextAreaField`** instead.
+
+## Primary tab strips (breadcrumb / toolbar tabs)
+
+- Use **`MainTabsBar`** from `@/components/MainTabsBar` for any horizontal tab row that should match app chrome (`.bc-main-tabs` + `.btn-comp-tab`, optional Material Icons, shared typography).
+- Pass **`tabs`** as `{ value, label, icon?, disabled?, tabClassName? }[]`, **`activeValue`**, and **`onSelect`** (omit `onSelect` only for purely presentational/disabled strips).
+- Use **`variant="buttonsOnly"`** when the buttons sit inside a custom scroll row or split toolbar; use default **`variant="bar"`** for a full strip.
+- Set **`tablistAccessibility={{ ariaLabel: "…" }}`** (or `labelledBy`) when the strip is a real tab panel control; use **`tabRole`** only for legacy patterns without a tablist wrapper.
+- Do **not** hand-roll duplicate `bc-main-tabs` / `btn-comp-tab` markup for new UI; extend **`MainTabsBar`** or its **`className` / `tabClassName`** props instead.
+
+## App shell header (PageToolbar)
+
+- New warehouse-scoped pages under `src/app/[locale]/[dw_id]/` must integrate with the **shared top bar** rendered by `Sidebar` (`PageToolbar` in `src/components/Sidebar.tsx`): title and icon come from the route via `getPageConfigForPathname`; actions are driven by **`useSidebar()`** from `@/contexts/SidebarContext`.
+- Wire **Import / Export / Delete** only when the feature needs them (`setToolbarImport`, `setToolbarExport`, `setBulkDelete`); clear them on unmount.
+- For contextual actions (refresh, status chips, filter pills), use **`setToolbarExtra`** and return a cleanup that sets it to `null`.
+- Page help is provided by **`PageToolbar`** via **`DFAHelpRenderer`** (route key from `getHelpKeyFromPathname`). Do **not** wire custom Info modals with **`setToolbarInfo`** unless the design explicitly requires non–help-panel behavior. Use **`hideInfo`** on `PageToolbar` only when the Info button must be hidden.
+- **Do not** duplicate the breadcrumb/title strip inside page content; keep page bodies below the shared toolbar only.
+
+## Modal / drawer dismiss (close) control
+
+- Use **`ModalCloseButton`** from `@/components/ModalCloseButton` for every header dismiss control on modals, drawers, slide-in panels, and custom dialog shells — not ad hoc `<button>` + Material icon markup.
+- **`Modal`** already renders **`ModalCloseButton`** in its header; only pass **`closeButtonClassName`** / **`closeIconClassName`** for rare layout overrides (e.g. `shrink-0`), not to restyle the button.
+- Default chrome: **`btn-comp-icon-md`** via **`ModalCloseButton`** (square h-8 secondary). Pass localized **`ariaLabel`** (e.g. `t("CLOSE")`).
+
+## Modal footers and action buttons
+
+- Use **`Modal`** from `@/components/Modal` for dialogs; body copy may use **`modal-*`** layout helpers (`modal-lead`, `modal-list`, `modal-impact`, etc.) from `globals.css`.
+- **Do not** use legacy modal-only button classes on footer actions. Use the shared **`btn-comp-*`** classes (same as toolbars, pickers, and `Sidebar` confirmations):
+  - **Cancel / neutral** → **`btn-comp-secondary`** or **`SecondaryButton`** (optionally add `shrink-0 gap-1.5 text-xs font-medium`).
+  - **Primary confirm** → **`btn-comp-primary`** or **`PrimaryButton`** (same optional typography utilities).
+  - **Permanent delete inside a confirmation modal** → use **`DeletePermanentConfirmModal`** from `@/components/DeletePermanentConfirmModal`, or the same footer classes: **`btn-comp-secondary`** (cancel) and **`btn-comp-primary`** (confirm). Pass optional **`impact`** (loading / error / `lines`) for association impact preview; **`runError`** for delete-action errors. Use **`dataIusAssociationImpactLines`** for standard data/IUS count labels. Do **not** use strong error/red styling on toolbar or row icons; bulk delete entry stays **`btn-comp-secondary`** like Import/Export.
+- The modal footer row (`.modal-footer`) only handles spacing; button appearance must come from **`btn-comp-*`**, not one-off modal-only button classes.

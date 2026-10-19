@@ -1,0 +1,25 @@
+{
+  "name": "dfa-v6-comp-kw-search",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.umd.js"
+    },
+    "./style.css": { "types": "./style.css.d.ts", "import": "./dist/styles.css", "require": "./dist/styles.css" }
+  },
+  "files": ["dist", "style.css.d.ts"],
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.0.0"
+  }
+}

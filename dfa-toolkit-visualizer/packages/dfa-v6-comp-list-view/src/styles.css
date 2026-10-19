@@ -1,0 +1,90 @@
+/*
+ * List view: scrollable list with rows and checkboxes.
+ * Uses design tokens from packages/design-tokens/tokens.css when the app loads them.
+ * Variables below either reference tokens or define component-specific values.
+ */
+:root {
+  /* Global tokens: from packages/design-tokens/tokens.css when the app loads them */
+  /* --color-primary: #FF3366;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f9fafb;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --font-body: Inter, system-ui, sans-serif;
+  --radius-sm: 4px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-xl: 32px; 
+  */
+
+  /* Row hover: primary with opacity (no secondary token) */
+  --color-row-hover: color-mix(in srgb, var(--color-primary) 12%, white);
+  --color-scrollbar-thumb: #cbd5e1;
+  --scrollbar-width: 6px;
+  --spacing-panel-x: 0.75rem;
+  --size-checkbox: 0.875rem;
+  --font-size-list-item: 0.8125rem;
+  --dtk-lv-row-min-height: 1.75rem;
+}
+
+.dtk-lv-list-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dtk-lv-list {
+  padding: var(--spacing-sm) var(--spacing-panel-x);
+}
+
+.dtk-lv-list-wrap::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+.dtk-lv-list-wrap::-webkit-scrollbar-track {
+  background: var(--color-surface-muted);
+}
+
+.dtk-lv-list-wrap::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border-radius: var(--radius-sm);
+}
+
+.dtk-lv-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-height: var(--dtk-lv-row-min-height);
+  padding: var(--spacing-xs) 0;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  box-sizing: border-box;
+}
+
+.dtk-lv-row:hover {
+  background-color: var(--color-row-hover);
+  border-radius: var(--radius-sm);
+}
+
+.dtk-lv-checkbox {
+  width: var(--size-checkbox);
+  height: var(--size-checkbox);
+  min-width: var(--size-checkbox);
+  min-height: var(--size-checkbox);
+  flex-shrink: 0;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  margin: 0;
+}
+
+.dtk-lv-item-label {
+  font-size: var(--font-size-list-item);
+  line-height: 1.4;
+  color: var(--color-text);
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+  min-width: 0;
+}

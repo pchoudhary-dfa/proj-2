@@ -1,0 +1,112 @@
+version: 0.1
+component: build
+timeoutInSeconds: 6000
+runAs: root
+shell: bash
+
+env:
+  variables:
+    TZ: "Asia/Kolkata"
+    DEPLOY_ADAPTATIONS: "demo,guinea,sisomali"  # Comma-separated list or "all"
+  exportedVariables:
+    - IMAGE_TAG
+    - REPOSITORY_URI
+    - COMMIT_HASH
+
+steps:
+  - type: Command
+    name: "Build and push container image"
+    timeoutInSeconds: 3600
+    command: |
+      set -e
+      export TZ=Asia/Kolkata
+      echo "Current time: $(date)"
+      
+      export COMMIT_HASH=$(echo ${OCI_TRIGGER_COMMIT_HASH:-$(git rev-parse HEAD)} | cut -c 1-7)
+      export IMAGE_TAG="${COMMIT_HASH}"
+      export REGION_KEY="me-dubai-1"
+      export TENANCY_NAMESPACE="axrfhwznxtja"
+      export DEVOPS_PROJECT="dtk-devops"
+      export APP_NAME="dm-adap"
+      export REPOSITORY_URI="${REGION_KEY}.ocir.io/${TENANCY_NAMESPACE}/${DEVOPS_PROJECT}/${APP_NAME}"
+      
+      echo "IMAGE_TAG=${IMAGE_TAG}" >> ${OCI_PRIMARY_SOURCE_DIR}/build_spec_output.txt
+      echo "REPOSITORY_URI=${REPOSITORY_URI}" >> ${OCI_PRIMARY_SOURCE_DIR}/build_spec_output.txt
+      echo "COMMIT_HASH=${COMMIT_HASH}" >> ${OCI_PRIMARY_SOURCE_DIR}/build_spec_output.txt
+      
+      echo "Logging into container registry..."
+      echo "${AUTH_TOKEN}" | docker login ${REGION_KEY}.ocir.io -u "${DOCKER_USERNAME}" --password-stdin
+      
+      # Parse adaptations
+      if [ "${DEPLOY_ADAPTATIONS}" = "all" ]; then
+        ADAPTATIONS=($(ls -d oci_k8s/overlays/*/ | xargs -n 1 basename))
+      else
+        IFS=',' read -ra ADAPTATIONS <<< "${DEPLOY_ADAPTATIONS}"
+      fi
+      
+      echo "Installing kubectl..."
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      chmod +x kubectl
+      mv kubectl /usr/local/bin/
+      
+      echo "Building and generating manifests for: ${ADAPTATIONS[@]}"
+      
+      # Build one image per adaptation (Next.js bakes NEXT_PUBLIC_* at build time)
+      for ADAPTATION in "${ADAPTATIONS[@]}"; do
+        ADAPTATION=$(echo $ADAPTATION | xargs)
+        echo "=== Processing: ${ADAPTATION} ==="
+        
+        if [ ! -d "oci_k8s/overlays/${ADAPTATION}" ]; then
+          echo "ERROR: oci_k8s/overlays/${ADAPTATION} not found"
+          exit 1
+        fi
+        
+        ENV_CONFIG="oci_k8s/overlays/${ADAPTATION}/env-config.yaml"
+        
+        echo "Building image for ${ADAPTATION}..."
+        docker build --ulimit nofile=65536:65536 \
+          -t "${APP_NAME}:${ADAPTATION}-${IMAGE_TAG}" -f Dockerfile.oci \
+          --build-arg NEXT_PUBLIC_APP_BASE_ID="$(grep 'NEXT_PUBLIC_APP_BASE_ID:' ${ENV_CONFIG} | head -1 | cut -d'"' -f2)" \
+          --build-arg NEXT_PUBLIC_API_BASE_URL="$(grep 'NEXT_PUBLIC_API_BASE_URL:' ${ENV_CONFIG} | cut -d'"' -f2)" \
+          --build-arg NEXT_PUBLIC_API_PROXY_URL="$(grep 'NEXT_PUBLIC_API_PROXY_URL:' ${ENV_CONFIG} | cut -d'"' -f2)" \
+          --build-arg NEXT_PUBLIC_API_KEY="$(grep 'NEXT_PUBLIC_API_KEY:' ${ENV_CONFIG} | cut -d'"' -f2)" \
+          --build-arg NEXT_PUBLIC_API_SIGNATURE="$(grep 'NEXT_PUBLIC_API_SIGNATURE:' ${ENV_CONFIG} | cut -d'"' -f2)" \
+          --build-arg NEXT_PUBLIC_BASE_URL="$(grep 'NEXT_PUBLIC_BASE_URL:' ${ENV_CONFIG} | cut -d'"' -f2)" \
+          --build-arg NEXT_PUBLIC_APP_ID="$(grep 'NEXT_PUBLIC_APP_ID:' ${ENV_CONFIG} | cut -d'"' -f2)" \
+          --build-arg NEXT_PUBLIC_ENABLE_API_PROXY="$(grep 'NEXT_PUBLIC_ENABLE_API_PROXY:' ${ENV_CONFIG} | cut -d'"' -f2)" \
+          .
+        
+        docker tag "${APP_NAME}:${ADAPTATION}-${IMAGE_TAG}" "${REPOSITORY_URI}:${ADAPTATION}-${IMAGE_TAG}"
+        docker push "${REPOSITORY_URI}:${ADAPTATION}-${IMAGE_TAG}"
+        
+        echo "Generating K8s manifest for ${ADAPTATION}..."
+        cp -r oci_k8s/overlays/${ADAPTATION} oci_k8s/overlays/${ADAPTATION}-temp
+        sed -i "s/IMAGE_TAG/\"${ADAPTATION}-${IMAGE_TAG}\"/g" oci_k8s/overlays/${ADAPTATION}-temp/kustomization.yaml
+        
+        kubectl kustomize oci_k8s/overlays/${ADAPTATION}-temp/ > dm-k8s-manifest-${ADAPTATION}.yaml
+        echo "Generated dm-k8s-manifest-${ADAPTATION}.yaml"
+        
+        rm -rf oci_k8s/overlays/${ADAPTATION}-temp
+      done
+      
+      # Tag the first adaptation image as the "primary" for the container_image artifact
+      FIRST_ADAPTATION=$(echo "${ADAPTATIONS[0]}" | xargs)
+      docker tag "${APP_NAME}:${FIRST_ADAPTATION}-${IMAGE_TAG}" "${REPOSITORY_URI}:${IMAGE_TAG}"
+      docker push "${REPOSITORY_URI}:${IMAGE_TAG}"
+      
+      echo "Build completed successfully"
+
+# Output artifacts: 1 container image + N K8s manifests (one per adaptation overlay)
+outputArtifacts:
+  - name: dm_adap_image
+    type: DOCKER_IMAGE
+    location: ${REPOSITORY_URI}:${IMAGE_TAG}
+  - name: dm_demo_manifest_deployment
+    type: BINARY
+    location: dm-k8s-manifest-demo.yaml
+  - name: dm_guinea_manifest_deployment_name
+    type: BINARY
+    location: dm-k8s-manifest-guinea.yaml
+  - name: dm_sisomali_manifest_deployment_name
+    type: BINARY
+    location: dm-k8s-manifest-sisomali.yaml

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DFA Visualizer – Live embed preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; padding: 1.5rem; max-width: 900px; }
+    h1 { font-size: 1.25rem; margin-top: 0; }
+    p { color: #444; line-height: 1.5; }
+    label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+    input[type="url"], textarea { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+    textarea { min-height: 80px; font-family: ui-monospace, monospace; resize: vertical; }
+    .section { margin-bottom: 1.5rem; }
+    .preview { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #f9f9f9; }
+    .preview iframe { display: block; width: 100%; height: 500px; border: 0; }
+    code { background: #eee; padding: 0.15em 0.4em; border-radius: 3px; font-size: 0.9em; }
+    .hint { font-size: 0.875rem; color: #666; margin-top: 0.25rem; }
+  </style>
+</head>
+<body>
+  <h1>Live embed preview</h1>
+  <p>Paste the iframe code from Share → Embed, or paste the embed/share URL. The chart will load in the preview below (same origin, e.g. <code>http://localhost:3000/embed-example.html</code>).</p>
+
+  <div class="section">
+    <label for="embedInput">Iframe code or URL</label>
+    <textarea id="embedInput" placeholder='Paste iframe code, e.g. &lt;iframe src=".../visualize/embed?p=..."&gt;&lt;/iframe&gt; or paste the URL.'></textarea>
+    <p class="hint">Paste the iframe from Share → Embed, or paste the embed/share URL. Preview uses the chart-only embed URL.</p>
+  </div>
+
+  <div class="section">
+    <label>Preview</label>
+    <div class="preview">
+      <iframe id="embedFrame" title="Chart embed" src="about:blank"></iframe>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var input = document.getElementById("embedInput");
+      var frame = document.getElementById("embedFrame");
+
+      function extractUrl(raw) {
+        var t = (raw || "").trim();
+        if (!t) return "";
+        if (/^https?:\/\//i.test(t) || /^\/[^\s<]*/.test(t)) {
+          return t.split(/\s/)[0];
+        }
+        var m = t.match(/\bsrc\s*=\s*["']([^"']+)["']/i);
+        return m ? m[1].trim() : "";
+      }
+
+      function toEmbedUrl(url) {
+        if (!url) return "";
+        var u = url.trim();
+        u = u.replace(/\/visualize\?/, "/visualize/embed?");
+        u = u.replace(/\/visualizer\?/, "/visualize/embed?");
+        return u;
+      }
+
+      function update() {
+        var url = toEmbedUrl(extractUrl(input.value));
+        if (url) {
+          frame.src = url;
+        } else {
+          frame.src = "about:blank";
+        }
+      }
+
+      input.addEventListener("input", update);
+      input.addEventListener("paste", function() { setTimeout(update, 0); });
+    })();
+  </script>
+</body>
+</html>

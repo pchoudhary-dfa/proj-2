@@ -1,0 +1,31 @@
+<footer class="site-footer" aria-label="Pied de page République de Guinée">
+
+	<div class="d-flex flex-column flex-nowrap flex-md-row align-items-start pt-4 pb-2 pe-3 gap-0 footer-inside">
+
+		<div class="foot-watermark" aria-hidden="true">
+			<img class="object-fit-contain w-100" style="filter: contrast(1.25) brightness(0.92);" src="/themes/custom/guinea/img/foot_waTER_MARK.png" alt="" loading="lazy" />
+		</div>
+
+		{{ drupal_entity('block_content', '6') }}
+
+		<div class="login-user">
+			{{ drupal_entity('block_content', '7') }}
+			<div class="login-logout mt-3">
+				{% if logged_in %}
+				<a class="header-login more" href="/user/logout">Se déconnecter</a>
+				{% else %}
+				<a class="header-login more" href="/user/login">Se connecter</a>
+				{% endif %}
+			</div>
+			<div class="number-of number-of-views flex-column">
+				<strong>{{ page.visitors_count }}</strong>
+			</div>
+		</div>
+
+		{{ drupal_entity('block_content', '8') }}
+
+	</div>
+
+	{{ drupal_entity('block_content', '9') }}
+
+</footer>

@@ -1,0 +1,161 @@
+# DFA Toolkit API Core - Cursor Rules
+
+## Project Standards
+
+### API Response Structure
+
+**ALL API responses MUST follow this generic response structure. Use `apps.shared.utils.response` functions.**
+
+#### Success Response Format:
+```json
+{
+  "success": true,
+  "message": "Indicator created successfully",
+  "data": {
+    "indicator_nid": 123
+  }
+}
+```
+
+#### Error Response Format:
+```json
+{
+  "success": false,
+  "err_message": "Access denied",
+  "errors": {
+    "request_id": "req-98abc",
+    "service": "assessment"
+  }
+}
+```
+
+Note: Success responses use `message`; error responses use `err_message`. Clients must read the appropriate field based on `success`.
+
+### Implementation Rules
+
+1. **ALWAYS use response utilities from `apps.shared.utils.response`**:
+   - `success_response()` - For successful operations
+   - `created_response()` - For 201 Created responses
+   - `error_response()` - For error responses
+   - `not_found_response()` - For 404 errors
+   - `unauthorized_response()` - For 401 errors
+   - `forbidden_response()` - For 403 errors
+   - `validation_error_response()` - For 422 validation errors
+
+2. **NEVER return raw dictionaries** - Always use response utility functions
+
+3. **HTTP Status Codes**: Use appropriate HTTP status codes (200, 201, 400, 401, 403, 404, 422, 500)
+
+4. **Error details**: Include relevant error information in the `errors` object
+
+### Code Structure
+
+#### Models (`apps/*/models/`)
+- **Purpose**: SQLAlchemy ORM models - represent database tables
+- **Similar to**: Django Models
+- **Used for**: Database operations, table structure, relationships
+
+#### Schemas (`apps/*/schemas/`)
+- **Purpose**: Pydantic models - request/response validation and serialization
+- **Similar to**: Django Serializers
+- **Used for**: Validating incoming requests, formatting outgoing responses
+
+**Key Difference**: Models = Database tables, Schemas = API validation/serialization
+
+#### DB Folder (`apps/*/db/`)
+- **Purpose**: Database connection, engine, and session management
+- **Contains**: Database engine setup, session factory, Base class for models
+- **Think of it as**: The "database connection manager"
+
+#### Services (`apps/*/services/`)
+- **Purpose**: Database operations layer
+- **Contains**: Business logic for Create, Read, Update, Delete operations
+- **Inherits from**: `CRUDBase` for common operations where applicable
+
+#### Router (`apps/*/router/`)
+- **Purpose**: API endpoint definitions
+- **Contains**: FastAPI route handlers
+- **Must use**: Response utilities from `apps.shared.utils.response`
+- **Swagger Documentation**: All endpoints MUST have proper Swagger/OpenAPI documentation:
+  - Use `tags` parameter to group endpoints by functionality
+  - Add `summary` and `description` for each endpoint
+  - Use `response_model` to document response structure (SuccessResponse, ErrorResponse)
+  - Add `responses` parameter with examples for success and error cases
+  - Include detailed docstrings with parameter descriptions
+  - Use `Path`, `Query`, `Body` parameters with descriptions and examples
+
+### Best Practices
+
+- **No hardcoding** - Always use environment variables via config/settings where applicable
+- **Dependency injection** - Use `Depends(get_db)` or equivalent for database sessions
+- **Validation** - Validate all inputs using Pydantic schemas
+- **RESTful conventions** - Follow RESTful API design principles
+- **Error handling** - Use standardized error responses
+- **Logging** - Include proper logging for debugging and monitoring
+- **Common functions** - Reusable utility functions go in `apps/shared/utils/` or app-specific `apps/*/utils/`
+  - Response utilities → `apps.shared.utils.response`
+  - Validators → `apps.shared.utils.validators`
+  - Any other common utilities → Create or use files in `apps/shared/utils/` as needed
+
+### Documentation Rules
+
+- **NO extra markdown files** - Do not create additional .md files (like ARCHITECTURE.md, CONTRIBUTING.md, etc.) unless explicitly requested by the user
+- **Keep documentation minimal** - Only create documentation files when specifically asked
+
+### Testing Rules
+
+- **Test folder structure**: All tests must be in the `tests/` directory or app-specific `apps/*/tests/`
+  - `tests/test_api/` or `apps/*/tests/test_api/` - API endpoint tests
+  - `tests/test_services/` or `apps/*/tests/test_services/` - Service operation tests
+  - `tests/test_utils/` or `apps/*/tests/test_utils/` - Utility function tests
+  - `tests/conftest.py` or `apps/*/tests/conftest.py` - Pytest fixtures and configuration
+
+- **Test requirements**:
+  1. **When modifying existing code**:
+     - ALWAYS check if corresponding test cases exist in `tests/` directory
+     - Update existing tests if the code changes affect test behavior
+     - Ensure all existing tests still pass after modifications
+
+  2. **When implementing new features**:
+     - MUST write new test cases for every new feature
+     - Test cases should cover:
+       - Success scenarios
+       - Error scenarios
+       - Edge cases
+       - Validation errors
+
+  3. **Test coverage**:
+     - Write tests for all new API endpoints
+     - Write tests for all new service operations
+     - Write tests for all new utility functions
+     - Write tests for all new business logic
+
+- **Test naming convention**:
+  - Test files: `test_<module_name>.py`
+  - Test functions: `test_<functionality>_<scenario>()`
+  - Example: `test_create_indicator_success()`, `test_create_indicator_validation_error()`
+
+- **Test structure**:
+  - Use pytest fixtures from conftest.py (client, db)
+  - Follow AAA pattern: Arrange, Act, Assert
+  - Use descriptive test names that explain what is being tested
+
+### Example Endpoint Pattern
+
+```python
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from apps.shared.config.dependencies import get_db
+from apps.shared.utils.response import success_response, created_response
+
+router = APIRouter()
+
+@router.get("/items")
+async def get_items(db: Session = Depends(get_db)):
+    # Business logic here
+    items = [...]  # Your data
+    return success_response(
+        message="Items retrieved successfully",
+        data=items
+    )
+```

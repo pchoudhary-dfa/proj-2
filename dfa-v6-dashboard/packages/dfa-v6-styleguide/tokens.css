@@ -1,0 +1,137 @@
+/* src/styles/tokens.css */
+:root {
+  /* =========================
+   * BRAND
+   * ========================= */
+  --color-primary: #993366;
+  --color-primary-hover: #662244;
+  --color-on-primary: #ffffff;
+
+  /* Primary tones — trimmed set (3 semantic steps) */
+  --color-primary-subtle: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
+  --color-primary-emphasis: color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+  --color-primary-overlay: color-mix(in srgb, var(--color-primary) 9%, transparent);
+
+  /* On-primary chrome (header, sidebar) — 4 steps, same idea as primary tones above */
+  --color-primary-deep: color-mix(in srgb, black 12%, var(--color-primary));
+  --color-on-primary-border: color-mix(in srgb, var(--color-on-primary) 15%, transparent);
+  --color-on-primary-surface: color-mix(in srgb, var(--color-on-primary) 12%, transparent);
+  --color-on-primary-surface-emphasis: color-mix(in srgb, var(--color-on-primary) 20%, transparent);
+  --color-on-primary-fg: color-mix(in srgb, var(--color-on-primary) 95%, transparent);
+  --color-on-primary-fg-muted: color-mix(in srgb, var(--color-on-primary) 80%, transparent);
+  --color-on-primary-fg-dim: color-mix(in srgb, var(--color-on-primary) 62%, transparent);
+
+  /* =========================
+   * SURFACES
+   * ========================= */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f9fafb;
+  --color-surface-elevated: #ffffff;
+  --color-surface-scrim: color-mix(in srgb, var(--color-surface) 85%, transparent);
+  --color-surface-muted-blend: color-mix(in srgb, var(--color-surface-muted) 55%, var(--color-surface));
+  --color-surface-hover-tint: color-mix(in srgb, var(--color-text) 3%, var(--color-surface));
+  --color-surface-hover-overlay: color-mix(in srgb, var(--color-text) 5%, transparent);
+
+  /* =========================
+   * TEXT
+   * ========================= */
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+
+  /* =========================
+   * BORDERS & DIVIDERS
+   * ========================= */
+  --color-border: #e5e7eb;
+
+  /* =========================
+   * STATUS
+   * ========================= */
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+  --color-info: #0284c7;
+  --color-danger: var(--color-error);
+
+  /* Status tones — same semantic steps as primary */
+  --color-success-subtle: color-mix(in srgb, var(--color-success) 12%, var(--color-surface));
+  --color-success-border: color-mix(in srgb, var(--color-success) 30%, var(--color-border));
+  --color-success-hover: color-mix(in srgb, var(--color-success) 80%, black);
+  --color-success-disabled: color-mix(in srgb, var(--color-success) 55%, white);
+  --color-error-subtle: color-mix(in srgb, var(--color-error) 12%, var(--color-surface));
+  --color-error-border: color-mix(in srgb, var(--color-error) 30%, var(--color-border));
+  --color-error-hover-bg: color-mix(in srgb, var(--color-error) 10%, var(--color-surface));
+  --color-danger-hover: color-mix(in srgb, var(--color-danger) 80%, black);
+  --color-danger-disabled: color-mix(in srgb, var(--color-danger) 55%, white);
+  --color-warning-subtle: color-mix(in srgb, var(--color-warning) 12%, var(--color-surface));
+  --color-warning-border: color-mix(in srgb, var(--color-warning) 30%, var(--color-border));
+  --color-warning-overlay: color-mix(in srgb, var(--color-warning) 12%, transparent);
+  --color-muted-subtle: color-mix(in srgb, var(--color-text-muted) 12%, var(--color-surface));
+  --color-muted-border: color-mix(in srgb, var(--color-text-muted) 35%, var(--color-border));
+
+  /* =========================
+   * SPACING (data UI friendly)
+   * ========================= */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* =========================
+   * TYPOGRAPHY
+   * ========================= */
+  --font-body: Inter, system-ui, sans-serif;
+  --font-heading: Inter, system-ui, sans-serif;
+
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 32px;
+  --font-size-xxl: 52px;
+  --icon-size-xs: 0.75rem;
+  --icon-size-sm: 0.875rem;
+  --icon-size-md: 1rem;
+  --icon-size-lg: 1.25rem;
+  --icon-size-default: var(--icon-size-sm);
+
+  /* =========================
+   * SHAPE
+   * ========================= */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-xl: 12px;
+  --radius-lg: 16px;
+  /* =========================
+   * SHADOW
+   * ========================= */
+  --shadow-header: 0 4px 6px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -1px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* =========================
+   * LAYOUT (fixed constraints)
+   * ========================= */
+  --height-header: 52px;
+  --height-breadcrumb: 52px;
+  /* Compact switch track (grid / IAM / subgroup default) */
+  --height-toggle-track-sm: 15px;
+  --width-sidebar: 220px;
+
+  /* =========================
+   * Z-INDEX
+   * ========================= */
+  --z-tooltip: 1001;
+
+  /* =========================
+   * FOCUS RINGS (primary)
+   * ========================= */
+  --shadow-focus-ring: 0 0 0 3px var(--color-primary-overlay);
+
+  /* =========================
+   * LOADER
+   * ========================= */
+  --default-loader-size: 54; /* unitless: used as --loader-size in .loader (calc * 1px / * 1rem) */
+}

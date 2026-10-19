@@ -1,0 +1,175 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dkt-env
+  namespace: apps-dfa-v6-test
+data:
+  # =========================
+  # Core / Server Settings
+  # =========================
+  PROJECT_NAME: "DFA Toolkit API Core"
+  VERSION: "0.1.0"
+  DESCRIPTION: "FastAPI Gateway for DFA Toolkit"
+  API_V1_STR: "/api/v1"
+  HOST: "0.0.0.0"
+  PORT: "8000"
+  DEBUG: "false"
+  ENVIRONMENT: "development"
+  WEB_CONCURRENCY: "3"
+
+  # =========================
+  # CORS
+  # =========================
+  CORS_ORIGINS: '["http://localhost:3000","http://localhost:3001","http://localhost:3002","https://test.visualizer.dfa6.dataforall.org","https://test.datamanager.dfa6.dataforall.org","https://test.dashboard.dfa6.dataforall.org"]'
+
+  # =========================
+  # Database (MySQL)
+  # =========================
+  DB_HOST: "10.0.1.148"
+  DB_PORT: "3306"
+  DB_NAME: "d-core-dfav6_api_test"
+  DB_USER: "csfdba"
+  DB_PASSWORD: ""
+  DB_CHARSET: "utf8mb4"
+  DB_COLLATION: "utf8mb4_0900_ai_ci"
+  DB_ECHO: "false"
+  DB_POOL_SIZE: "5"
+  DB_MAX_OVERFLOW: "10"
+  DATABASE_URL: ""
+
+  # =========================
+  # Auth / Security / JWT
+  # =========================
+  SECRET_KEY: "your-secret-key-change-in-production"
+  ALGORITHM: "HS256"
+  ACCESS_TOKEN_EXPIRE_MINUTES: "10"
+  REFRESH_TOKEN_EXPIRE_DAYS: "7"
+  PASSWORD_ENCRYPTION_KEY: ""
+  JWT_SECRET_KEY: "your-jwt-secret-key-change-in-production"
+  JWT_ALGORITHM: "HS256"
+
+  # =========================
+  # App Client / Seed / Users
+  # =========================
+  DEFAULT_APP_KEY: "DFA_DM"
+  DFA_DM_APP_KEY: "DFA_DM"
+  DFA_VIZ_APP_KEY: "DFA_VIZ"
+  DFA_DASH_APP_KEY: "DFA_DASH"
+  DFA_DM_FED_APP_API_KEY: "dfa_dm_fed_app"
+  DFA_VIZ_FED_APP_API_KEY: "dfa_viz_fed_app"
+  DEFAULT_ROLE_MAP: '{"DFA_VIZ": "DFA_PUBLIC"}'
+  ENABLE_APP_CLIENT_AUTH: "true"
+  ENABLE_SIGNATURE_VERIFICATION: "true"
+  SYSTEM_USER_ID: "1"
+  SYSTEM_USER_USERNAME: "admin"
+  SYSTEM_USER_PASSWORD: "demo"
+  SYSTEM_USER_EMAIL: "admin@example.com"
+  SYSTEM_USER_FIRST_NAME: "DM"
+  SYSTEM_USER_LAST_NAME: "Super Admin"
+  VIZ_USER_USERNAME: "viz_admin"
+  VIZ_USER_PASSWORD: "demo"
+  VIZ_USER_EMAIL: "viz_admin@example.com"
+  VIZ_USER_FIRST_NAME: "VIZ"
+  VIZ_USER_LAST_NAME: "Super Admin"
+
+  # =========================
+  # Logs
+  # =========================
+  LOG_LEVEL: "DEBUG"
+  LOG_FORMAT: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  DB_LOG_LEVELS: "ERROR"
+
+  # =========================
+  # Languages / Base Paths
+  # =========================
+  AVAILABLE_LANGUAGES: "en"
+  DATAWAREHOUSES_BASE_PATH: "dw"
+
+  # =========================
+  # Redis Cache
+  # =========================
+  REDIS_URL: ""
+  CACHE_INDICATOR_TTL_SECONDS: "300"
+  REDIS_KEY_PREFIX: "DFA"
+
+  # =========================
+  # Indicator Response / GID
+  # =========================
+  INDICATOR_RESPONSE_FIELDS: ""
+  IUS_GID_SEPARATOR: "|"
+
+  # =========================
+  # Data Warehouse Subgroups
+  # =========================
+  DW_SYSTEM_SUBGROUP_CATG_OTHERS_GID: "OTHERS"
+  DW_SYSTEM_SUBGROUP_CATG_TOTAL_GID: "TOTAL"
+  DEFAULT_SYSTEM_DW_SUBGROUP_GID: "TOTAL"
+
+  # =========================
+  # Response Adaptation / DB Mapping
+  # =========================
+  ADAPTATION: ""
+  DB_TBL_COLS_MAPPING_PATH: ""
+  RETURN_FULL_RES_AFTER_CREATE: "false"
+
+  # =========================
+  # Route Cache / IAM Method Mapping
+  # =========================
+  ENABLE_ROUTE_CACHE: "false"
+  CRUD_HTTP_METHOD_MAP: '{"C": ["POST"], "R": ["GET"], "U": ["PUT", "PATCH"], "D": ["DELETE"]}'
+
+  # =========================
+  # Email / SMTP
+  # =========================
+  SMTP_HOST: "smtp.sendgrid.net"
+  SMTP_PORT: "587"
+  SMTP_USERNAME: "apikey"
+  # SMTP_PASSWORD is injected from the dfav6test-secrets Secret (see deployment.yaml)
+  SMTP_USE_TLS: "true"
+  SMTP_FROM_EMAIL: "no-reply@dataforall.org"
+  SMTP_FROM_NAME: "DFA Toolkit"
+  DFA_DM_FED_ORIGIN_URL: "https://test.datamanager.dfa6.dataforall.org/"
+
+  # =========================
+  # DFA Mailer Service
+  # =========================
+  DFA_MAILER_API_PREFIX: "/dfa-mailer"
+  MAIL_PROVIDER: "smtp"
+  # auto: async when JOB_WORKER=db (empty) + BG_JOB_MQ_TYPE=DB — mail goes through system_bg_job_queue + poller
+  DFA_SEND_MODE: "auto"
+  ADMIN_ALERT_EMAILS: ""
+  ALERT_ON_ASYNC_FAILURE: "true"
+
+  # =========================
+  # Pagination / Verbose Logs
+  # =========================
+  DFA_PAGINATION_TYPE: "offset"
+  DFA_PAGE_SIZE: "100"
+  DFA_ENABLE_VERBOSE_LOGS: "false"
+
+  # =========================
+  # Background job queue (DB poller)
+  # Verify: pod logs — "Started system_bg_job_queue poller" or "Background job poller starting";
+  # DB — system_bg_job_queue.job_type = dfa_send_email (pending -> completed)
+  # =========================
+  BG_JOB_MQ_TYPE: "DB"
+  BG_JOB_POLLER_ENABLED: "true"
+  BG_JOB_POLL_INTERVAL_SEC: "5"
+  BG_JOB_POLL_BATCH_SIZE: "10"
+  BG_JOB_STALE_LEASE_SEC: "1800"
+
+  # =========================
+  # Background Jobs (Celery)
+  # =========================
+  JOB_WORKER: ""
+  DFA_CELERY_BROKER_URL: "redis://localhost:6379/0"
+  DFA_CELERY_RESULT_BACKEND: "redis://localhost:6379/0"
+  DFA_CELERY_QUEUE_NAME: "dfa_mailer_service"
+  CELERY_BROKER_URL: "amqp://guest:guest@localhost:5672//"
+  CELERY_RESULT_BACKEND: "rpc://"
+  CELERY_QUEUE_NAME_ISMRD: "dfa_dw_ismrd"
+  CELERY_QUEUE_NAME_SUBGROUP_UPDATE: "dfa_dw_subgroup_update"
+  IS_BACKGROUND_ENABLED: "true"
+  CELERY_QUEUE_NAME_DEFAULT_SUBGROUP: "dfa_dw_default_subgroup"
+  DEFAULT_SUBGROUP_SYNC_MAX_IUS_ROWS: "1000"
+  DEFAULT_SUBGROUP_SYNC_MAX_IU_PAIRS: "1000"

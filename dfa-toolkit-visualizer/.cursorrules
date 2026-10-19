@@ -1,0 +1,12 @@
+# DFA Visualizer — Cursor rules
+
+## DFA v6 styleguide (shared CSS)
+
+- **Source of truth:** `dfa-v6-styleguide` repo, copied into `packages/dfa-v6-styleguide/` and imported as `@dfa-v6/styleguide`.
+- **Do not** add `dm-` / `viz-` prefixes to new component classes. Use shared BEM names from the styleguide (`app-header`, `btn-comp-*`, `content-canvas`, etc.).
+- **App header:** `app-header app-header--surface` + `app-header__inner`, `__start`, `__end`, `__center`, `__home-link`.
+- **Toolbar ghost icons:** `btn-comp-icon--ghost` (not bordered `btn-comp-icon`).
+- **Main visualization canvas:** `content-canvas`.
+- **Filter sidebar:** `filter-panel`, `filter-panel__*`.
+- **Gallery filter toggles:** `btn-comp-pill`, `btn-comp-pill--active`.
+- **Modals / actions:** `btn-comp-primary`, `btn-comp-secondary`, `modal-*` where applicable.

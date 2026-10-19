@@ -1,0 +1,36 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+{{ drupal_entity('block_content', '19') }}
+
+<main class="container-fluid px-4 py-5 apprentissage-main">
+  <!-- Main featured tile + 6 tiles (same images as reports page) -->
+  <section class="apprentissage-stories-section mt-5 pt-4">
+    <div class="container-fluid px-0 apprentissage-tiles-container">
+      <!-- Main tile -->
+      {{ drupal_view('apprentissage', 'block_1') }}
+
+      <section class="apprentissage-search-section mb-4">
+        <div class="apprentissage-search-panel bg-white rounded-3 border shadow-sm p-4 p-lg-4">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+            <h2 class="apprentissage-search-title mb-0 d-flex align-items-center gap-2"><i class="fas fa-filter apprentissage-filter-icon" aria-hidden="true"></i> Explorer les Histoires</h2>
+            <span class="apprentissage-results-count text-secondary small" aria-live="polite" data-guinea-apprentissage-count></span>
+          </div>
+          <div class="position-relative mb-4">
+            <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y apprentissage-search-icon ms-3" aria-hidden="true"></i>
+          </div>
+          <div class="d-flex flex-wrap align-items-end gap-3 mb-4">
+            {{page.apprentissage_search}}
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 tiles grid -->
+      <div class="row g-4 g-lg-4">
+        {{page.content}}
+      </div>
+    </div>
+  </section>
+</main>
+
+
+{% include directory ~ '/templates/footer.html.twig' %}

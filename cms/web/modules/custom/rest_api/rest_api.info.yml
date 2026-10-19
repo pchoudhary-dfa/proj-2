@@ -1,0 +1,4 @@
+name: Rest Api
+type: module
+description: Provides Rest Api functionality.
+core_version_requirement: ^11

@@ -1,0 +1,11 @@
+name: 'OAuth2 Server test'
+type: module
+description: 'Provides test helpers for OAuth2 Server module.'
+package: Testing
+# version: VERSION
+core_version_requirement: ^8 || ^9 || ^10 || ^11
+
+# Information added by Drupal.org packaging script on 2025-02-28
+version: '2.1.1'
+project: 'oauth2_server'
+datestamp: 1740712765

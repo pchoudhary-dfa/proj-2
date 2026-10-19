@@ -1,0 +1,1 @@
+{"version":3,"file":"embedEntry.d.ts","sourceRoot":"","sources":["../src/embedEntry.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,OAAO,EAAE,cAAc,EAAE,MAAM,qBAAqB,CAAC;AAErD,OAAO,CAAC,MAAM,CAAC;IACb,UAAU,MAAM;QACd,WAAW,CAAC,EAAE;YAAE,cAAc,EAAE,OAAO,cAAc,CAAA;SAAE,CAAC;KACzD;CACF"}

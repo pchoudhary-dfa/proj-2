@@ -1,0 +1,12 @@
+{
+    "require": {
+        "bshaffer/oauth2-server-php": {
+            "version": "v1.11.1",
+            "url": "https://github.com/bshaffer/oauth2-server-php/archive/v1.11.1.zip"
+        },
+        "bshaffer/oauth2-server-httpfoundation-bridge": {
+            "version": "v1.4",
+            "url": "https://github.com/bshaffer/oauth2-server-httpfoundation-bridge/archive/v1.4.zip"
+        }
+    }
+}

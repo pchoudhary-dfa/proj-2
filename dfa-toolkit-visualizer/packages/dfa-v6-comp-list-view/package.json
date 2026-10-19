@@ -1,0 +1,38 @@
+{
+  "name": "dfa-v6-comp-list-view",
+  "version": "0.1.0",
+  "description": "Reusable list view component with single/multi selection and imperative getData/clearData API",
+  "type": "module",
+  "main": "./dist/dfa-v6-comp-list-view.umd.cjs",
+  "module": "./dist/dfa-v6-comp-list-view.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/dfa-v6-comp-list-view.js",
+      "require": "./dist/dfa-v6-comp-list-view.umd.cjs",
+      "default": "./dist/dfa-v6-comp-list-view.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.0.0"
+  }
+}

@@ -1,0 +1,26 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+{{ drupal_entity('block_content', '18') }}
+
+<main class="container-fluid px-4 py-4 py-lg-4 tableaux-main">
+    <div class="mb-4">
+        <span class="featured-badge d-inline-flex align-items-center gap-2">
+            <i class="fas fa-star text-white" aria-hidden="true"></i>
+            Tableau de bord en vedette
+        </span>
+    </div>
+
+    {{ drupal_view('dashboard', 'block_1') }}
+
+    <div class="bg-white rounded-3 border shadow-sm p-4 mb-4 tableaux-filters">
+        <div class="d-flex flex-wrap align-items-end gap-3">
+            {{page.dashboard_search}}
+        </div>
+    </div>
+
+    <div class="tableaux-cards-row mt-2">
+        {{page.content}}
+    </div>
+</main>
+
+{% include directory ~ '/templates/footer.html.twig' %}

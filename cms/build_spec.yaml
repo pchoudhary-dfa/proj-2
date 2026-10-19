@@ -1,0 +1,58 @@
+version: 0.1
+component: build
+timeoutInSeconds: 6000
+runAs: root
+shell: bash
+
+env:
+  variables:
+    REGION_KEY: "me-dubai-1"
+    TENANCY_NAMESPACE: "axrfhwznxtja"
+    APP_NAME: "guinea-cms-portal"
+    K8S_NAMESPACE: "apps-guinea"
+  exportedVariables:
+    - IMAGE_TAG
+    - REPOSITORY_URI
+    - COMMIT_HASH
+
+steps:
+  - type: Command
+    name: "Build and push image"
+    command: |
+      set -e
+
+      echo "Starting build..."
+
+      # Generate image tag from commit/build ID
+      export COMMIT_HASH=$(echo ${OCI_TRIGGER_COMMIT_HASH:-$OCI_BUILD_RUN_ID} | cut -c1-7)
+      export IMAGE_TAG="${COMMIT_HASH}"
+      export REPOSITORY_URI="${REGION_KEY}.ocir.io/${TENANCY_NAMESPACE}/${APP_NAME}"
+
+      echo "Image tag: ${IMAGE_TAG}"
+      echo "Repo URI: ${REPOSITORY_URI}"
+
+      # Login to OCIR
+      echo "Logging into OCIR..."
+      echo "${AUTH_TOKEN}" | docker login ${REGION_KEY}.ocir.io -u "${DOCKER_USERNAME}" --password-stdin
+
+      # Replace placeholder in Kubernetes manifest
+      sed -i "s|\${IMAGE_TAG}|${IMAGE_TAG}|g" k8s/manifest.yaml
+
+      # Build Docker image
+      echo "Building image..."
+      docker build -t "${APP_NAME}:${IMAGE_TAG}" .
+
+      # Tag and push to OCIR
+      docker tag "${APP_NAME}:${IMAGE_TAG}" "${REPOSITORY_URI}:${IMAGE_TAG}"
+      docker push "${REPOSITORY_URI}:${IMAGE_TAG}"
+
+      echo "Build and push completed"
+
+outputArtifacts:
+  - name: container_image
+    type: DOCKER_IMAGE
+    location: ${REPOSITORY_URI}:${IMAGE_TAG}
+
+  - name: k8s_manifest
+    type: BINARY
+    location: k8s/manifest.yaml

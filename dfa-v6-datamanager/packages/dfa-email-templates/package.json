@@ -1,0 +1,52 @@
+{
+  "name": "dfa-mailer-templates",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A React component package for managing email templates with CRUD operations",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "email",
+    "templates",
+    "crud",
+    "dfa-mailer"
+  ],
+  "author": "DFA Mailer Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
+    "@ckeditor/ckeditor5-react": "^11.0.0",
+    "@ckeditor/ckeditor5-build-classic": "^41.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "js-cookie": "^3.0.5",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/js-cookie": "^3.0.6",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "rollup": "^3.0.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "tslib": "^2.8.1",
+    "typescript": "^5.0.0",
+    "@ckeditor/ckeditor5-react": "11.0.0",
+    "@ckeditor/ckeditor5-build-classic": "41.4.2"
+  }
+}

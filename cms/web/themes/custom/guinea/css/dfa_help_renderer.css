@@ -1,0 +1,335 @@
+.dfaHelpSidebarRtl {
+  direction: rtl;
+  unicode-bidi: embed;
+}
+
+.dfaHelpSidebar ::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.dfaHelpSidebar ::-webkit-scrollbar-track {
+  border-radius: 20px;
+  background: rgba(153, 0, 0, 0.1);
+}
+
+.dfaHelpSidebar ::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: var(--scrollbar-background-color);
+}
+
+.dfaHelp-MyButton {
+  cursor: pointer;
+  border: none;
+  padding: 0px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0;
+  flex: 1;
+  background-color: transparent !important;
+  overflow: visible;
+}
+
+.dfaHelpSidebar {
+  top: 0;
+  right: 0px;
+  width: 400px;
+  display: flex;
+  height: 100vh;
+  padding: 10px;
+  z-index: 9999;
+  flex-wrap: wrap;
+  position: fixed;
+  overflow: hidden;
+  transition: all 0.3s;
+  box-sizing: border-box;
+  align-items: flex-start;
+  background-color: #f5f5f5;
+  justify-content: space-between;
+  border-left: 1px solid #f7f8f9;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: -5px 0px 30px rgba(0, 0, 0, 0.03);
+}
+
+.dfaHelpSidebarRtl.dfaHelpSidebar {
+  left: 0;
+  right: auto;
+}
+
+@media (min-width: 768px) {
+
+  .dfaHelpSidebar {
+    width: 400px;
+    animation: slide-left 0.5s forwards;
+  }
+}
+
+.dfaHelpSidebar .inner-dfaHelpSidebar p:last-child {
+  margin: 0;
+}
+
+#dfaHelp-myBox {
+  height: 64px;
+  padding: 8px 8px 0 8px;
+  width: 370px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  white-space: nowrap;
+  border-top: 1px solid #c7c7c7;
+}
+
+#dfaHelp-myBox p {
+  display: inline-block;
+  width: auto;
+  margin: 0 !important;
+}
+
+#dfaHelp-myBox p a {
+  color: #FFFFFF;
+  padding: 5px 10px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 50px;
+  display: inline-block;
+  text-decoration: none;
+  margin: 5px 5px 5px 0;
+  text-transform: capitalize;
+}
+
+@media (max-width: 480px) {
+  #dfaHelp-myBox p a {
+    flex-basis: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  #dfaHelp-myBox p a {
+    flex-basis: 33.33%;
+  }
+}
+
+.dfaHelp-back-button,
+.dfaHelp-close-button {
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: #FED100;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 15px;
+  display: inline-block !important;
+}
+
+.dfaHelp-back-button {
+  margin: 0 5px 0 0;
+}
+
+.dfaHelp-close-button {
+  margin: 0 0 0 5px;
+}
+
+.inner-dfaHelpFontHead,
+.inner-dfaHelpLangHead {
+  margin: 0 5px;
+  display: flex;
+  overflow: hidden;
+  border-radius: 50px;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.inner-dfaHelpFontHead button,
+.inner-dfaHelpLangHead button {
+  margin: 0;
+  padding: 0;
+  width: 40px;
+  height: 30px;
+  border: none;
+  display: flex;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 31px;
+  text-align: center;
+  align-items: center;
+  transition: all 0.3s;
+  color: rgba(0, 0, 0, 0.6);
+  box-sizing: border-box;
+  justify-content: center;
+  /* background: #ffffff !important; */
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+}
+
+.inner-dfaHelpFontHead button:first-child,
+.inner-dfaHelpLangHead button:first-child {
+  border: none;
+}
+
+.inner-dfaHelpLangHead button:hover {
+  color: red;
+  /* background: red !important; */
+}
+
+.inner-dfaHelpLangHead button {
+  color: rgba(0, 0, 0, 1);
+}
+
+.inner-dfaHelpSidebar {
+  width: 100%;
+  overflow-y: auto;
+  margin: 66px 0 0 0;
+  position: relative;
+  box-sizing: border-box;
+  /* height: calc(100vh - 182px); */
+  padding: 10px 10px 6px 0px;
+  /* border-top: 1px solid rgba(0, 0, 0, 0.1); */
+}
+
+.dfa-help-heading-h3 {
+  top: 54px;
+  width: 377px;
+  position: fixed;
+  font-size: 15px;
+  height: 40px;
+  font-weight: 600;
+  line-height: 18px;
+  padding: 18px 0 0 8px;
+  margin: 0 0 0 0;
+  box-sizing: border-box;
+  border-bottom: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dfaHelpSidebar .inner-dfaHelpSidebar p.p1 {
+  margin: 0px;
+}
+
+.dfaHelpSidebar .inner-dfaHelpSidebar .content,
+.dfaHelpSidebar .inner-dfaHelpSidebar p {
+  font-size: 13px;
+  line-height: 21px;
+}
+
+.TitleOFEditor {
+  color: #510c0c;
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+  padding: 10px 10px 10px 0px
+}
+
+.dfaHelpSidebar ul {
+  margin: 0;
+  font-size: 12px;
+  line-height: 17px;
+  padding: 0 0 0 15px;
+}
+
+.dfaHelpSidebar ul li {
+  margin: 0 0 0 8px !important;
+}
+
+.dfaHelpSidebar ul li b {
+  font-weight: 600;
+}
+
+.dfaHelpSidebarRtl.dfaHelpSidebar .dfaHelp-back-button {
+  right: 20px;
+  left: auto;
+}
+
+.dfaHelpSidebarRtl .inner-dfaHelpFontHead button:first-child,
+.dfaHelpSidebarRtl .inner-dfaHelpLangHead button:first-child {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+  .dfaHelp-back-button {
+    right: 54px;
+  }
+}
+
+.dfa-help-close-sidebar {
+  animation: slide-right 0.3s backwards;
+}
+
+.dfa-help-hidden {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .dfa-help-close-sidebar {
+    animation: slide-right 0.3s backwards;
+  }
+}
+
+@keyframes slide-left {
+  0% {
+    width: 0;
+  }
+
+  100% {
+    width: 400px;
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    width: 400px;
+  }
+
+  100% {
+    width: 0;
+  }
+}
+
+.brdTop {
+  border-top: 1px solid #c7c7c7;
+  padding-top: 10px;
+  margin-top: 10px
+}
+
+.dfaHelpTitleOFEditor {
+  font-size: 15px;
+  text-align: left;
+  margin-top: 10px;
+  color: #510c0c;
+  font-weight: 500;
+  padding: 0px;
+}
+
+.disableButton {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dfaHelpSidebar .inner-dfaHelpSidebar .content .TitleOFEditor,
+.dfaHelpSidebar .inner-dfaHelpSidebar .content p,
+.dfaHelpSidebar .inner-dfaHelpSidebar .content ul li {
+  text-align: left;
+}
+
+.dfaHelpSidebar .inner-dfaHelpSidebar .content hr {
+  border: 1px solid #999;
+}
+
+.dfaHelp-close-button .fa-close {
+  margin: 3px 0px 0px 0px;
+}
+
+.dfaHelp-back-button {
+  left: 0;
+}
+
+.dfaHelp-back-button .fa-arrow-left {
+  margin: 3px 0px 0px 0px;
+}

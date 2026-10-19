@@ -1,0 +1,240 @@
+{
+  "ut_dbmetadata": {
+    "dbmtd_nid": "dbmtd_nid",
+    "dbmtd_desc": "description",
+    "dbmtd_pubname": "published_by",
+    "dbmtd_pubdate": "publication_date",
+    "dbmtd_pubcountry": "dbmtd_pubcountry",
+    "dbmtd_pubregion": "dbmtd_pubregion",
+    "dbmtd_puboffice": "dbmtd_puboffice",
+    "dbmtd_areacnt": "dbmtd_areacnt",
+    "dbmtd_indcnt": "dbmtd_indcnt",
+    "dbmtd_iuscnt": "dbmtd_iuscnt",
+    "dbmtd_timecnt": "dbmtd_timecnt",
+    "dbmtd_srccnt": "dbmtd_srccnt",
+    "dbmtd_datacnt": "dbmtd_datacnt"
+  },
+  "ut_area_level": {
+    "level_nid": "al_nid",
+    "area_level": "al_level",
+    "area_level_name": "al_name"
+  },
+  "ut_area": {
+    "area_nid":"ar_nid",
+    "area_parent_nid":"ar_parent_nid",
+    "area_id":"ar_id",
+    "area_name":"ar_name",
+    "area_gid":"ar_gid",
+    "area_level":"ar_level",
+    "area_short_name":"ar_short_name",
+    "block_nids":"ar_block_nids",
+    "area_map":"ar_map",
+    "area_is_global":"ar_is_global",
+    "area_has_data":"ar_has_data"
+  },
+  "ut_indicator_classifications": {
+    "ic_nid":"ic_nid",
+    "ic_parent_nid":"ic_parent_nid",
+    "ic_gid":"ic_gid",
+    "ic_name":"ic_name",
+    "ic_global":"ic_is_global",
+    "ic_info":"ic_info",
+    "ic_type":"ic_type",
+    "ic_short_name":"ic_short_name",
+    "publisher":"ic_publisher",
+    "title":"ic_title",
+    "diyear":"ic_diyear",
+    "sourcelink1":"ic_sourcelink1",
+    "sourcelink2":"ic_sourcelink2",
+    "ic_order":"ic_order",
+    "isbn":"ic_isbn",
+    "nature":"ic_nature"
+  },
+  "ut_sources": {
+    "ic_nid": "src_nid",
+    "ic_parent_nid": "ic_parent_nid",
+    "ic_gid": "src_gid",
+    "ic_name": "src_name",
+    "ic_short_name": "src_short_name",
+    "publisher": "src_publisher",
+    "title": "src_title",
+    "diyear": "src_year",
+    "ic_order": "src_order"
+  },
+  "ut_indicator": {
+    "indicator_nid": "i_nid",
+    "indicator_gid": "i_gid",
+    "indicator_name": "i_name",
+    "indicator_info": "i_description",
+    "short_name": "i_short_name",
+    "keywords": "i_keywords",
+    "indicator_global": "i_is_global",
+    "indicator_order": "i_order",
+    "data_exist": "i_has_data",
+    "highisgood": "i_high_is_good"
+  },
+  "ut_unit": {
+    "unit_nid": "u_nid",
+    "unit_gid": "u_gid",
+    "unit_name": "u_name",
+    "unit_global": "u_is_global",
+    "unit_format": "u_format"
+  },
+  "ut_subgroup_type": {
+    "subgroup_type_nid": "sg_cat_nid",
+    "subgroup_type_name": "sg_cat_name",
+    "subgroup_type_gid": "sg_cat_gid",
+    "subgroup_type_order": "sg_cat_order",
+    "subgroup_type_global": "sg_cat_global",
+    "is_system": "is_system"
+  },
+  "ut_subgroup": {
+    "subgroup_nid": "sg_catg_val_nid",
+    "subgroup_name": "sg_catg_val_name",
+    "subgroup_gid": "sg_catg_val_gid",
+    "subgroup_global": "sg_catg_val_global",
+    "subgroup_type": "sg_cat_nid",
+    "subgroup_order": "sg_catg_val_order",
+    "is_system": "is_system"
+  },
+  "ut_subgroup_vals": {
+    "subgroup_val_nid": "sg_nid",
+    "subgroup_val": "sg_name",
+    "subgroup_val_gid": "sg_gid",
+    "subgroup_val_global": "sg_is_global",
+    "subgroup_val_order": "sg_order",
+    "is_system": "is_system"
+  },
+  "ut_subgroup_vals_subgroup": {
+    "subgroup_val_subgroup_nid": "sg_nid_sg_catg_val_nid",
+    "subgroup_val_nid": "sg_nid",
+    "subgroup_nid": "sg_catg_val_nid"
+  },
+  "ut_timeperiod": {
+    "timeperiod_nid": "tp_nid",
+    "timeperiod": "tp_timeperiod",
+    "startdate": "tp_startdate",
+    "enddate": "tp_enddate",
+    "periodicity": "tp_periodicity"
+  },
+  "ut_metadata_category": {
+    "categorynid": "mt_catg_nid",
+    "categorygid": "mt_catg_gid",
+    "categoryname": "mt_catg_name",
+    "categorytype": "mt_catg_type",
+    "categoryorder": "mt_catg_order",
+    "parentcategorynid": "mt_catg_parent_nid",
+    "categorydescription": "mt_catg_description",
+    "ispresentational": "mt_catg_is_presentational",
+    "ismandatory": "mt_catg_is_mandatory"
+  },
+  "ut_metadatareport": {
+    "metadatareport_nid": "mt_rpt_nid",
+    "report_category_gid": "mt_rpt_gid",
+    "target_nid": "mt_rpt_target_nid",
+    "category_nid": "mt_rpt_category_nid",
+    "metadata_text": "mt_rpt_metadata"
+  },
+  "ut_indicator_unit_subgroup": {
+    "iusnid": "ius_nid",
+    "indicator_nid": "i_nid",
+    "unit_nid": "u_nid",
+    "subgroup_val_nid": "sg_nid",
+    "min_value": "ius_min_value",
+    "max_value": "ius_max_value",
+    "subgroup_nids": "sg_catg_val_nids",
+    "data_exist": "ius_has_data",
+    "isdefaultsubgroup": "ius_is_default_subgroup",
+    "avlmindatavalue": "ius_avl_min_data_value",
+    "avlmaxdatavalue": "ius_avl_max_data_value",
+    "avlmintimeperiod": "ius_avl_min_timeperiod",
+    "avlmaxtimeperiod": "ius_avl_max_timeperiod"
+  },
+  "ut_ic_ius": {
+    "ic_iusnid": "ic_ius_nid",
+    "ic_nid": "ic_nid",
+    "iusnid": "ius_nid",
+    "recommendedsource": "ic_ius_is_recommended_source",
+    "ic_ius_order": "ic_ius_order",
+    "ic_ius_label": "ic_ius_label"
+  },
+  "ut_data": {
+    "data_nid": "dt_nid",
+    "iusnid": "ius_nid",
+    "timeperiod_nid": "tp_nid",
+    "area_nid": "ar_nid",
+    "start_date": "dt_start_date",
+    "end_date": "dt_end_date",
+    "data_denominator": "dt_denominator",
+    "footnote_nid": "fn_nid",
+    "source_nid": "ic_nid",
+    "indicator_nid": "i_nid",
+    "unit_nid": "u_nid",
+    "subgroup_val_nid": "sg_nid",
+    "ic_ius_order": "ic_ius_order",
+    "textual_data_value": "dt_text_value",
+    "istextualdata": "dt_is_textual",
+    "ismrd": "dt_is_mrd",
+    "isplannedvalue": "dt_is_planned_value",
+    "iunid": "dt_iunid",
+    "confidenceintervalupper": "dt_confidence_interval_upper",
+    "confidenceintervallower": "dt_confidence_interval_lower",
+    "multiplesource": "dt_is_multiple_source",
+    "data_value": "dt_value"
+  },
+  "ut_footnote": {
+    "footnote_nid": "fn_nid",
+    "footnote": "fn_text",
+    "footnote_gid": "fn_gid"
+  },
+  "ut_language": {
+    "language_nid": "lang_nid",
+    "language_name": "lang_name",
+    "language_code": "lang_code",
+    "language_default": "lang_is_default",
+    "language_globallock": "lang_is_global_lock"
+  },
+  "ut_area_feature_type": {
+    "feature_type_nid": "ar_ft_nid",
+    "feature_type": "ar_ft_type"
+  },  
+  "ut_area_latlong": {
+    "id": "ar_lat_long_nid",
+    "area_id": "ar_id",
+    "area_nid": "ar_nid",
+    "area_lat": "ar_latitude",
+    "area_long": "ar_longitude",
+    "created_at": "ar_ll_created_at",
+    "modified_at": "ar_ll_modified_at"
+  },
+  "ut_area_map": {
+    "area_map_nid": "ar_map_nid",
+    "area_nid": "ar_nid",
+    "feature_layer": "ar_map_feature_layer",
+    "feature_type_nid": "ar_ft_nid",
+    "layer_nid": "ar_ml_nid"
+  },
+  "ut_area_map_metadata": {
+    "metadata_nid": "ar_map_mt_nid",
+    "layer_nid": "ar_ml_nid",
+    "metadata_text": "ar_map_mt_metadata",
+    "layer_name": "ar_map_mt_layer_name"
+  },
+  "ut_area_map_layer": {
+    "layer_nid": "ar_ml_nid",
+    "layer_size": "ar_ml_size",
+    "layer_shp": "ar_ml_shp",
+    "layer_shx": "ar_ml_shx",
+    "layer_dbf": "ar_ml_dbf",
+    "layer_type": "ar_ml_type",
+    "minx": "ar_ml_minx",
+    "miny": "ar_ml_miny",
+    "maxx": "ar_ml_maxx",
+    "maxy": "ar_ml_maxy",
+    "start_date": "ar_ml_start_date",
+    "end_date": "ar_ml_end_date",
+    "metadata_nid": "ar_map_mt_nid",
+    "update_timestamp": "ar_ml_update_timestamp",
+    "map_geojson": "ar_ml_map_geojson"
+  }
+}

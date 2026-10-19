@@ -1,0 +1,1049 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\group\Entity\Group;
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormState;
+use Drupal\node\Entity\Node;
+use Drupal\Core\Mail\MailManagerInterface;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Database\Database;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use GuzzleHttp\RequestOptions;
+use Drupal\user\Entity\Role;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\user\UserInterface;
+
+/**
+ * Returns the taxonomy term ID for the Global workspace.
+ */
+function usermanagemnet_function_unset_get_global_workspace_tid() {
+  static $tid = NULL;
+
+  if ($tid !== NULL) {
+    return $tid;
+  }
+
+  try {
+    $terms = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties([
+        'vid' => 'workspaces',
+        'name' => 'Global',
+      ]);
+    if (!empty($terms)) {
+      $term = reset($terms);
+      $tid = (int) $term->id();
+      return $tid;
+    }
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('usermanagemnet_function_unset')->warning('Global workspace lookup failed: @message', ['@message' => $e->getMessage()]);
+  }
+
+  // Fallback used on other country sites (e.g. Sierra Leone term id 4).
+  $tid = 4;
+  return $tid;
+}
+
+/**
+ * Resolves the user being edited on user_form.
+ */
+function usermanagemnet_function_unset_user_form_get_edited_user(array $form) {
+  if (isset($form['#user']) && $form['#user'] instanceof UserInterface) {
+    return $form['#user'];
+  }
+  if (isset($form['#entity']) && $form['#entity'] instanceof UserInterface) {
+    return $form['#entity'];
+  }
+  $param = \Drupal::routeMatch()->getParameter('user');
+  if ($param instanceof UserInterface) {
+    return $param;
+  }
+  return NULL;
+}
+
+/**
+ * Converts assignable roles to radio buttons (create + edit).
+ */
+function usermanagemnet_function_unset_guinea_apply_user_form_roles(array &$form, UserInterface $account = NULL) {
+  if (!isset($form['account']['roles']) || !is_array($form['account']['roles'])) {
+    return;
+  }
+  if (($form['account']['roles']['#access'] ?? TRUE) === FALSE) {
+    return;
+  }
+
+  $form['account']['roles']['#access'] = TRUE;
+  $form['account']['roles']['#required'] = FALSE;
+
+  if (empty($form['account']['roles']['#options']) || !is_array($form['account']['roles']['#options'])) {
+    $form['account']['roles']['#options'] = [];
+    foreach (array_keys($form['account']['roles']) as $key) {
+      if (!str_starts_with((string) $key, '#')) {
+        $child = $form['account']['roles'][$key];
+        if (is_array($child)) {
+          $form['account']['roles']['#options'][$key] = $child['#title'] ?? $key;
+        }
+      }
+    }
+  }
+  if (empty($form['account']['roles']['#options'])) {
+    foreach (Role::loadMultiple() as $role) {
+      $rid = $role->id();
+      if ($rid !== 'anonymous') {
+        $form['account']['roles']['#options'][$rid] = $role->label();
+      }
+    }
+  }
+
+  unset($form['account']['roles']['#options']['authenticated']);
+
+  foreach (array_keys($form['account']['roles']) as $key) {
+    if (!str_starts_with((string) $key, '#')) {
+      unset($form['account']['roles'][$key]);
+    }
+  }
+
+  $form['account']['roles']['#type'] = 'radios';
+
+  $selected_rid = '';
+  if ($account && !$account->isNew()) {
+    foreach ($account->getRoles(TRUE) as $rid) {
+      if ($rid !== 'authenticated' && isset($form['account']['roles']['#options'][$rid])) {
+        $selected_rid = $rid;
+        break;
+      }
+    }
+  }
+  if ($selected_rid !== '') {
+    $form['account']['roles']['#default_value'] = $selected_rid;
+  }
+  elseif (is_array($form['account']['roles']['#default_value'] ?? NULL)) {
+    $default_roles = $form['account']['roles']['#default_value'];
+    foreach (array_keys($form['account']['roles']['#options'] ?? []) as $rid) {
+      if (!empty($default_roles[$rid])) {
+        $form['account']['roles']['#default_value'] = $rid;
+        break;
+      }
+    }
+    if (is_array($form['account']['roles']['#default_value'])) {
+      $filtered = array_filter($form['account']['roles']['#default_value'], function ($value, $key) {
+        return $key !== 'authenticated' && $key !== 'anonymous' && $value;
+      }, ARRAY_FILTER_USE_BOTH);
+      $form['account']['roles']['#default_value'] = !empty($filtered) ? (string) array_key_first($filtered) : '';
+    }
+  }
+}
+
+/**
+ * Applies Guinea user create/edit form layout (aligned with Sierra Leone).
+ *
+ * Visible fields (in order): Name, Surname, Email, Username, Status, Roles,
+ * Notify user. Workspace, site language, and URL alias are hidden with defaults.
+ */
+function usermanagemnet_function_unset_guinea_apply_user_form(array &$form, $is_edit = FALSE) {
+  $account = $is_edit ? usermanagemnet_function_unset_user_form_get_edited_user($form) : NULL;
+
+  if (isset($form['field_sy'])) {
+    $form['field_sy']['#access'] = FALSE;
+  }
+
+  if (isset($form['field_workspaces'])) {
+    $form['field_workspaces']['#access'] = FALSE;
+    $form['field_workspaces']['widget']['#default_value'] = [usermanagemnet_function_unset_get_global_workspace_tid()];
+  }
+  if (isset($form['account']['field_workspaces'])) {
+    $form['account']['field_workspaces']['#access'] = FALSE;
+    $form['account']['field_workspaces']['widget']['#default_value'] = [usermanagemnet_function_unset_get_global_workspace_tid()];
+  }
+
+  // "Langue du site" is Drupal core language.preferred_langcode.
+  if (isset($form['language'])) {
+    $form['language']['#access'] = FALSE;
+  }
+  if (isset($form['language']['preferred_langcode'])) {
+    $form['language']['preferred_langcode']['#default_value'] = 'fr';
+  }
+  if (isset($form['account']['preferred_langcode'])) {
+    $form['account']['preferred_langcode']['#access'] = FALSE;
+    $form['account']['preferred_langcode']['#default_value'] = 'fr';
+  }
+  if (isset($form['field_language'])) {
+    $form['field_language']['#access'] = FALSE;
+    $form['field_language']['widget']['#default_value'] = 'fr';
+  }
+  if (isset($form['account']['field_language'])) {
+    $form['account']['field_language']['#access'] = FALSE;
+    $form['account']['field_language']['widget']['#default_value'] = 'fr';
+  }
+
+  if (isset($form['path'])) {
+    $form['path']['#access'] = FALSE;
+  }
+
+  foreach (['timezone', 'user_picture', 'contact'] as $account_key) {
+    if (isset($form['account'][$account_key])) {
+      $form['account'][$account_key]['#access'] = FALSE;
+    }
+  }
+
+  usermanagemnet_function_unset_guinea_apply_user_form_roles($form, $account);
+
+  if (isset($form['field_name'])) {
+    $form['field_name']['#weight'] = 0;
+    $form['field_name']['#title'] = t('Prénom');
+    if (isset($form['field_name']['widget'][0]['value']['#title'])) {
+      $form['field_name']['widget'][0]['value']['#title'] = t('Prénom');
+    }
+  }
+  if (isset($form['field_surname'])) {
+    $form['field_surname']['#weight'] = 1;
+    $form['field_surname']['#title'] = t('Nom de famille');
+    if (isset($form['field_surname']['widget'][0]['value']['#title'])) {
+      $form['field_surname']['widget'][0]['value']['#title'] = t('Nom de famille');
+    }
+  }
+  if (isset($form['account']['mail'])) {
+    $form['account']['mail']['#weight'] = 2;
+  }
+  if (isset($form['account']['name'])) {
+    $form['account']['name']['#weight'] = 3;
+  }
+  if (isset($form['account']['status'])) {
+    $form['account']['status']['#weight'] = 4;
+  }
+  if (isset($form['account']['roles'])) {
+    $form['account']['roles']['#weight'] = 5;
+  }
+  if (isset($form['account']['notify'])) {
+    $form['account']['notify']['#default_value'] = TRUE;
+    $form['account']['notify']['#weight'] = 99;
+  }
+
+  $form['#validate'] = $form['#validate'] ?? [];
+  if (!in_array('usermanagemnet_function_unset_user_form_roles_cleanup', $form['#validate'], TRUE)) {
+    array_unshift($form['#validate'], 'usermanagemnet_function_unset_user_form_roles_cleanup');
+  }
+
+  $form['actions']['submit']['#submit'] = $form['actions']['submit']['#submit'] ?? [];
+  if (!in_array('usermanagemnet_function_unset_guinea_user_form_defaults_submit', $form['actions']['submit']['#submit'], TRUE)) {
+    array_unshift($form['actions']['submit']['#submit'], 'usermanagemnet_function_unset_guinea_user_form_defaults_submit');
+  }
+
+  $form['#attributes']['class'][] = 'guinea-user-form';
+  $form['#attached']['library'][] = 'usermanagemnet_function_unset/guinea_user_form';
+}
+
+/**
+ * Ensures hidden workspace/language defaults are saved on the user entity.
+ */
+function usermanagemnet_function_unset_guinea_user_form_defaults_submit(array $form, FormStateInterface $form_state) {
+  $form_object = $form_state->getFormObject();
+  if (!method_exists($form_object, 'getEntity')) {
+    return;
+  }
+
+  $account = $form_object->getEntity();
+  if (!$account instanceof UserInterface) {
+    return;
+  }
+
+  $account->set('preferred_langcode', 'fr');
+  $form_state->setValue(['language', 'preferred_langcode'], 'fr');
+
+  $workspace_tid = usermanagemnet_function_unset_get_global_workspace_tid();
+  if ($account->hasField('field_workspaces')) {
+    $account->set('field_workspaces', [['target_id' => $workspace_tid]]);
+    $form_state->setValue('field_workspaces', [['target_id' => $workspace_tid]]);
+  }
+
+  if ($account->hasField('field_language')) {
+    $account->set('field_language', 'fr');
+    $form_state->setValue('field_language', [['value' => 'fr']]);
+  }
+}
+
+/**
+ * Normalizes role values submitted as radios/checkboxes.
+ */
+function usermanagemnet_function_unset_user_form_roles_cleanup($form, FormStateInterface $form_state) {
+  $acc = $form_state->getValue(['account', 'roles']);
+
+  if (is_string($acc) && $acc !== '') {
+    $form_state->setValue(['account', 'roles'], [$acc]);
+  }
+  elseif (is_string($acc) && $acc === '') {
+    $form_state->setValue(['account', 'roles'], []);
+  }
+  elseif (is_array($acc) && $acc !== [] && is_string(key($acc))) {
+    $form_state->setValue(['account', 'roles'], array_keys(array_filter($acc)));
+  }
+
+  if (!$form_state->hasValue('roles')) {
+    return;
+  }
+
+  $top = $form_state->getValue('roles');
+  if (is_string($top) && $top !== '') {
+    $form_state->setValue('roles', [$top]);
+  }
+  elseif (is_string($top) && $top === '') {
+    $form_state->setValue('roles', []);
+  }
+  elseif (is_array($top) && $top !== [] && is_string(key($top))) {
+    $form_state->setValue('roles', array_keys(array_filter($top)));
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+
+/* Register the user with common connect details */
+function usermanagemnet_function_unset_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  // global $base_url;
+  //$base_url='https://tunisia.dataforall.org';
+  $base_url = isset($_ENV['APP_URL']) ? trim($_ENV['APP_URL']) : '';
+  $host = $base_url;
+
+  $current_user = User::load(\Drupal::currentUser()->id());
+  $currUserId = $current_user->get('uid')->value;
+  $currUserRoles = $current_user->getRoles();
+  /** 
+   * Start code Unset the ccl message field from all basic pages except home page 
+   */
+  if ($form_id == 'node_page_edit_form' || $form_id == 'node_page_form') {
+    $node_id = $form['#cache']['tags'][1];
+    if (isset($node_id)) {
+      if ($node_id != 'node:4') {
+        $form['field_ccl_message']['#access'] = FALSE;
+      }
+    } else {
+      $form['field_ccl_message']['#access'] = FALSE;
+    }
+  }
+  $current_user = User::load(\Drupal::currentUser()->id());
+  $currUserId = $current_user->get('uid')->value;
+  $currUserRoles = $current_user->getRoles();
+
+  if ($form_id == 'user_register_form') {
+    $form['account']['mail']['#required'] = TRUE;
+    usermanagemnet_function_unset_guinea_apply_user_form($form, FALSE);
+
+    // apart from administrator, hide below fields
+    if (!empty($currUserRoles) && in_array("administrator", $currUserRoles) === false && in_array("anonymous", $currUserRoles) === false) {
+      $form['account']['pass']['#access']  = FALSE;
+      $form['account']['pass']['#required']  = FALSE;
+    }
+
+    /*
+     * Call submit handler for submit button of user registartion form
+     */
+    $form['actions']['submit']['#submit'][] = 'check_data_saved_in_dfa';
+  }
+  /*
+   * Condition for user registration edit form
+   */
+  if ($form_id == 'user_form') {
+    $route_user = \Drupal::routeMatch()->getParameter('user');
+    $selUserId = ($route_user instanceof UserInterface) ? $route_user->id() : '';
+
+    $status_prev = $form['account']['status']['#default_value'];
+    $form['actions']['submit']['#attributes']['class'][] = 'Btn BtnPrimary form-control';
+    $form['account']['name']['#title'] = t('User Id');
+    $form['account']['name']['#attributes']['readonly'] = 'readonly';
+    $form['account']['mail']['#attributes']['readonly'] = 'readonly';
+    $form['account']['mail']['#required'] = TRUE;
+    usermanagemnet_function_unset_guinea_apply_user_form($form, TRUE);
+
+    if ($selUserId == $currUserId || in_array("administrator", $currUserRoles) !== false) {
+      if ($selUserId == $currUserId) {
+        $form['account']['status']['#access'] = FALSE;
+      }
+    }
+    else {
+      unset($form['account']['pass']);
+      unset($form['account']['current_pass']);
+    }
+
+    /*
+     * Call submit handler for user registration edit form
+     */
+    $form['actions']['submit']['#submit'][] = 'check_data_saved_in_dfa';
+  }
+
+
+  /*
+   * Condition for delete user registartion form
+   */
+  if ($form_id == 'user_cancel_form') {
+    // Remove core confirm submit to avoid duplicate delete actions.
+    unset($form['actions']['submit']);
+
+    $form['actions']['submit_cancel'] = array(
+      '#type' => 'submit',
+      '#weight' => 1,
+      '#value' => t('Supprimer'),
+      '#submit' => array('usermanagemnet_function_unset_custom_user_delete'),
+    );
+    $markup = t('Êtes-vous sûr de vouloir supprimer le compte et son contenu ? Cette action est irréversible.');
+    $form['description']['#markup'] = $markup;
+    $form['#attached']['library'][] = 'usermanagemnet_function_unset/usermanagemnet_function_unset_style';
+  }
+}
+
+
+function usermanagemnet_function_unset_form_views_exposed_form_alter(&$form, &$form_state, $form_id)
+{
+  if ($form_id == 'views_exposed_form') {
+  }
+  if ($form['#id'] == 'views-exposed-form-user-management-page-1') {
+    $usercurrent = User::load(\Drupal::currentUser()->id());
+    $user_id = $usercurrent->get('uid')->value;
+    $connection = Database::getConnection();
+    $roleidd = $connection->query("SELECT roles_target_id FROM {user__roles} WHERE entity_id = :entityids", [':entityids' => $user_id])->fetchField();
+    if ($roleidd == 'country_admin') {
+      unset($form['field_function_list_target_id']['#options']['95']);
+      unset($form['field_function_list_target_id']['#options']['96']);
+      unset($form['field_function_list_target_id']['#options']['97']);
+      unset($form['field_function_list_target_id']['#options']['98']);
+      unset($form['field_function_list_target_id']['#options']['99']);
+    } else if ($roleidd == 'regional_admin') {
+      unset($form['field_function_list_target_id']['#options']['98']);
+      unset($form['field_function_list_target_id']['#options']['99']);
+    }
+  }
+
+
+  /*
+   * Unset 'doc' workspace from workspace list in filter in document library
+   */
+  if ($form['#id'] == 'views-exposed-form-document-library-page-1') {
+    unset($form['field_workspace_list_target_id']['#options']['4']);
+
+    $form['download_files_view'] = array(
+      '#prefix' => '<div class="view-footer-custom-download">',
+      '#suffix' => '</div>',
+      '#type' => 'markup',
+      '#weight' => 10,
+      '#markup' => '<div id="download_file_selected" title="Download selected files" data-drupal-selector="edit-download-files-view" name="op" value="" class="button js-form-submit form-submit form-control"></div>',
+    );
+  }
+}
+
+
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function usermanagemnet_function_unset_views_pre_render(\Drupal\views\ViewExecutable $view)
+{
+  // $host = $GLOBALS['base_url'];
+  // global $base_url;
+  //$base_url='https://tunisia.dataforall.org';
+  $host = isset($_ENV['APP_URL']) ? trim($_ENV['APP_URL']) : '';
+
+  $site_base_url = Url::fromUri('internal:/')->setAbsolute()->toString();
+  $current_uri = \Drupal::request()->getRequestUri();
+
+  $currentLoginUser = User::load(\Drupal::currentUser()->id());
+  $roles = $currentLoginUser->getRoles();
+  if ($view->id() == "user_management" && $view->current_display == 'page_1') {
+    foreach ($view->result as $value) {
+      $user_view_id = $value->_entity->id();
+      $workspce_ids = $value->_entity->get('field_workspaces')->target_id;
+      $store_ids = strval($workspce_ids);
+
+      $workspace_number_count = getWorkspaceGid($store_ids);
+      if (($workspace_number_count == 'NA') && (!in_array("global_admin", $roles))) {
+        $user_action_link = "<div class='custom_action'><a href='" . $site_base_url . "/user/" . $user_view_id . "/edit?destination=user-administration'>" . t('Edit') . "</a></div>";
+        $value->_entity->set('field_user_actions', array(
+          'value' => $user_action_link,
+          'format' => 'basic_html',
+        ));
+      } else {
+        $user_action_link = "<div class='custom_action'><a href='" . $site_base_url . "/user/" . $user_view_id . "/edit?destination=user-administration'>" . t('Edit') . "</a>
+          <a href='" . $site_base_url . "/user/" . $user_view_id . "/cancel?destination=user-administration' class='custom_action_delete'>" . t('Delete') . "</a></div>";
+        $value->_entity->set('field_user_actions', array(
+          'value' => $user_action_link,
+          'format' => 'basic_html',
+        ));
+      }
+    }
+  }
+}
+
+
+
+/**
+ * Get Translated Workspace Name according to the site current language
+ **/
+function translatedWorkspaceName(string $ids)
+{
+  $view_workspace_ids = $ids;
+  $curr_langcode = \Drupal::languageManager()->getCurrentLanguage(\Drupal\Core\Language\LanguageInterface::TYPE_CONTENT)->getId();
+  $myworkspace_translated_name = array();
+  if (!empty($view_workspace_ids)) {
+    $explode_view_wrkspce_res = explode(',', $view_workspace_ids);
+    foreach ($explode_view_wrkspce_res as $explode_view_wrkspce_res_key => $explode_view_wrkspce_res_value) {
+      $taxonomy_term = Term::load($explode_view_wrkspce_res_value);
+      $taxonomy_term_trans = \Drupal::service('entity.repository')->getTranslationFromContext($taxonomy_term, $curr_langcode);
+      $myworkspace_translated_name[] = $taxonomy_term_trans->name->value;
+    }
+  }
+  $tarns_workspace_list = implode(", ", $myworkspace_translated_name);
+  return ($tarns_workspace_list);
+}
+
+
+/* Get workspace Gid list to manage the roles at user management page
+*/
+function getRoleManageWorkspaceGids(string $currentUserIds, string $ids)
+{
+  $view_workspace_ids = $ids;
+  $login_user_workspace_ids = $currentUserIds;
+  $site_curr_langcode = \Drupal::languageManager()->getCurrentLanguage(\Drupal\Core\Language\LanguageInterface::TYPE_CONTENT)->getId();
+  if (!empty($view_workspace_ids) && !empty($login_user_workspace_ids)) {
+    $login_user_workspace_ids_array = explode(',', $login_user_workspace_ids);
+    foreach ($login_user_workspace_ids_array as $login_user_workspace_ids_array_key => $login_user_workspace_ids_array_value) {
+      $login_user_taxonomy_term = Term::load($login_user_workspace_ids_array_value);
+      $taxonomy_workspace_name_trans = \Drupal::service('entity.repository')->getTranslationFromContext($login_user_taxonomy_term, $site_curr_langcode);
+      $user_workspace_translated_name = $taxonomy_workspace_name_trans->name->value;
+      $login_user_term_guid[$user_workspace_translated_name] = $login_user_taxonomy_term->field_wrkspc_uni_gid->value;
+    }
+
+    $explode_view_wrkspce_res = explode(',', $view_workspace_ids);
+    foreach ($explode_view_wrkspce_res as $explode_view_wrkspce_res_key => $explode_view_wrkspce_res_value) {
+      $taxonomy_term = Term::load($explode_view_wrkspce_res_value);
+      $view_taxonomy_workspace_name_trans = \Drupal::service('entity.repository')->getTranslationFromContext($taxonomy_term, $site_curr_langcode);
+      $view_workspace_translated_name = $view_taxonomy_workspace_name_trans->name->value;
+      $term_guid[$view_workspace_translated_name] = $taxonomy_term->field_wrkspc_uni_gid->value;
+    }
+  }
+  if (in_array('GLOBAL', $login_user_term_guid)) {
+    return ($term_guid);
+  } else {
+    $common_term_guid = array_intersect($login_user_term_guid, $term_guid);
+    return ($common_term_guid);
+  }
+}
+
+
+function getWorkspaceGid($ids)
+{
+  $view_workspace_ids = $ids;
+  $curr_langcode = \Drupal::languageManager()->getCurrentLanguage(\Drupal\Core\Language\LanguageInterface::TYPE_CONTENT)->getId();
+  $myworkspace_translated_name = array();
+  if (!empty($view_workspace_ids)) {
+    $explode_view_wrkspce_res = explode(',', $view_workspace_ids);
+    $arrSize = sizeof($explode_view_wrkspce_res);
+    if ($arrSize == 1) {
+      foreach ($explode_view_wrkspce_res as $explode_view_wrkspce_res_key => $explode_view_wrkspce_res_value) {
+        $taxonomy_term = Term::load($explode_view_wrkspce_res_value);
+        $term_guid = $taxonomy_term->field_wrkspc_uni_gid->value;
+      }
+    } else {
+      $term_guid = 'NA';
+    }
+  }
+  return ($term_guid);
+}
+
+
+function usermanagemnet_function_unset_views_pre_build(\Drupal\views\ViewExecutable $view)
+{
+  $usercurrent2 = User::load(\Drupal::currentUser()->id());
+  $user_role = $usercurrent2->getRoles();
+  /* Unset the workspace filter for all single workspace documnet listing page only display for global workspace associated */
+  $current_doc_path = \Drupal::service('path.current')->getPath();
+  $current_doc_path_arr = (explode("/", $current_doc_path));
+  if ($current_doc_path_arr[1] == 'document-library') {
+    if ($view->id() == "document_library" && $view->current_display == 'page_1') {
+      if ($current_doc_path_arr[2] != 'all') {
+        unset($view->filter['field_workspace_list_target_id']);
+      }
+    }
+  }
+  /* Unset the workspace filter for country admin and display for regional and global admin */
+  if ($view->id() == "user_management" && $view->current_display == 'page_1') {
+    $role_arr_size = sizeof($user_role);
+    if ($role_arr_size == 2 && $user_role[1] == 'country_admin') {
+      unset($view->filter['field_hidden_workspace_name_value']);
+    }
+  }
+}
+
+
+/**
+ * Implements hook_page_attachments().
+ * Include the js file to this module to redirect at monitoring dashboard page
+ */
+function usermanagemnet_function_unset_page_attachments(array &$attachments)
+{
+  // No global attachment here: keep this module's assets route/form specific.
+}
+
+
+/*
+ * the extra submit handler that persist the user management data filter value in database
+ */
+function sandbox_exposed_form_submit($form, \Drupal\Core\Form\FormStateInterface $form_state)
+{
+  $usercurrent = User::load(\Drupal::currentUser()->id());
+  $user_filter_value = $usercurrent->get('field_user_filter_value')->value;
+  $base_url = Url::fromUri('internal:/')->setAbsolute()->toString();
+  $url = $base_url . "/user-administration" . $user_filter_value;
+  $response = new Symfony\Component\HttpFoundation\RedirectResponse($url);
+  $response->send();
+  return;
+}
+
+
+function usermanagemnet_function_unset_views_query_alter(Drupal\views\ViewExecutable $view, Drupal\views\Plugin\views\query\Sql $query)
+{
+  if ($view->id() == 'user_management') {
+    $current_url = Url::fromRoute('<current>');
+    $path = $current_url->toString();
+    $current_uri = \Drupal::request()->getRequestUri();
+    $filter_url = explode($path, $current_uri);
+
+    // alter view query to display record properly
+    $usercurrent = User::load(\Drupal::currentUser()->id());
+    $user_worspaces = [];
+    $userWsIdRes = $usercurrent->get('field_workspaces')->getValue();
+    foreach ($userWsIdRes as $usrWsIds) {
+      $user_worspaces[] = $usrWsIds['target_id'];
+    }
+    $user_id = $usercurrent->get('uid')->value;
+    $connection = Database::getConnection();
+    $myrole = $connection->query("SELECT roles_target_id FROM {user__roles} WHERE entity_id = :entity_ids", [':entity_ids' => $user_id])->fetchField();
+    if (($myrole == 'country_admin')) {
+      $configuration = [
+        'left_table' => 'users_field_data',
+        'left_field' => 'uid',
+        'table' => 'user__field_workspaces',
+        'field' => 'entity_id',
+        'adjusted' => TRUE,
+      ];
+      $user_worspaces_id_str = join("','", $user_worspaces);
+      $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $configuration);
+      $query->addRelationship('user__field_workspaces', $join, 'users_field_data');
+      $query->addWhereExpression(0, "FIND_IN_SET('" . $user_worspaces_id_str . "', user__field_workspaces.field_workspaces_target_id) ");
+      $query->addWhere(1, 'users_field_data.uid', $user_id, '!=');
+    }
+
+    if (!empty($filter_url[1])) {
+      $extraUrl = trim($filter_url[1]);
+      $search = 'format=csv';
+      if (strpos($extraUrl, $search) !== false) {
+        //echo 'do nothing';
+      } else {
+        //$usercurrent = User::load(\Drupal::currentUser()->id());
+        //$usercurrent->set('field_user_filter_value', $extraUrl);
+        $usercurrent->save();
+      }
+    }
+
+    // The crucial part! Save the $user object, else changes won't persist.
+  }
+}
+
+
+/*
+* Submit handler for user edit form
+*/
+
+function check_data_saved_in_dfa($form, FormStateInterface $form_state)
+{
+  $data = array();
+  $values = \Drupal::request()->request->all();
+  $uid = $form_state->getValue('uid');
+  $name = $form_state->getValue('name');
+  $mail = $form_state->getValue('mail');
+
+  $route_user = \Drupal::routeMatch()->getParameter('user');
+  $current_user_id = ($route_user instanceof UserInterface) ? (int) $route_user->id() : 0;
+
+  if ($current_user_id > 0) {
+    $current_user_data = User::load($current_user_id);
+    if ($current_user_data) {
+      $username = $current_user_data->getAccountName();
+      $email = $current_user_data->getEmail();
+    }
+    else {
+      $username = $name;
+      $email = $mail;
+    }
+  } else {
+    $username = $name;
+    $email = $mail;
+  }
+
+  $connection = Database::getConnection();
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $token = getApiToken();
+
+  $user_roles = array('VIEWER');
+  $roles_input = $values['roles'] ?? $form_state->getValue('roles');
+  $selected_role = '';
+  if (is_array($roles_input)) {
+    $first_value = reset($roles_input);
+    if (is_string($first_value) && $first_value !== '') {
+      // Radios/selects may submit as array with the selected role as first value.
+      $selected_role = $first_value;
+    }
+    else {
+      // Checkbox-style role arrays may be keyed by role id with truthy values.
+      foreach ($roles_input as $rid => $enabled) {
+        if ($enabled && !in_array($rid, ['authenticated', 'anonymous'], TRUE)) {
+          $selected_role = (string) $rid;
+          break;
+        }
+      }
+    }
+  }
+  elseif (is_string($roles_input)) {
+    $selected_role = $roles_input;
+  }
+
+  if ($selected_role == 'country_admin') {
+    // $selWsIds = explode(',', $values['field_workspaces'][0]['value']);
+  } else {
+    // $selWsIds = array('ALL');
+  }
+
+  $usrArr = ['first_name' => $values['field_name'][0]['value'], 'last_name' => $values['field_surname'][0]['value'], 'username' => $username, 'email' => $email, 'agency' => '', 'ws' => ['GLOBAL'], 'roles' => array('VIEWER')];
+
+  $data = ['uid' => $uid, 'workspace' => 'GLOBAL', 'language' => $language, 'action' => 'create', 'User' => $usrArr];
+
+  \Drupal::logger('api_data')->notice(json_encode($data));
+  
+  synUserToDatamanager($usrArr);
+
+  $dfa_status = syncUserToServiceProvider($data, $token);
+  if ($dfa_status['success'] !== true) {
+    \Drupal::logger('api_params')->notice(json_encode($data));
+    \Drupal::logger('api_response')->notice(json_encode($dfa_status));
+  } else {
+    \Drupal::logger('api_response_true_case')->notice(json_encode($dfa_status));
+
+    $connection = Database::getConnection();
+    $num_updated = $connection->update('user__field_sy')
+      ->fields([
+        'field_sy_value' => 1,
+      ])
+      ->condition('entity_id', $uid, '=')
+      ->execute();
+
+    /* End sync status field from 0 to 1 */
+
+    if ($selected_role != '') {
+      $usrArr = ['first_name' => $values['field_name'][0]['value'], 'last_name' => $values['field_surname'][0]['value'], 'username' => $username, 'email' => $email, 'agency' => '', 'ws' => ['GLOBAL'], 'roles' => array($selected_role)];
+      // $usrArr = ['first_name' => 'aaaa', 'last_name' => 'ssss', 'username' => $email, 'email' => $email, 'agency' => '', 'ws' => ['GLOBAL'], 'roles' => array('VIEWER')];
+
+      $data = ['uid' => $uid, 'workspace' => 'GLOBAL', 'language' => $language, 'action' => 'create', 'User' => $usrArr];
+
+      $data = ['uid' => $uid, 'workspace' => 'GLOBAL', 'language' => $language, 'action' => 'create', 'User' => $usrArr];
+
+      \Drupal::logger('api_data')->notice(json_encode($data));
+
+      $dfa_status = syncUserToServiceProvider($data, $token);
+      if ($dfa_status['success'] !== true) {
+        \Drupal::logger('api_params')->notice(json_encode($data));
+        \Drupal::logger('api_response')->notice(json_encode($dfa_status));
+
+        if ($dfa_status['err']['msg'] != '') {
+          $form_state->setErrorByName('name', $dfa_status['err']['msg']);
+        } else {
+          $form_state->setErrorByName('name', $dfa_status['err']['code']);
+        }
+      }
+    }
+  }
+}
+
+
+
+/* 
+* Submit handler of call api for user delete
+*/
+function validateUser($currUserId, $currUserRoles, $currUserWsIdArr, $selUserId, $selUserWsIdArr, $action)
+{
+  $status = false;
+  // global admin can do anything
+  if (in_array("global_admin", $currUserRoles) !== false) {
+    $status = true;
+  } else {
+    // country admin can update only if belongs to one workspace only
+    if (in_array("country_admin", $currUserRoles) !== false) {
+      // cannot delete if more than one ws associated
+      if ($action == 'delete' && sizeof($selUserWsIdArr) > 1) {
+        $status = false;
+      } else if ($action == 'delete' && $currUserId == $selUserId) {
+        $status = false;
+      } else {
+        $commWsIdArr = array_intersect($currUserWsIdArr, $selUserWsIdArr);
+        print_r($commWsIdArr);
+        if (sizeof($commWsIdArr) > 0 && sizeof($commWsIdArr) < 2) {
+          $status = true;
+        }
+      }
+    } else {
+      if ($action == 'update' && $currUserId == $selUserId) {
+        $status = true;
+      }
+    }
+  }
+  return $status;
+}
+
+
+/*
+* This handler is calling for delete user programmiticlly
+*/
+
+function usermanagemnet_function_unset_custom_user_delete()
+{
+  $status = false;
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $route_user = \Drupal::routeMatch()->getParameter('user');
+  $delete_user_id = ($route_user instanceof UserInterface) ? (int) $route_user->id() : 0;
+  if ($delete_user_id <= 0) {
+    \Drupal::logger('delete_user')->error('Delete requested without a valid route user.');
+    return;
+  }
+  $deleted_user = User::load($delete_user_id);
+  if (!$deleted_user) {
+    \Drupal::logger('delete_user')->error('Delete requested for missing user id: @uid', ['@uid' => $delete_user_id]);
+    return;
+  }
+  $current_user = User::load(\Drupal::currentUser()->id());
+  $deleted_un = $deleted_user->getAccountName();
+  $current_un = $current_user->getAccountName();
+
+  $data = ['action' => 'delete', 'workspace' => 'GLOBAL', 'username' => $deleted_un, 'language' => $language, 'logged_in_username' => $current_un];
+
+  \Drupal::logger('deleted_user')->notice(json_encode($data));
+
+  $api_response = deleteUser($data);
+  if ($api_response === true) {
+    $deleted_user->delete();
+  } else {
+    \Drupal::logger('delete_user')->error('Remote delete failed: ' . json_encode($api_response));
+  }
+}
+
+
+/**
+ * Api function for createuser
+ */
+
+function syncUserToServiceProvider(array $params, $token)
+{
+  // global $base_url;
+  //$base_url='https://tunisia.dataforall.org';
+  $base_url = isset($_ENV['APP_URL']) ? trim($_ENV['APP_URL']) : '';
+
+  $host  =  $base_url;
+
+  if (empty($token)) {
+    $api_token = getApiToken();
+  } else {
+    $api_token = $token;
+  }
+
+  $reqHdrs[] = 'AuthorizationToken: ' . $api_token;
+
+  \Drupal::logger('api_debug')->notice('Calling URL: ' . $host . MONITORING_CORE_URL . '/' . API_CREATE_USER);
+
+  \Drupal::logger('api_debug')->notice('Request Headers: ' . json_encode($reqHdrs));
+  \Drupal::logger('api_debug')->notice('Request Params: ' . json_encode($params));
+
+  $ntwrkResponse = doCurlPostRequest($host . MONITORING_CORE_URL . '/' . API_CREATE_USER, $params, $reqHdrs);
+
+  if ($ntwrkResponse === false || $ntwrkResponse === null) {
+    \Drupal::logger('api_debug')->error('Curl returned NULL or FALSE');
+  } else {
+    \Drupal::logger('api_debug')->notice('Raw Curl Response: ' . $ntwrkResponse);
+  }
+
+  \Drupal::logger('debug_constants')->notice('API_CREATE_USER: ' . API_CREATE_USER);
+  \Drupal::logger('debug_constants')->notice('MONITORING_CORE_URL: ' . MONITORING_CORE_URL);
+  \Drupal::logger('api_debug')->notice('Headers: ' . json_encode($reqHdrs));
+  \Drupal::logger('api_debug')->notice('Params: ' . json_encode($params));
+  \Drupal::logger('openid_api_response_true_case')->notice(json_encode($ntwrkResponse));
+
+  $ntwrkdecode = json_decode($ntwrkResponse, true);
+
+  return $ntwrkdecode;
+}
+
+
+/**
+ * Api function for createuser in datamanager
+ */
+
+function synUserToDatamanager($user_data)
+{
+  $config = \Drupal::config('metadata.adminsettings');
+  $api_url = $config->get('api_url');
+  if (empty($api_url)) {
+    return;
+  }
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $client = new \GuzzleHttp\Client();
+
+  $url = $api_url . 'saveusr';
+  $usrArr = [
+    'lang' => $language,
+    'name' => $user_data['first_name'],
+    'status' => 1,
+    'username' => $user_data['username'],
+    'email' => $user_data['email'],
+    'roleAction' => 'add',
+    'roles' => ['TEMPLATE']
+  ];
+
+  $response = $client->request('POST', $url, [
+    'form_params' => [
+      'usrArr' => [$usrArr],
+      'dbId' => $config->get('api_db_id'),
+    ],
+  ]);
+
+  $body = $response->getBody()->getContents();
+  $body = json_decode($body, true);
+
+  if ($body['success'] == true) {
+    \Drupal::logger('datamanager_user_entry')->notice('data inserted: ' . json_encode($user_data));
+  } else {
+    \Drupal::logger('datamanager_user_entry')->notice(json_encode($body['error']));
+  }
+}
+
+
+/*
+* Workspace assosiation api
+*/
+// function assosialteWorkspaceUser(array $params): bool
+// {
+// 	//$host = $GLOBALS['base_url'];
+// 	// global $base_url;
+// 	//$base_url='https://tunisia.dataforall.org';
+// 	$host = isset($_ENV['APP_URL']) ? trim($_ENV['APP_URL']) : '';
+
+// 	$status = false;
+// 	$token = getApiToken();
+// 	if (!empty($token)) {
+// 		$reqHdrs[] = 'AuthorizationToken: ' . $token;
+// 		$ntwrkResponse = doCurlPostRequest($host . '/' . MONITORING_CORE_URL . '/' . API_ASSOSIATE_WORKSPACE, $params, $reqHdrs);
+// 		if (!empty($decodeResp['success']) && $decodeResp['success'] === true) {
+// 			$status = true;
+// 		} else {
+// 			$status = false;
+// 		}
+// 	} else {
+// 		$status = false;
+// 	}
+// 	return $status;
+// }
+
+function assosialteWorkspaceUser(array $params): bool
+{
+  $host = isset($_ENV['APP_URL']) ? trim($_ENV['APP_URL']) : '';
+  $status = false;
+
+  $token = getApiToken();
+  if (!empty($token)) {
+    $reqHdrs[] = 'AuthorizationToken: ' . $token;
+    $ntwrkResponse = doCurlPostRequest($host . MONITORING_CORE_URL . '/' . API_ASSOSIATE_WORKSPACE, $params, $reqHdrs);
+
+    // Decode the response
+    $decodeResp = json_decode($ntwrkResponse, true);
+
+    if (!empty($decodeResp['success']) && $decodeResp['success'] === true) {
+      $status = true;
+    }
+  }
+  return $status;
+}
+
+
+
+
+/**
+ * Api function for deleteuser
+ */
+function deleteUser(array $params): bool
+{
+  // global $base_url;
+  //$base_url='https://tunisia.dataforall.org';
+  $base_url = isset($_ENV['APP_URL']) ? trim($_ENV['APP_URL']) : '';
+
+  $host = $base_url;
+
+  $status = false;
+  $token = getApiToken();
+  if (!empty($token)) {
+    $reqHdrs[] = 'AuthorizationToken: ' . $token;
+    $ntwrkResponse = doCurlPostRequest($host . MONITORING_CORE_URL . '/' . API_DELETE_USER, $params, $reqHdrs);
+    $decodeResp = json_decode($ntwrkResponse, 1);
+    if (!empty($decodeResp['success']) && $decodeResp['success'] === true) {
+      $status = true;
+    } else {
+      $status = false;
+    }
+  } else {
+    $status = false;
+  }
+  return $status;
+}
+
+
+function usermanagemnet_function_unset_form_user_pass_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+  // Add uep validation handler.
+  $form['#validate'][] = 'user_pass_validate';
+}
+
+
+/**
+ * Overrides user_pass_validate() found in user.pages.inc.
+ */
+function user_pass_validate($form, FormStateInterface $form_state)
+{
+  if ($form_state->getValue('name') == '') {
+    $form_state->setErrorByName('name', ' Username or email address field is required.');
+  } else {
+    $input = trim($form_state->getValue('name'));
+    // Access check would hide users from anonymous; this matches credential lookup.
+    // Match username or email (same as core user password behavior).
+    $query = \Drupal::entityQuery('user')
+      ->accessCheck(FALSE)
+      ->range(0, 1);
+    $group = $query->orConditionGroup()
+      ->condition('name', $input)
+      ->condition('mail', $input);
+    if (strpos($input, '@') !== FALSE) {
+      // Also match normalized form so stored address casing can differ from input.
+      $group->condition('mail', mb_strtolower($input));
+    }
+    $ids = $query->condition($group)->execute();
+
+    if (empty($ids)) {
+      $form_state->clearErrors();
+      $form_state->setErrorByName('name', 'Account not found');
+    }
+  }
+}
+
+
+function usermanagemnet_function_unset_preprocess_html(&$variables)
+{
+  $variables['attributes']['class'][] = 'hide-confirmation';
+}

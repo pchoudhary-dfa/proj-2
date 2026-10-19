@@ -1,0 +1,13 @@
+{
+    "folders": [
+        {
+            "path": "../../.."
+        },
+        {
+            "path": "../../../../../dfa-v6-datamanager"
+        },
+        {
+            "path": "../../../../../dfa-help-view"
+        }
+    ]
+}

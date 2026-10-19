@@ -1,0 +1,9 @@
+usermanagemnet_function_unset_style:
+  css:
+    theme:
+      css/usermanagemnet_function_unset.css: {}
+
+guinea_user_form:
+  css:
+    theme:
+      css/guinea_user_form.css: {}

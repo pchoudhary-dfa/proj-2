@@ -1,0 +1,29 @@
+{
+  "id": "/",
+  "name": "DFA Visualizer",
+  "short_name": "DFAViz",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "{{FLAVOR_COLOR}}",
+  "icons": [
+    {
+      "src": "/icons/dfa_fav_vis_192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/dfa_fav_vis_512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/dfa_fav_vis_512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Build arguments for local development (overrides Dockerfile production defaults)
+      args:
+        - APP_URL=${APP_URL:-http://guinea}
+        - DB_NAME=${DB_NAME:-guinea}
+        - DB_USER=${DB_USER:-root}
+        - DB_PASSWORD=${DB_PASSWORD:-root}
+        - DB_HOST=${DB_HOST:-db}
+        - DRUPAL_FILE_PUBLIC_PATH=${DRUPAL_FILE_PUBLIC_PATH:-sites/default/files}
+        - DRUPAL_HASH_SALT=${DRUPAL_HASH_SALT}
+        - DRUPAL_CONFIG_SYNC_DIRECTORY=${DRUPAL_CONFIG_SYNC_DIRECTORY:-sites/default/files/config/sync}
+        - DRUPAL_TRUSTED_HOST_PATTERNS=${DRUPAL_TRUSTED_HOST_PATTERNS:-^guinea$,^guinea\.localhost$,^localhost$,^guinea\.dataforall\.org$}
+        - DRUPAL_ENVIRONMENT=${DRUPAL_ENVIRONMENT:-development}
+        - DB_ISOLATION_LEVEL=${DB_ISOLATION_LEVEL:-READ COMMITTED}
+    container_name: guinea_web
+    ports:
+      - "80:80"
+    volumes:
+      # Mount source code for live development (changes reflect immediately)
+      - .:/var/www/html
+      # Mount the files directory as a named volume for persistence
+      # This ensures uploaded files persist across container restarts
+      - drupal_files:/var/www/html/web/sites/default/files
+      # Optional: Mount private files directory if you use private file storage
+      - drupal_private_files:/var/www/html/web/sites/default/files/private
+      # Optional: Mount temporary files directory
+      - drupal_temp_files:/var/www/html/web/sites/default/files/temporary
+      # Optional: Mount config sync directory for configuration management
+      - drupal_config_sync:/var/www/html/web/sites/default/files/config/sync
+    environment:
+      # Runtime environment variables (can override build args)
+      - APP_URL=${APP_URL:-http://guinea}
+      - DB_NAME=${DB_NAME:-guinea}
+      - DB_USER=${DB_USER:-root}
+      - DB_PASSWORD=${DB_PASSWORD:-root}
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_DRIVER=${DB_DRIVER:-mysql}
+      - DB_ISOLATION_LEVEL=${DB_ISOLATION_LEVEL:-READ COMMITTED}
+      - DRUPAL_ENVIRONMENT=${DRUPAL_ENVIRONMENT:-development}
+      - DRUPAL_CONFIG_SYNC_DIRECTORY=${DRUPAL_CONFIG_SYNC_DIRECTORY:-sites/default/files/config/sync}
+      - DRUPAL_FILE_PUBLIC_PATH=${DRUPAL_FILE_PUBLIC_PATH:-sites/default/files}
+      - DRUPAL_TRUSTED_HOST_PATTERNS=${DRUPAL_TRUSTED_HOST_PATTERNS:-^guinea$,^guinea\.localhost$,^localhost$,^guinea\.dataforall\.org$}
+      - DRUPAL_HASH_SALT=${DRUPAL_HASH_SALT}
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      - guinea_network
+
+  db:
+    image: mysql:8.0
+    container_name: guinea_db
+    environment:
+      - MYSQL_DATABASE=${DB_NAME:-guinea}
+      - MYSQL_USER=${DB_USER:-root}
+      - MYSQL_PASSWORD=${DB_PASSWORD:-root}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-root}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"  # Use 3307 to avoid conflict with local MySQL if running
+    restart: unless-stopped
+    networks:
+      - guinea_network
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  # Named volumes for persistent data storage
+  # These volumes persist even when containers are removed
+  drupal_files:
+    driver: local
+  drupal_private_files:
+    driver: local
+  drupal_temp_files:
+    driver: local
+  drupal_config_sync:
+    driver: local
+  db_data:
+    driver: local
+
+networks:
+  guinea_network:
+    driver: bridge
+

@@ -1,0 +1,57 @@
+/**
+ * dfa-v6-comp-visualization
+ * Chart engine (ECharts wrapper) + React component + types.
+ */
+import './styles.css';
+
+export {
+  init,
+  update,
+  destroy,
+  getDataURL,
+  isLineBarAreaData,
+  isPieChartData,
+  isScatterXYData,
+  isHeatmapData,
+  isTreemapData,
+  isSliceDiceTreemapData,
+  isStripesTreemapData,
+  isSunburstData,
+  isDotMatrixData,
+  isHundredMinusData,
+  isRadarData,
+  isPyramidData,
+  isMapChartData,
+  type ChartInstance,
+  type ChartCallbacks,
+  type ChartConfig,
+  type ChartData,
+  type LineBarAreaData,
+  type LineBarAreaSeriesItem,
+  type PieChartData,
+  type ScatterXYData,
+  type ScatterSeriesItem,
+  type SeriesStyleOverrides,
+  type SeriesChartTypeOverride,
+  type HeatmapData,
+  type TreemapData,
+  type SliceDiceTreemapData,
+  type StripesTreemapData,
+  type SunburstData,
+  type DotMatrixData,
+  type HundredMinusData,
+  type RadarData,
+  type PyramidData,
+  type MapChartData,
+  type PointMeta,
+  type FontStyle,
+  type RequiredFontStyle,
+  ECHARTS_CANVAS_SUPPORTS_TEXT_DECORATION,
+  applyCanvasUnderline,
+  formatCanvasText,
+  measureTextWidth,
+  resolveUnderlineColor,
+} from './engine';
+export { createDfaChart, type DfaChartOptions, type DfaChartInstance } from './engine/standalone';
+export { ChartRendererWrapper, type ChartRendererWrapperRef, type ChartRendererWrapperProps } from './ChartRendererWrapper';
+export { formatValueByUnitFormatCode } from './engine/unitFormatDisplay';

@@ -1,0 +1,5 @@
+# Secrets: never commit real env files or local agent settings
+.env
+.env.*
+!.env.example
+**/.claude/settings.local.json

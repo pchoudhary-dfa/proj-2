@@ -1,0 +1,452 @@
+<?php
+
+use Drupal\taxonomy\Entity\Term;
+use Drupal\file\Entity\File;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Carbon\Carbon;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\SafeMarkup;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\Core\Path\PathMatcher;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\custom_settings\Mail\UserMailFormatter;
+
+
+/**
+ * Returns the user mail formatter (instantiated directly, no container service).
+ */
+function custom_settings_user_mail_formatter(): UserMailFormatter {
+  static $formatter;
+  if (!isset($formatter)) {
+    $formatter = new UserMailFormatter(
+      \Drupal::configFactory(),
+      \Drupal::languageManager(),
+      \Drupal::service('renderer'),
+    );
+  }
+  return $formatter;
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function custom_settings_preprocess_page(&$variables)
+{
+  $request = \Drupal::request();
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $mail_sent = $request->query->get('mail_sent');
+
+  $variables['password_mail_sent'] = ($route_name === 'user.pass' && $mail_sent === '1');
+}
+
+/**
+ * Implements hook_theme_suggestions_page_alter().
+ */
+function custom_settings_theme_suggestions_page_alter(array &$suggestions, array $variables): void {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name === 'entity.user.edit_form') {
+    $request = \Drupal::request();
+    $token = $request->query->get('pass-reset-token');
+
+    if ($token !== NULL && $token !== '') {
+      $suggestions[] = 'page__user__password_reset';
+    }
+  }
+}
+
+
+/**
+ * Implements - Home Featured Learnings().
+ */
+function getFeaturedLearningPosts($language)
+{
+    
+}
+
+
+/**
+ * Implements hook_preprocess_node().
+ */
+
+function custom_settings_preprocess_node(&$variables)
+{
+    
+}
+
+
+
+/**
+ * Implements hook_theme().
+ */
+function custom_settings_theme($existing, $type, $theme, $path)
+{
+    return [
+        'sdg-detail' => [
+            'variables' => ['sdg_data' => NULL, 'libraries' => NULL],
+        ],
+        'metadata-indcl' => [
+            'variables' => ['indicators' => NULL, 'metadata' => NULL, 'error' => NULL],
+        ],
+        'guinea_user_mail' => [
+            'variables' => [
+                'subject' => '',
+                'site_name' => '',
+                'logo_url' => '',
+                'greeting_name' => '',
+                'headline' => '',
+                'intro' => '',
+                'action_url' => '',
+                'action_label' => '',
+                'show_login_details' => FALSE,
+                'username' => '',
+                'login_url' => '',
+                'login_url_label' => '',
+                'note' => '',
+                'langcode' => '',
+            ],
+            'template' => 'guinea-user-mail',
+        ],
+    ];
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+
+
+function custom_settings_mail_alter(&$message): void {
+  if ($message['module'] !== 'user' || empty($message['params']['account'])) {
+    return;
+  }
+
+  // Cancel sending the 'status_activated' email.
+  if ($message['key'] === 'status_activated') {
+    $message['send'] = FALSE;
+    return;
+  }
+
+  /** @var \Drupal\custom_settings\Mail\UserMailFormatter $formatter */
+  $formatter = custom_settings_user_mail_formatter();
+  if (!$formatter->supports($message['key'])) {
+    return;
+  }
+
+  $build = $formatter->build($message['key'], $message['params']['account'], $message['langcode']);
+  if (!$build) {
+    return;
+  }
+
+  $message['subject'] = $build['subject'];
+  $message['body'] = [$build['body']];
+  $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
+  $message['headers']['Content-Transfer-Encoding'] = '8Bit';
+  $from_name = 'Plateforme SAMA';
+  $from_email = '';
+  if (!empty($message['from'])) {
+    if (preg_match('/<([^>]+)>/', (string) $message['from'], $matches)) {
+      $from_email = trim($matches[1]);
+    }
+    elseif (filter_var((string) $message['from'], FILTER_VALIDATE_EMAIL)) {
+      $from_email = (string) $message['from'];
+    }
+  }
+  if ($from_email === '') {
+    $from_email = (string) \Drupal::config('system.site')->get('mail');
+  }
+  if ($from_email !== '') {
+    $message['from'] = sprintf('%s <%s>', $from_name, $from_email);
+    $message['headers']['From'] = $message['from'];
+  }
+}
+
+
+/**
+ * Implements hook_form_alter() for adding csrf token to login and register form.
+ */
+function custom_settings_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+    // if (in_array($form_id, ['user_login_form', 'user_register_form'])) {
+    //     // Add CSRF token hidden field
+    //     $form['csrf_token'] = [
+    //         '#type' => 'hidden',
+    //         '#value' => \Drupal::service('csrf_token')->get('user_form_csrf_protection'),
+    //     ];
+
+    //     // Attach a validation handler
+    //     $form['#validate'][] = 'custom_settings_validate_csrf_token';
+    // }
+  if ($form_id === 'user_pass') {
+    $form['#submit'] = $form['#submit'] ?? [];
+    $form['#submit'][] = 'custom_settings_user_pass_submit_redirect';
+  }
+
+  if ($form_id === 'user_register_form') {
+    $form['#validate'][] = 'custom_settings_user_register_clean_messages_validate';
+
+    // Remove novalidate attribute to enable browser's native HTML5 validation.
+    unset($form['#attributes']['novalidate']);
+
+    // Make First name required.
+    if (isset($form['field_name'])) {
+      $form['field_name']['#required'] = TRUE;
+      if (isset($form['field_name']['widget'][0]['value'])) {
+        $form['field_name']['widget'][0]['value']['#required'] = TRUE;
+      }
+    }
+  }
+
+  if ($form_id === 'user_pass_reset') {
+    if (isset($form['message']['#markup'])) {
+      $form['message']['#markup'] = preg_replace('/\s*(qui expirera le|and will expire on)\s*<em class="placeholder">.*?<\/em>/ui', '', $form['message']['#markup']);
+    }
+  }
+
+  // Use a clearer destructive action label on user edit forms.
+  if (in_array($form_id, ['user_form', 'user_profile_form', 'user_user_form'], TRUE) && isset($form['actions']) && is_array($form['actions'])) {
+    foreach ($form['actions'] as &$action) {
+      if (!is_array($action)) {
+        continue;
+      }
+      $title = (string) ($action['#title'] ?? '');
+      $value = (string) ($action['#value'] ?? '');
+      $is_cancel_account = str_contains(mb_strtolower($title), 'annuler le compte')
+        || str_contains(mb_strtolower($value), 'annuler le compte')
+        || str_contains(mb_strtolower($title), 'cancel account')
+        || str_contains(mb_strtolower($value), 'cancel account');
+      if ($is_cancel_account) {
+        $action['#title'] = t('Supprimer le compte');
+        if (isset($action['#value'])) {
+          $action['#value'] = t('Supprimer le compte');
+        }
+      }
+    }
+    unset($action);
+  }
+}
+
+/**
+ * Keeps password reset users on the same page after submit.
+ */
+function custom_settings_user_pass_submit_redirect(array &$form, FormStateInterface $form_state): void {
+  // Preserve validation errors; only change redirect when submit succeeded.
+  if ($form_state->hasAnyErrors()) {
+    return;
+  }
+
+  $form_state->setRedirect('user.pass', [], [
+    'query' => [
+      'mail_sent' => 1,
+    ],
+  ]);
+}
+
+/**
+ * CSRF token validation handler.
+ */
+function custom_settings_validate_csrf_token(&$form, FormStateInterface $form_state)
+{
+    // $input_token = $form_state->getValue('csrf_token');
+    // $expected_token = \Drupal::service('csrf_token')->get('user_form_csrf_protection');
+
+    // if ($input_token !== $expected_token) {
+    //     $form_state->setErrorByName('csrf_token', t('Invalid CSRF token.'));
+    // }
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ *
+ * Better Exposed Filters adds a read-only form element
+ * sort_options_unsupported when custom option sorting is not supported for a
+ * filter (see FilterWidgetBase::buildConfigurationForm). That key is saved in
+ * the view but omitted from bef.filter.schema.yml, which triggers "missing
+ * schema" warnings. The string "sort_options" may appear in the message next
+ * to "unsupported" (i.e. sort_options_unsupported), not the boolean sort_options
+ * field.
+ *
+ * @see https://www.drupal.org/project/better_exposed_filters
+ */
+function custom_settings_config_schema_info_alter(array &$definitions): void {
+  if (isset($definitions['better_exposed_filters_filter_widget']['mapping']['advanced']['mapping'])) {
+    $definitions['better_exposed_filters_filter_widget']['mapping']['advanced']['mapping']['sort_options_unsupported'] = [
+      'type' => 'ignore',
+      'label' => 'BEF placeholder when custom sort options are not supported for this filter',
+    ];
+  }
+}
+
+/**
+ * Implements hook_user_presave().
+ *
+ * Block new self-registering users and assign 'public' role.
+ */
+function custom_settings_user_presave(\Drupal\user\UserInterface $account) {
+  if ($account->isNew()) {
+    $account->addRole('public');
+
+    // Only block users registering themselves (anonymous registrations).
+    if (\Drupal::currentUser()->isAnonymous()) {
+      $account->block();
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_form.
+ */
+function custom_settings_form_user_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
+  $request = \Drupal::request();
+
+  // Check if we are in the password reset / welcome activation flow.
+  $token = $request->query->get('pass-reset-token');
+
+  if ($token !== NULL && $token !== '') {
+    // Hide all profile/other fields.
+    foreach (\Drupal\Core\Render\Element::children($form) as $key) {
+      if (!in_array($key, ['account', 'actions', 'form_build_id', 'form_token', 'form_id'], TRUE)) {
+        $form[$key]['#access'] = FALSE;
+      }
+    }
+
+    // Inside the account fields group, hide everything except password.
+    if (isset($form['account']) && is_array($form['account'])) {
+      foreach (\Drupal\Core\Render\Element::children($form['account']) as $key) {
+        if ($key !== 'pass') {
+          $form['account'][$key]['#access'] = FALSE;
+        }
+      }
+    }
+
+    // Make the password fields required.
+    if (isset($form['account']['pass'])) {
+      $form['account']['pass']['#required'] = TRUE;
+    }
+
+    // Add a custom redirect on submit to go to the home page.
+    $form['actions']['submit']['#submit'][] = 'custom_settings_pass_reset_redirect';
+  }
+}
+
+/**
+ * Redirects the user to the front page after setting their password.
+ */
+function custom_settings_pass_reset_redirect(array &$form, FormStateInterface $form_state): void {
+  $form_state->setRedirect('<front>');
+}
+
+/**
+ * Validation handler to clean up error messages on user registration form.
+ *
+ * Removes username and email address values from standard validation errors.
+ */
+function custom_settings_user_register_clean_messages_validate(array &$form, FormStateInterface $form_state): void {
+  $errors = $form_state->getErrors();
+  if (empty($errors)) {
+    return;
+  }
+
+  $form_state->clearErrors();
+
+  foreach ($errors as $field_name => $message) {
+    $msg_str = (string) $message;
+    $msg_lower = mb_strtolower($msg_str);
+
+    // 1. Check for duplicate email
+    if ((str_contains($msg_lower, 'mail') || str_contains($msg_lower, 'courriel')) && (str_contains($msg_lower, 'taken') || str_contains($msg_lower, 'utilis') || str_contains($msg_lower, 'prise') || str_contains($msg_lower, 'déjà'))) {
+      $message = t('This email address is already taken.');
+    }
+    // 2. Check for invalid email format
+    elseif ((str_contains($msg_lower, 'mail') || str_contains($msg_lower, 'courriel')) && (str_contains($msg_lower, 'not valid') || str_contains($msg_lower, 'pas valide') || str_contains($msg_lower, 'non valide'))) {
+      $message = t('This email address is not valid.');
+    }
+    // 3. Check for duplicate username
+    elseif ((str_contains($msg_lower, 'name') || str_contains($msg_lower, 'nom')) && (str_contains($msg_lower, 'taken') || str_contains($msg_lower, 'utilis') || str_contains($msg_lower, 'pris') || str_contains($msg_lower, 'déjà'))) {
+      $message = t('This username is already taken.');
+    }
+
+    $form_state->setErrorByName($field_name, $message);
+  }
+}
+
+/**
+ * Implements hook_preprocess_status_messages().
+ *
+ * Remove PHP warning/notice/error messages from being displayed on the user registration page.
+ */
+function custom_settings_preprocess_status_messages(array &$variables): void {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $request = \Drupal::request();
+  $token = $request->query->get('pass-reset-token');
+
+  // Target both the user registration page and user edit page during password resets.
+  if ($route_name !== 'user.register' && !($route_name === 'entity.user.edit_form' && $token !== NULL && $token !== '')) {
+    return;
+  }
+
+  if (empty($variables['message_list'])) {
+    return;
+  }
+
+  // Iterate over all message types (status, warning, error, etc.)
+  foreach ($variables['message_list'] as $type => &$messages) {
+    if (!is_array($messages)) {
+      continue;
+    }
+    foreach ($messages as $key => $message) {
+      $msg_str = (string) $message;
+      $msg_lower = mb_strtolower($msg_str);
+
+      // Clean up welcome/success message to remove username/email.
+      if ($type === 'status' && (str_contains($msg_lower, 'bienvenue') || str_contains($msg_lower, 'welcome') || str_contains($msg_lower, 'instructions'))) {
+        $messages[$key] = t('Un message de bienvenue avec les instructions détaillées a été envoyé.');
+        continue;
+      }
+
+      // Check if this is the "current password is required/missing" error message.
+      if ($type === 'error' && (str_contains($msg_lower, 'mot de passe actuel') || str_contains($msg_lower, 'current password'))) {
+        $clean_msg = preg_replace('/\s*:\s*<em class="placeholder">.*?<\/em>|\s*:\s*\S+/ui', '', $msg_str);
+        if (str_ends_with($msg_str, '.')) {
+          $clean_msg = rtrim($clean_msg, '.') . '.';
+        }
+        $messages[$key] = \Drupal\Core\Render\Markup::create($clean_msg);
+        continue;
+      }
+
+      // Detect if the message contains patterns of PHP notices, warnings, or database errors.
+      $is_php_warning = str_contains($msg_lower, 'trying to access')
+        || str_contains($msg_lower, 'array offset')
+        || str_contains($msg_lower, 'line ')
+        || str_contains($msg_lower, '.php')
+        || str_contains($msg_lower, 'warning:')
+        || str_contains($msg_lower, 'notice:')
+        || str_contains($msg_lower, 'exception')
+        || str_contains($msg_lower, 'sqlstate')
+        || str_contains($msg_lower, 'databaseexception');
+
+      if ($is_php_warning) {
+        unset($messages[$key]);
+      }
+    }
+    // Re-index messages array.
+    $messages = array_values($messages);
+  }
+  unset($messages);
+
+  // If a message category is now empty, remove it.
+  foreach ($variables['message_list'] as $type => $messages) {
+    if (empty($messages)) {
+      unset($variables['message_list'][$type]);
+    }
+  }
+}
+
+
+
+

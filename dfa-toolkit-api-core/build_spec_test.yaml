@@ -1,0 +1,65 @@
+version: 0.1
+component: build
+timeoutInSeconds: 6000
+runAs: root
+shell: bash
+
+env:
+  variables:
+    TZ: "Asia/Kolkata"
+  exportedVariables:
+    - IMAGE_TAG
+    - REPOSITORY_URI
+    - COMMIT_HASH
+
+steps:
+  - type: Command
+    name: "Build and push container image"
+    timeoutInSeconds: 1800
+    command: |
+      set -e
+      export TZ=Asia/Kolkata
+      echo "Current time: $(date)"
+
+      export COMMIT_HASH=$(echo ${OCI_TRIGGER_COMMIT_HASH:-$(git rev-parse HEAD)} | cut -c 1-7)
+      export IMAGE_TAG="${COMMIT_HASH}"
+      export REGION_KEY="me-dubai-1"
+      export TENANCY_NAMESPACE="axrfhwznxtja"
+      export DEVOPS_PROJECT="dtk-devops"
+      export APP_NAME="api-test"
+      export REPOSITORY_URI="${REGION_KEY}.ocir.io/${TENANCY_NAMESPACE}/${DEVOPS_PROJECT}/${APP_NAME}"
+
+      echo "IMAGE_TAG=${IMAGE_TAG}" >> ${OCI_PRIMARY_SOURCE_DIR}/build_spec_output.txt
+      echo "REPOSITORY_URI=${REPOSITORY_URI}" >> ${OCI_PRIMARY_SOURCE_DIR}/build_spec_output.txt
+      echo "COMMIT_HASH=${COMMIT_HASH}" >> ${OCI_PRIMARY_SOURCE_DIR}/build_spec_output.txt
+
+      echo "Logging into container registry..."
+      echo "${AUTH_TOKEN}" | docker login ${REGION_KEY}.ocir.io -u "${DOCKER_USERNAME}" --password-stdin
+
+      echo "Building Docker image..."
+      docker build -t "${APP_NAME}:${IMAGE_TAG}" -f Dockerfile .
+      docker tag "${APP_NAME}:${IMAGE_TAG}" "${REPOSITORY_URI}:${IMAGE_TAG}"
+
+      echo "Pushing image..."
+      docker push "${REPOSITORY_URI}:${IMAGE_TAG}"
+
+      echo "Installing kubectl..."
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      chmod +x kubectl
+      mv kubectl /usr/local/bin/
+
+      echo "Generating k8s manifest..."
+      sed -i "s|IMAGE_TAG|${IMAGE_TAG}|g" oci_k8s_test/deployment.yaml
+      cat oci_k8s_test/env-config.yaml > k8s-manifest-test.yaml
+      echo "---" >> k8s-manifest-test.yaml
+      cat oci_k8s_test/deployment.yaml >> k8s-manifest-test.yaml
+      echo "---" >> k8s-manifest-test.yaml
+      cat oci_k8s_test/ingress.yaml >> k8s-manifest-test.yaml
+
+outputArtifacts:
+  - name: api_test_image_name
+    type: DOCKER_IMAGE
+    location: ${REPOSITORY_URI}:${IMAGE_TAG}
+  - name: api_test_manifest_deployment_name
+    type: BINARY
+    location: k8s-manifest-test.yaml

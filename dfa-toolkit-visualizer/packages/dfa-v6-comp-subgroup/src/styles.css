@@ -1,0 +1,297 @@
+/*
+ * Subgroup select: search, actions, list, summary.
+ * Uses design tokens from packages/design-tokens/tokens.css when the app loads them.
+ * Variables below either reference tokens or define component-specific values.
+ */
+:root {
+  /* Global tokens: from packages/design-tokens/tokens.css when the app loads them */
+  /* --color-primary: #FF3366;
+  --color-primary-hover: #CC2952;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f9fafb;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --font-body: Inter, system-ui, sans-serif;
+  --spacing-sm: 8px;
+  --spacing-md: 16px; 
+  */
+
+  /* Component-specific (not in tokens.css) */
+  --color-border-input: #d1d5db;
+  --color-focus-ring: color-mix(in srgb, var(--color-primary) 22%, transparent);
+  --radius-control: 0.375rem;
+  --font-size-control: 0.75rem;
+  --spacing-panel-y: 0.5rem;
+  --spacing-panel-x: 1rem;
+  --spacing-control-y: 0.375rem;
+  --spacing-input-icon: 0.625rem;
+  --size-icon-sm: 1rem;
+  --spacing-empty-y: 2rem;
+  --spacing-empty-x: 1rem;
+  --spacing-empty-gap: 0.75rem;
+  --spacing-actions-gap: 0.75rem 0.25rem;
+}
+
+.dtk-sg-root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.dtk-sg-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Search, actions, list, and selected-items overlay */
+.dtk-sg-content {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-sg-search-wrap {
+  position: relative;
+  flex-shrink: 0;
+  padding: var(--spacing-panel-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dtk-sg-search-icon {
+  position: absolute;
+  left: 1.625rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E") center/contain no-repeat;
+  pointer-events: none;
+}
+
+.dtk-sg-search-clear {
+  position: absolute;
+  /* Position relative to input: wrap has padding, so offset by panel-x + input-icon so clear sits inside input */
+  right: calc(var(--spacing-panel-x) + var(--spacing-input-icon));
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.dtk-sg-search-clear:hover {
+  color: var(--color-text);
+}
+
+.dtk-sg-search {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-control-y) 2rem var(--spacing-control-y) 2rem;
+  font-size: var(--font-size-control);
+  line-height: 1.25;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.dtk-sg-search::placeholder {
+  color: var(--color-text-muted);
+}
+
+.dtk-sg-search:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-focus-ring);
+}
+
+.dtk-sg-actions {
+  flex-shrink: 0;
+  padding: var(--spacing-control-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-actions-gap);
+}
+
+.dtk-sg-action-btn {
+  font-size: var(--font-size-control);
+  font-weight: 500;
+  color: var(--color-primary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dtk-sg-action-btn:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+.dtk-sg-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dtk-sg-list-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dtk-sg-list-wrap .dtk-lv-list-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--spacing-panel-y);
+}
+
+.dtk-sg-empty {
+  padding: var(--spacing-empty-y) var(--spacing-empty-x);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-control);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-empty-gap);
+}
+
+.dtk-sg-empty.dtk-sg-loading {
+  color: var(--color-text-muted);
+}
+
+.dtk-sg-loading-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+}
+
+.dtk-sg-error {
+  padding: var(--spacing-empty-y) var(--spacing-empty-x);
+  text-align: center;
+  font-size: var(--font-size-control);
+  color: var(--color-primary);
+}
+
+.dtk-sg-summary {
+  flex-shrink: 0;
+  padding: var(--spacing-control-y) var(--spacing-panel-x);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--font-size-control);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.dtk-sg-summary .dtk-sg-count {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.dtk-sg-summary.dtk-sg-summary-clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.dtk-sg-summary.dtk-sg-summary-clickable:hover {
+  background-color: var(--color-surface-muted);
+}
+
+.dtk-sg-summary.dtk-sg-summary-clickable:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+/* Selected-only panel (click-triggered slide-up overlay) */
+.dtk-sg-selected-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.25s ease-out, opacity 0.2s ease-out;
+}
+
+.dtk-sg-selected-panel.dtk-sg-selected-panel-is-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.dtk-sg-selected-panel-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-panel-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dtk-sg-selected-panel-title {
+  font-size: var(--font-size-control);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.dtk-sg-selected-panel-close {
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dtk-sg-selected-panel-close:hover {
+  color: var(--color-text);
+}
+
+.dtk-sg-selected-panel-list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-sg-selected-panel-list .dtk-lv-list-wrap {
+  flex: 1;
+  min-height: 0;
+}

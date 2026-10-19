@@ -1,0 +1,300 @@
+/*
+ * Time period select: quick-select buttons, list, summary.
+ * Uses design tokens from packages/design-tokens/tokens.css when the app loads them.
+ * Variables below either reference tokens or define component-specific values.
+ */
+:root {
+  /* Global tokens: from packages/design-tokens/tokens.css */
+  /* 
+  --color-primary: #FF3366;
+  --color-primary-hover: #CC2952;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f9fafb;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --font-body: Inter, system-ui, sans-serif;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px; 
+  */
+
+
+  /* Component-specific (not in tokens.css) */
+  --radius-quick: 0.5rem;
+  --font-size-control: 0.75rem;
+  --font-size-quick: 0.875rem;
+  --spacing-quick-section-y: 0.75rem 1rem 0.5rem;
+  --spacing-quick-label-gap: 0.25rem;
+  --spacing-quick-buttons-gap: 0.5rem;
+  --spacing-quick-btn-y: 0.5rem;
+  --spacing-quick-btn-x: 1rem;
+  --spacing-panel-x: 1rem;
+  --spacing-actions-gap: 0.75rem 0.25rem;
+  --spacing-control-y: 0.375rem;
+  --spacing-empty-y: 2rem;
+  --spacing-empty-x: 1rem;
+  --spacing-empty-gap: 0.75rem;
+  --size-icon-sm: 1rem;
+  --spacing-panel-y: 0.5rem;
+}
+
+.dtk-tp-root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+/* Quick select + actions + list + summary; selected-items panel is absolutely positioned over this */
+.dtk-tp-stack {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-tp-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-tp-quick-select {
+  flex-shrink: 0;
+  padding: var(--spacing-quick-section-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-quick-label-gap);
+}
+
+.dtk-tp-quick-select-label {
+  font-size: var(--font-size-control);
+  font-weight: 500;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.dtk-tp-quick-select-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-quick-buttons-gap);
+}
+
+.dtk-tp-quick-btn {
+  border-radius: var(--radius-quick);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-quick-btn-y) var(--spacing-quick-btn-x);
+  font-size: var(--font-size-quick);
+  font-weight: 500;
+  background: var(--color-surface-elevated);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+/* Hover: clearly interactive — muted fill + primary ring + stronger label */
+.dtk-tp-quick-btn:hover:not(:disabled):not(.dtk-tp-quick-btn-active) {
+  background: var(--color-surface-muted);
+  border-color: var(--color-primary);
+  color: var(--color-text);
+}
+
+.dtk-tp-quick-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Selected quick period: solid brand (not “gray selected”) */
+.dtk-tp-quick-btn-active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.dtk-tp-quick-btn-active:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: var(--color-on-primary);
+}
+
+.dtk-tp-quick-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.dtk-tp-actions {
+  flex-shrink: 0;
+  padding: var(--spacing-control-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-actions-gap);
+}
+
+.dtk-tp-action-btn {
+  font-size: var(--font-size-control);
+  font-weight: 500;
+  color: var(--color-primary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dtk-tp-action-btn:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+.dtk-tp-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dtk-tp-list-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dtk-tp-list-wrap .dtk-lv-list-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--spacing-sm);
+}
+
+.dtk-tp-empty {
+  padding: var(--spacing-empty-y) var(--spacing-empty-x);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-control);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-empty-gap);
+}
+
+.dtk-tp-empty.dtk-tp-loading {
+  color: var(--color-text-muted);
+}
+
+.dtk-tp-loading-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+}
+
+.dtk-tp-error {
+  padding: var(--spacing-empty-y) var(--spacing-empty-x);
+  text-align: center;
+  font-size: var(--font-size-control);
+  color: var(--color-primary);
+}
+
+.dtk-tp-summary {
+  flex-shrink: 0;
+  padding: var(--spacing-control-y) var(--spacing-panel-x);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--font-size-control);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.dtk-tp-summary .dtk-tp-count {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.dtk-tp-summary.dtk-tp-summary-clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.dtk-tp-summary.dtk-tp-summary-clickable:hover {
+  background-color: var(--color-surface-muted);
+}
+
+.dtk-tp-summary.dtk-tp-summary-clickable:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.dtk-tp-selected-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.25s ease-out, opacity 0.2s ease-out;
+}
+
+.dtk-tp-selected-panel.dtk-tp-selected-panel-is-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.dtk-tp-selected-panel-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-panel-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dtk-tp-selected-panel-title {
+  font-size: var(--font-size-control);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.dtk-tp-selected-panel-close {
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dtk-tp-selected-panel-close:hover {
+  color: var(--color-text);
+}
+
+.dtk-tp-selected-panel-list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-tp-selected-panel-list .dtk-lv-list-wrap {
+  flex: 1;
+  min-height: 0;
+}

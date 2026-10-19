@@ -1,0 +1,2135 @@
+/* @styleguide-version: 1.0.0 */
+@import "./tokens.css";
+
+/*
+ * Icon fonts: define here with font-display: block so text is not shown as a fallback while
+ * the font loads (avoids visible ligature names like "grid_view" on hard refresh).
+ * Files match fonts.googleapis.com responses; if icons break after a CDN update, refresh URLs from:
+ *   https://fonts.googleapis.com/icon?family=Material+Icons
+ *   https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0
+ */
+@font-face {
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://fonts.gstatic.com/s/materialicons/v145/flUhRq6tzZclQEJ-Vdg-IuiaDsNZ.ttf)
+    format("truetype");
+}
+
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v323/kJF1BvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzByHX9rA6RzaxHMPdY43zj-jCxv3fzvRNU22ZXGJpEpjC_1v-p_4MrImHCIJIZrDCvHOem.ttf)
+    format("truetype");
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* =============================================================================
+ * DFA STYLEGUIDE — COMPONENT CLASSES
+ *
+ * Table of contents (single shipped file):
+ *   1. Foundation   — loader, ghost buttons, scrollbar, pagination, sign-in
+ *   2. App chrome   — app-header (+ --brand / --surface), sidebar, breadcrumb
+ *   3. Buttons      — btn-comp*, btn-comp-icon, btn-comp-icon--ghost, btn-comp-pill
+ *   4. Form controls  — field-comp*, toggles, form-label
+ *   5. Dropdowns    — drop-panel*, list-opt*
+ *   6. Data display — tbl-wrap*, side-nav*, tone-pill*, pagination
+ *   7. Cards/panels — card, filter-panel, gallery
+ *   8. Modals/drawers — modal-*, drawer-*, config-*, workflow tables
+ *   9. Admin          — sys-config*
+ *  10. Layout/feedback — app-body, content-canvas, tooltip, a11y
+ * ============================================================================= */
+
+@layer components {
+
+  /* ===========================================================================
+   * SECTION 1: COMMON
+   * Classes used in both Datamanager and Visualizer. Safe to include in both.
+   * =========================================================================== */
+
+  /* ---------------------------------------------------------------------------
+   * Loader — animated "A" logo with fill.
+   * Logo, gap, and text scale together via --loader-size so proportions are
+   * always consistent. Default size comes from tokens.css; override with an
+   * inline --loader-size when the `size` prop is passed.
+   * ------------------------------------------------------------------------- */
+  .loader {
+    --loader-size: var(--default-loader-size);
+    @apply flex flex-col items-center justify-center;
+    gap: calc(var(--loader-size) * 0.008 * 1rem);
+  }
+
+  .loader__logo {
+    width: calc(var(--loader-size) * 1px);
+    height: calc(var(--loader-size) * 1px);
+    @apply flex shrink-0 items-center justify-center rounded-md bg-primary;
+  }
+
+  .loader__svg {
+    width: 65%;
+    height: 65%;
+    overflow: visible;
+  }
+
+  .loader__fill-rect {
+    transform: translateY(100%);
+    animation: loader-fill 3s ease-in-out infinite;
+  }
+
+  .loader__status-text {
+    width: calc(var(--loader-size) * 1px); /* match logo width */
+    font-size: clamp(0.2rem, calc(var(--loader-size) * 0.014 * 1rem), 1rem);
+    @apply m-0 shrink-0 text-center whitespace-nowrap font-medium text-text-muted;
+  }
+
+  /* Reserve space for icon + gap + label so text is not clipped */
+  .loader:has(.loader__status-text) {
+    min-height: calc(var(--loader-size) * 1.65 * 1px);
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Ghost buttons — transparent-surface; compose with a size modifier
+   * (--sort, --grid-icon, --xs, --lg, --warning) and a tone modifier
+   * (--primary, --success, --danger) in markup.
+   *
+   * --xs and --danger are used in both DM and VIZ (TranslationsPanel).
+   * The full --grid-icon / --sort / --meta / --lg / --warning family lives in
+   * the DM section since VIZ does not use them.
+   * ------------------------------------------------------------------------- */
+  .btn-comp-ghost {
+    @apply inline-flex shrink-0 items-center justify-center border-0 bg-transparent p-0
+           cursor-pointer outline-none transition-colors duration-100
+           focus-visible:shadow-focus-ring;
+  }
+  /* Size: xs — 20×20 compact ghost; use a tone modifier (--success, --danger,
+     --primary) to set color. Defaults to text-text-muted when no tone is applied. */
+  .btn-comp-ghost--xs {
+    @apply btn-comp-ghost h-5 w-5 rounded text-text-muted opacity-80 hover:opacity-100;
+  }
+  /* Tone modifiers — resting color + hover bg. These work standalone (any size)
+     and are also scoped to --grid-icon in the DM section for the bordered style. */
+  .btn-comp-ghost--success {
+    @apply text-success hover:enabled:bg-success-subtle;
+  }
+  .btn-comp-ghost--danger {
+    @apply text-error hover:enabled:bg-error-subtle
+           disabled:cursor-not-allowed disabled:opacity-35;
+  }
+  .btn-comp-ghost--primary {
+    @apply text-primary hover:bg-primary-soft;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Scrollbar utility — hides scrollbar chrome while keeping scroll behaviour.
+   * ------------------------------------------------------------------------- */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Pagination controls — shared by DM tables and VIZ panels.
+   * ------------------------------------------------------------------------- */
+  .pg-btn {
+    @apply w-[26px] h-[26px] border border-border rounded-[5px] bg-surface cursor-pointer
+           text-text-muted flex items-center justify-center transition-colors duration-100 p-0;
+  }
+  .pg-btn .material-icons {
+    @apply !text-sm;
+  }
+  .pg-btn:hover:not(:disabled) {
+    @apply bg-surface-muted text-text;
+  }
+  .pg-btn:disabled {
+    @apply opacity-30 cursor-default;
+  }
+  .pg-sel {
+    @apply py-0.5 px-1.5 rounded-sm text-xs font-body font-normal text-text bg-surface cursor-pointer outline-none;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Table header label — standalone/panel tables.
+   * ------------------------------------------------------------------------- */
+  .th-label {
+    @apply py-2 px-4 text-xs font-semibold text-text-muted tracking-wide text-left whitespace-nowrap align-top;
+  }
+
+  /* ===========================================================================
+   * App chrome — header, sidebar, breadcrumb
+   * =========================================================================== */
+
+  /* ---------------------------------------------------------------------------
+   * App Header — shared structure; compose with --brand or --surface variant.
+   * ------------------------------------------------------------------------- */
+  .app-header {
+    @apply sticky top-0 shrink-0 border-b;
+  }
+  .app-header__menu-wrap {
+    @apply relative;
+  }
+  .app-header__menu {
+    @apply absolute end-0 top-12 z-20 min-w-[180px] overflow-hidden rounded-lg border border-border bg-surface py-1
+           shadow-[0_8px_20px_rgba(15,23,42,0.15)];
+  }
+  .app-header__menu-item {
+    @apply flex w-full items-center gap-2 px-3 py-2 text-start text-xs text-text transition hover:bg-surface-muted;
+  }
+  .app-header__menu-item--danger {
+    @apply hover:bg-error-hover-bg hover:text-error;
+  }
+  .app-header__menu-separator {
+    @apply my-1 h-px bg-border;
+  }
+  .app-header__menu--apps {
+    @apply min-w-[290px];
+  }
+  .app-header__home-link {
+    @apply contents no-underline text-inherit cursor-pointer;
+  }
+  .app-header__center {
+    @apply flex basis-full md:basis-auto md:flex-1 md:min-w-0 md:max-w-[min(42rem,60vw)] items-center justify-center md:self-stretch order-last md:order-none pb-sm md:pb-0;
+  }
+
+  /* Brand variant — solid primary bar (Datamanager default) */
+  .app-header--brand {
+    @apply z-50 h-header bg-primary border-on-primary-border;
+  }
+  .app-header--brand .app-header__inner {
+    @apply flex h-header items-center justify-between px-4 text-on-primary;
+  }
+  .app-header--brand .app-header__start {
+    @apply flex min-w-0 items-center gap-2;
+  }
+  .app-header--brand .app-header__logo-box {
+    @apply flex h-6 items-center justify-center overflow-hidden rounded
+           bg-on-primary-surface-emphasis;
+  }
+  .app-header--brand .app-header__title {
+    @apply truncate text-sm font-semibold tracking-tight text-on-primary;
+  }
+  .app-header--brand .app-header__end {
+    @apply flex items-center gap-2 text-on-primary;
+  }
+  .app-header--brand .app-header__icon {
+    @apply !text-sm opacity-90;
+  }
+  .app-header--brand .app-header__user {
+    @apply flex items-center gap-1;
+  }
+  .app-header--brand .app-header__avatar {
+    @apply inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold
+           bg-on-primary-surface-emphasis;
+  }
+  .app-header--brand .app-header__user-name {
+    @apply text-xs font-medium opacity-95;
+  }
+  .app-header--brand .app-header__menu-trigger {
+    @apply inline-flex h-7 w-7 items-center justify-center rounded-full transition
+           hover:bg-on-primary-surface;
+  }
+  .app-header--brand .app-header__menu-trigger--lang {
+    @apply !w-auto min-w-0 max-w-[12rem] justify-start gap-0.5 px-1.5;
+  }
+  .app-header--brand .app-header__lang-trigger-label {
+    @apply text-xs font-medium leading-none text-on-primary opacity-95 whitespace-nowrap;
+  }
+
+  /* Surface variant — light bar, responsive wrap (Visualizer default) */
+  .app-header--surface {
+    @apply z-[250] border-border bg-surface backdrop-blur-sm shadow-header md:h-header;
+  }
+  .app-header--surface .app-header__inner {
+    @apply max-w-full mx-auto px-sm py-sm sm:px-md sm:py-md flex items-center justify-between gap-sm sm:gap-md md:h-header flex-wrap;
+  }
+  .app-header--surface .app-header__start {
+    @apply flex items-center gap-sm flex-shrink-0 min-w-0 md:self-stretch;
+  }
+  .app-header--surface .app-header__end {
+    @apply flex items-center gap-xs sm:gap-md flex-shrink-0 min-w-0 md:self-stretch;
+  }
+  .app-header--surface .app-header__start > div:first-child {
+    @apply w-icon h-icon flex-shrink-0 rounded-lg relative overflow-hidden bg-primary flex items-center justify-center;
+  }
+  .app-header--surface .app-header__start > div:first-child::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(135deg, transparent 0%, transparent 38%, white 38%, white 42%, black 42%, black 58%, white 58%, white 62%, transparent 62%, transparent 100%);
+  }
+  .app-header--surface .app-header__start > h1 {
+    @apply font-semibold text-sm sm:text-md text-primary truncate m-0 leading-tight;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Buttons — shared base (btn-comp, btn-comp-primary, btn-comp-secondary).
+   * Default height is h-8 (32px). Add btn-comp--comfortable for taller padding-
+   * based buttons. Icon buttons: `.btn-comp-icon` (bordered) or
+   * `.btn-comp-icon--ghost` (transparent toolbar style).
+   * ------------------------------------------------------------------------- */
+  .btn-comp {
+    @apply inline-flex items-center justify-center h-8 py-0 px-3 gap-0 rounded-md text-xs font-body
+           transition-all focus:outline-none
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-comp--comfortable {
+    @apply h-auto min-h-9 py-1.5 px-3 gap-xs;
+  }
+  /* Primary */
+  .btn-comp-primary {
+    @apply btn-comp bg-primary text-on-primary shadow-md
+           hover:bg-primary-hover hover:shadow-lg
+           disabled:hover:bg-primary disabled:hover:shadow-md;
+  }
+  /* Secondary */
+  .btn-comp-secondary {
+    @apply btn-comp bg-surface border border-border text-text
+           hover:bg-surface-muted hover:shadow-md
+           disabled:hover:bg-surface disabled:hover:shadow-none;
+  }
+  /* Approve / Reject */
+  .btn-approve {
+    @apply btn-comp-primary bg-success
+           hover:bg-success-hover
+           disabled:bg-success-disabled
+           disabled:hover:bg-success-disabled;
+  }
+  .btn-reject {
+    @apply btn-comp-primary bg-danger
+           hover:bg-danger-hover
+           disabled:bg-danger-disabled
+           disabled:hover:bg-danger-disabled;
+  }
+  /* Tab buttons */
+  .btn-comp-tab {
+    @apply inline-flex h-full items-center border-b-2 border-transparent text-text-muted opacity-100
+           transition-colors hover:text-primary hover:opacity-100;
+  }
+  .btn-comp-tab .material-icons {
+    @apply mr-1 !text-sm;
+  }
+  .btn-comp-tab.active {
+    @apply border-primary text-primary opacity-100;
+  }
+  /* Icon buttons — DM edition: square border-based 26px buttons */
+  .btn-comp-icon {
+    @apply btn-comp-secondary !h-[26px] !w-[26px] !min-w-[26px] !p-0;
+  }
+  .btn-comp-icon-md {
+    @apply btn-comp-secondary !w-8 !min-w-8 !p-0;
+  }
+  /* Ghost sort — table column sort trigger */
+  .btn-comp-ghost--sort {
+    @apply btn-comp-ghost h-7 w-7 min-w-[28px] rounded-sm p-0.5 text-text-muted
+           hover:bg-primary-subtle hover:text-primary;
+  }
+  /* Compact bordered grid icon (configure / inline save / cancel) — add a tone modifier */
+  .btn-comp-ghost--grid-icon {
+    @apply btn-comp-ghost box-border h-5 w-5 min-w-5 rounded border border-border bg-surface leading-none;
+  }
+  /* Grid actions — short label + icon (same height as .btn-comp-ghost--grid-icon) */
+  .btn-comp-ghost--grid-labeled {
+    @apply btn-comp-ghost box-border gap-1 rounded border px-2
+           h-5 min-h-5 !w-auto !min-w-0 max-w-none
+           text-[11px] font-semibold leading-none text-primary
+           border-primary-emphasis
+           bg-primary-subtle
+           hover:enabled:bg-primary-emphasis
+           disabled:cursor-not-allowed disabled:opacity-35;
+  }
+  .btn-comp-ghost--grid-icon:disabled {
+    @apply cursor-not-allowed opacity-35;
+  }
+  .btn-comp-ghost--grid-icon.btn-comp-ghost--primary {
+    @apply text-primary hover:enabled:bg-primary-subtle;
+  }
+  .btn-comp-ghost--grid-icon.btn-comp-ghost--success {
+    @apply text-success hover:enabled:bg-success-subtle;
+  }
+  .btn-comp-ghost--grid-icon.btn-comp-ghost--danger {
+    @apply text-error hover:enabled:bg-error-subtle;
+  }
+  /* Meta — inline row-level action; visible only on row hover */
+  .btn-comp-ghost--meta {
+    @apply btn-comp-ghost h-[22px] w-[22px] rounded text-text-muted opacity-0 transition-opacity duration-100;
+  }
+  .side-nav-item.meta-cat-item:hover .btn-comp-ghost--meta {
+    @apply opacity-100;
+  }
+  .side-nav-item.meta-cat-item.editing .meta-cat-actions > .btn-comp-ghost:first-child {
+    @apply hidden;
+  }
+  /* Large ghost — drawer / panel close / expand */
+  .btn-comp-ghost--lg {
+    @apply btn-comp-ghost h-8 w-8 rounded-sm text-sm text-text-muted
+           transition-[color_0.1s,background_0.1s];
+  }
+  /* Warning tone — circular */
+  .btn-comp-ghost--warning {
+    @apply btn-comp-ghost h-7 w-7 rounded-full text-warning
+           hover:bg-warning-overlay;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Form fields — grid cells, settings panel, admin config
+   * ------------------------------------------------------------------------- */
+  .field-comp {
+    @apply box-border min-w-0 rounded-sm border border-border bg-surface font-body text-xs text-text outline-none
+           transition-[border-color,box-shadow]
+           placeholder:font-normal placeholder:text-text-muted
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  /* Grid / autocomplete — h-8 (extra dense) */
+  .field-comp--xs {
+    @apply field-comp w-full h-8 min-h-8 py-0 px-2 font-normal leading-tight;
+  }
+  .field-comp--xs:focus {
+    @apply border-primary shadow-focus-ring;
+  }
+  /* Grid / autocomplete — h-7 */
+  .field-comp--sm {
+    @apply field-comp w-full h-7 min-h-7 py-0 px-2 font-normal leading-tight;
+  }
+  .field-comp--sm:focus {
+    @apply border-primary shadow-focus-ring;
+  }
+  /* Settings panel, admin config — h-8 */
+  .field-comp--md {
+    @apply field-comp h-8 px-[11px] transition-[border-color_0.15s,box-shadow_0.15s];
+  }
+  .field-comp--md:focus {
+    @apply border-primary shadow-focus-ring;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * List options & dropdown panels
+   * ------------------------------------------------------------------------- */
+  .list-opt {
+    @apply cursor-pointer border-0 bg-transparent text-text transition-colors;
+  }
+  /* Grid / combobox rows (SearchableListCombobox, grid filters) */
+  .list-opt--grid {
+    @apply py-1.5 px-2.5 text-xs duration-75;
+  }
+  .list-opt--grid:hover {
+    @apply bg-primary-subtle text-primary;
+  }
+  .list-opt--grid.hl {
+    @apply bg-primary-subtle text-primary font-medium;
+  }
+  .list-opt--create {
+    @apply w-full text-left border-t border-border text-primary font-semibold;
+  }
+  .list-opt--create:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+  .list-opt-empty {
+    @apply text-text-muted cursor-default;
+  }
+  .list-opt-empty--grid {
+    @apply py-1.5 px-2.5 text-xs;
+  }
+  .drop-panel {
+    @apply overflow-y-auto border border-border bg-surface;
+  }
+  .drop-panel--anchored {
+    @apply drop-panel absolute left-0 right-0 rounded-md shadow-lg;
+  }
+  .drop-panel--anchored-ac {
+    @apply drop-panel--anchored top-[calc(100%+3px)] z-[100] max-h-[200px];
+  }
+  /* List-only combobox (`search={false}`) — in-flow under trigger, not a floating popover */
+  .drop-panel--inline {
+    @apply drop-panel relative max-h-[min(240px,50vh)] border-0 rounded-none shadow-none;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Toggle tracks
+   * ------------------------------------------------------------------------- */
+  /* Base — inline-flex so absolute .tog-k does not collapse the control */
+  .tog-track {
+    @apply inline-flex items-center border-0 cursor-pointer relative p-0 outline-none
+           transition-colors duration-[180ms] flex-shrink-0 align-middle bg-border;
+  }
+  .tog-track:focus-visible {
+    @apply shadow-focus-ring;
+  }
+  .tog-k {
+    @apply absolute rounded-full bg-surface shadow-sm pointer-events-none;
+  }
+  /* Small pill — grids, IAM; on state via `.tog-on` (avoids Turbopack merging `.bg-primary` selectors with @apply bg-primary) */
+  .tog-track--sm {
+    @apply inline-flex items-center border-0 cursor-pointer relative p-0 outline-none
+           transition-colors duration-[180ms] flex-shrink-0 align-middle bg-border
+           h-toggle-track-sm w-7 rounded-full;
+  }
+  .tog-track--sm .tog-k {
+    @apply left-[1.5px] top-[1.5px] h-3 w-3 transition-[left_0.14s_cubic-bezier(0.4,0,0.2,1)];
+  }
+  .tog-track--sm.tog-on .tog-k {
+    @apply left-3.5;
+  }
+  /* Medium — workflow drawer; on state via `.tog-on` */
+  .tog-track--md {
+    @apply inline-flex items-center border-0 cursor-pointer relative p-0 outline-none
+           transition-colors duration-[180ms] flex-shrink-0 align-middle bg-border
+           h-6 w-11 shrink-0 rounded-full;
+  }
+  .tog-track--md .tog-k {
+    @apply left-[3px] top-1/2 h-[18px] w-[18px] -translate-y-1/2
+           transition-[left_0.14s_cubic-bezier(0.4,0,0.2,1)];
+  }
+  .tog-track--md.tog-on .tog-k {
+    @apply left-auto right-[3px];
+  }
+  /* Small rounded-rect — subgroup default; inherits --sm sizing, on state via `.tog-on` */
+  .tog-track--rounded {
+    @apply inline-flex items-center border-0 cursor-pointer relative p-0 outline-none
+           transition-colors duration-[180ms] flex-shrink-0 align-middle bg-border
+           h-toggle-track-sm w-7 rounded-lg;
+  }
+  .tog-track--rounded .tog-k {
+    @apply left-[1.5px] top-[1.5px] h-3 w-3 transition-[left_0.14s_cubic-bezier(0.4,0,0.2,1)];
+  }
+  .tog-track--rounded.tog-on .tog-k {
+    @apply left-3.5;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Checkbox (native input)
+   * ------------------------------------------------------------------------- */
+  .checkbox-comp {
+    @apply w-3.5 h-3.5 shrink-0 cursor-pointer rounded border-border accent-primary;
+  }
+  .radio-comp {
+    @apply w-3.5 h-3.5 shrink-0 cursor-pointer accent-primary;
+  }
+  /* Compute tab — align checkbox with multi-line labels */
+  .compute-check-row .checkbox-comp {
+    @apply mt-0.5;
+  }
+  .compute-check-row.items-center .checkbox-comp {
+    @apply mt-0;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Breadcrumb & Page Chrome
+   * ------------------------------------------------------------------------- */
+  .bc-main {
+    @apply shrink-0 border-b border-border bg-surface;
+  }
+  .bc-main-tabs {
+    @apply flex h-9 items-center gap-5 border-b border-border text-sm px-5;
+  }
+  /* List pages: tabs (+ optional trailing actions); same chrome as bc-main, compact h-9 height */
+  .page-subtabs-row {
+    @apply flex h-9 shrink-0 items-center gap-3 border-b border-border bg-surface;
+  }
+  .page-subtabs-row .bc-main-tabs {
+    @apply border-b-0;
+  }
+  .bc-main-search-wrap {
+    @apply relative w-full max-w-[286px];
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Icons & Misc UI
+   * ------------------------------------------------------------------------- */
+  .material-icons {
+    font-family: "Material Icons";
+    font-weight: normal;
+    font-style: normal;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    --mui-icon-size: var(--icon-size-default);
+    font-size: var(--mui-icon-size) !important;
+    line-height: 1 !important;
+  }
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    font-size: var(--font-size-sm);
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mui-icon {
+    @apply inline-flex flex-shrink-0 items-center justify-center leading-none;
+  }
+
+  .page-chrome-icon {
+    @apply bg-primary-soft inline-flex shrink-0 items-center justify-center rounded-md border border-primary-emphasis;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Sidebar
+   * ------------------------------------------------------------------------- */
+  .sb {
+    @apply w-sidebar min-h-0 flex-shrink-0 flex flex-col overflow-visible transition-[width] duration-200 ease-out bg-primary;
+  }
+  .sb-dw-block {
+    @apply flex items-center gap-2 px-3 py-2.5 relative flex-shrink-0 transition-colors duration-[120ms] select-none border-b border-on-primary-border
+           bg-primary-deep;
+  }
+  .sb-dw-header-center {
+    @apply flex items-center gap-2 flex-1 min-w-0 cursor-pointer py-1;
+  }
+  .sb-dw-name {
+    @apply text-sm font-bold text-on-primary leading-snug break-words whitespace-normal tracking-tight truncate;
+  }
+  /* Chromeless trigger; chevron matches .nav-item.parent + .chev */
+  .sb-dw-chev-btn {
+    @apply flex-shrink-0 inline-flex items-center justify-center border-0 bg-transparent cursor-pointer p-0;
+  }
+  .sb-dw-chev-btn:hover .chev {
+    @apply text-on-primary-fg;
+  }
+  .sb-dw-drop {
+    @apply absolute left-2 right-2 top-[calc(100%+6px)] rounded-xl border border-border bg-surface shadow-xl z-[300] overflow-hidden hidden;
+  }
+  .sb-dw-drop.open {
+    @apply block animate-[indicator-fadein_0.12s_ease];
+  }
+  .sb-dw-drop-list {
+    @apply py-1 max-h-[280px] overflow-y-auto;
+  }
+  .sb-dw-opt {
+    @apply flex items-center gap-2.5 py-2.5 px-3 w-full text-left text-sm font-medium text-text font-body
+           transition-colors duration-[80ms] cursor-pointer border-0 bg-transparent;
+  }
+  .sb-dw-opt:hover {
+    @apply bg-primary-subtle text-primary;
+  }
+  .sb-dw-opt.cur {
+    @apply bg-primary-subtle text-primary font-semibold;
+  }
+  .sb-dw-opt.empty {
+    @apply text-text-muted cursor-default py-3 text-center;
+  }
+  .sb-nav {
+    @apply flex-1 min-h-0 overflow-y-auto overflow-x-hidden py-2.5 px-2;
+  }
+  .sb-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-item {
+    @apply flex items-center justify-between py-2.5 px-3 rounded-[var(--radius-md)] cursor-pointer text-sm font-medium transition-colors duration-[80ms] select-none
+           whitespace-nowrap mb-0.5 min-w-0 text-on-primary-fg-muted;
+  }
+  .nav-item:hover {
+    @apply bg-on-primary-surface text-on-primary-fg;
+  }
+  .nav-item.active:not(.parent) {
+    @apply font-semibold rounded-[var(--radius-md)] text-on-primary bg-on-primary-surface-emphasis;
+  }
+  .nav-item-left {
+    @apply flex items-center gap-2.5 min-w-0 overflow-hidden;
+  }
+  .nav-item-left .material-icons {
+    @apply w-4 h-4 leading-4 text-center flex-shrink-0 inline-block !text-sm text-on-primary-fg-muted;
+  }
+  .nav-children {
+    @apply mb-1.5 pl-[2.375rem];
+  }
+  .nav-child {
+    @apply py-2 px-3 rounded-[var(--radius-md)] cursor-pointer text-xs font-normal transition-colors duration-[80ms] select-none mb-0.5 leading-normal
+           whitespace-nowrap overflow-hidden text-ellipsis no-underline block text-on-primary-fg-muted;
+  }
+  .nav-child:hover {
+    @apply bg-on-primary-surface text-on-primary-fg-muted;
+  }
+  .nav-child.active {
+    @apply font-medium rounded-[var(--radius-md)] text-on-primary-fg
+           bg-on-primary-surface-emphasis;
+  }
+  .chev {
+    @apply transition-transform duration-150 flex-shrink-0 !text-sm text-on-primary-fg-dim;
+  }
+  .chev .material-icons {
+    @apply inline-flex items-center justify-center leading-none font-normal;
+  }
+  .nav-item:hover .chev {
+    @apply text-on-primary-fg;
+  }
+  /* Chevron stays `absolute right-0 bottom-6` in Sidebar; reserve height for that strip */
+  .sb-bottom {
+    @apply relative shrink-0 pb-7;
+    min-height: 3.75rem;
+  }
+  /* Version only: pinned to bottom; centered */
+  .sb-footer-version {
+    bottom: theme('spacing.sm');
+    @apply absolute left-1/2 z-[1] max-w-[calc(100%-2.75rem)] -translate-x-1/2 truncate px-2 text-center text-xs leading-snug text-on-primary-fg-dim;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Tone pills, status chips & selection bar
+   * ------------------------------------------------------------------------- */
+  /* Base — layout + border; tone modifiers add color only */
+  .tone-pill {
+    @apply inline-flex items-center border;
+  }
+  /* Bordered semantic — text + ~30% border + ~12% bg */
+  .tone-pill--success {
+    @apply tone-pill text-success
+      border-success-border
+      bg-success-subtle;
+  }
+  .tone-pill--error {
+    @apply tone-pill text-error
+      border-error-border
+      bg-error-subtle;
+  }
+  .tone-pill--warning {
+    @apply tone-pill text-warning
+      border-warning-border
+      bg-warning-subtle;
+  }
+  .tone-pill--primary {
+    @apply tone-pill text-primary
+      border-primary-emphasis
+      bg-primary-subtle;
+  }
+  .tone-pill--neutral {
+    @apply tone-pill border-border bg-surface-muted text-text;
+  }
+  /* Text + bg only (no border tint) */
+  .tone-pill--success-subtle {
+    @apply tone-pill border-0 text-success
+      bg-success-subtle;
+  }
+  .tone-pill--muted-subtle {
+    @apply tone-pill border-0 text-text-muted
+      bg-muted-subtle;
+  }
+  /* Inline error banner — pair with layout utilities (mx-4 mt-2, etc.) */
+  .inline-alert--error {
+    @apply rounded-md border border-error-border bg-error-hover-bg px-3 py-2 text-xs text-error;
+  }
+  /* Status row chip — rounded-md + semibold; pair with tone-pill--* */
+  .status-chip {
+    @apply tone-pill rounded-md px-2 py-1 text-xs font-semibold leading-none;
+  }
+  /* Label tag — layout; pair with tone-pill--muted-subtle or --success-subtle in markup */
+  .label-tag {
+    @apply tone-pill shrink-0 rounded-full px-1.5 py-0.5 text-xs font-medium leading-4;
+  }
+
+  /* Tick / cross symbol badges — pair with IconBadge component */
+  .icon-badge {
+    @apply inline-flex shrink-0 items-center justify-center font-bold leading-none;
+  }
+  .icon-badge--circle.icon-badge--md {
+    @apply h-4 w-4 rounded-full text-xs shadow-sm;
+  }
+  .icon-badge--circle.icon-badge--sm {
+    @apply h-[14px] w-[14px] rounded-full text-[10px] shadow-sm;
+  }
+  .icon-badge--square.icon-badge--md {
+    @apply h-4 w-4 rounded-sm text-[10px];
+  }
+  .icon-badge--square.icon-badge--sm {
+    @apply h-3.5 w-3.5 rounded-sm text-[10px];
+  }
+  .icon-badge--success {
+    @apply bg-success text-white;
+  }
+  .icon-badge--error {
+    @apply bg-error text-white;
+  }
+  .icon-badge--warning {
+    @apply bg-warning text-white;
+  }
+  .icon-badge--primary {
+    @apply bg-primary text-on-primary;
+  }
+  .icon-badge--muted {
+    @apply bg-muted-subtle text-text-muted opacity-80;
+  }
+  .icon-badge--inline-success {
+    @apply text-success text-xs;
+  }
+  .icon-badge--inline-error {
+    @apply text-error text-xs;
+  }
+  .icon-badge--inline-warning {
+    @apply text-warning text-xs;
+  }
+  .icon-badge--inline-muted {
+    @apply text-text-muted text-xs opacity-80;
+  }
+  .icon-badge-spacer {
+    @apply inline-block shrink-0;
+  }
+  .icon-badge-spacer.icon-badge--md {
+    @apply h-4 w-4;
+  }
+  .icon-badge-spacer.icon-badge--sm {
+    @apply h-[14px] w-[14px];
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Cards — generic reusable card containers
+   * ------------------------------------------------------------------------- */
+  .card {
+    @apply rounded-md border border-border bg-surface overflow-hidden;
+  }
+  .card__header {
+    @apply flex items-center gap-2 border-b border-border bg-surface-muted px-4 py-2.5;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Review stage dots — merged under Status column in dataset list table
+   * ------------------------------------------------------------------------- */
+  .review-stage-dot {
+    @apply w-2 h-2 rounded-full shrink-0;
+  }
+  .review-stage-dot--completed {
+    @apply bg-success;
+  }
+  .review-stage-dot--active {
+    @apply bg-blue-600;
+  }
+  .review-stage-dot--pending {
+    @apply bg-warning;
+  }
+  .sel-notice {
+    @apply tone-pill--primary flex items-center gap-2 py-2 px-5 text-xs flex-shrink-0 border-b
+           bg-primary-subtle animate-[indicator-fadein_0.12s_ease];
+  }
+  .sel-notice > .material-icons {
+    @apply !text-sm text-primary;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Tables & Data Grids
+   * ------------------------------------------------------------------------- */
+  .tbl-wrap {
+    @apply flex flex-1 flex-col overflow-hidden bg-surface min-h-0;
+  }
+  .tbl-scroll {
+    @apply min-h-0 flex-1 overflow-auto [scrollbar-width:thin] [scrollbar-color:theme(colors.border)_transparent];
+  }
+  .tbl-scroll::-webkit-scrollbar {
+    width: 1px;
+    height: 1px;
+  }
+  .tbl-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+  .tbl-wrap table {
+    @apply w-full border-collapse min-w-[800px] text-xs font-body text-text;
+  }
+  /* Sticky checkbox + name + actions: subgroup list and similar grids */
+  .tbl-wrap table.tv-grid-cols-sticky-ends {
+    @apply w-full min-w-full;
+  }
+  .tbl-wrap table.tv-grid-cols-sticky-ends th:nth-child(1),
+  .tbl-wrap table.tv-grid-cols-sticky-ends td:nth-child(1) {
+    @apply sticky left-0;
+    z-index: 6;
+  }
+  .tbl-wrap table.tv-grid-cols-sticky-ends th:nth-child(2),
+  .tbl-wrap table.tv-grid-cols-sticky-ends td:nth-child(2) {
+    @apply sticky;
+    left: var(--tv-col-select-width, 36px);
+    z-index: 5;
+  }
+  .tbl-wrap table.tv-grid-cols-sticky-ends thead tr th:nth-child(1),
+  .tbl-wrap table.tv-grid-cols-sticky-ends thead tr th:nth-child(2) {
+    @apply bg-surface-muted;
+  }
+  .tbl-wrap table.tv-grid-cols-sticky-ends thead tr:last-child th {
+    border-bottom: 0;
+    @apply shadow-[inset_0_-1px_0_theme(colors.border)];
+  }
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr td:nth-child(1),
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr td:nth-child(2) {
+    @apply bg-surface;
+  }
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr:hover td,
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr.selected td,
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr[data-tv-nav-row="true"]:focus td,
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr:focus-within td {
+    @apply bg-primary-subtle;
+  }
+  /* Subgroup name column uses `border-r` in column defs; do not add a second 1px line here */
+  .tbl-wrap table.tv-grid-cols-sticky-ends th:last-child,
+  .tbl-wrap table.tv-grid-cols-sticky-ends td:last-child {
+    @apply sticky right-0;
+    z-index: 5;
+    box-shadow: none;
+    border-right: 0;
+  }
+  .tbl-wrap table.tv-grid-cols-sticky-ends thead tr th:last-child {
+    @apply bg-surface-muted;
+  }
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr td:last-child {
+    @apply bg-surface;
+  }
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr:hover td:last-child,
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr.selected td:last-child,
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr[data-tv-nav-row="true"]:focus td:last-child,
+  .tbl-wrap table.tv-grid-cols-sticky-ends tbody tr:focus-within td:last-child {
+    @apply bg-primary-subtle;
+  }
+  .tbl-wrap table.tv-grid-cols-sticky-ends thead tr:last-child th:last-child {
+    @apply shadow-[inset_0_-1px_0_theme(colors.border)];
+  }
+  /* z-[4] for generic tbl-wrap; tv-grid-table uses z-30/31 to sit above its sticky columns */
+  .tbl-wrap thead {
+    @apply sticky top-0 z-[4];
+  }
+  .tbl-wrap thead tr:first-child {
+    @apply bg-surface-muted border-b border-border;
+  }
+  .tbl-wrap thead tr:first-child th {
+    @apply bg-surface-muted text-text;
+  }
+  .tbl-wrap thead tr:last-child {
+    @apply bg-surface-muted border-b border-border;
+  }
+  .tbl-wrap thead tr:last-child th {
+    @apply bg-surface-muted;
+  }
+  .tbl-wrap th {
+    @apply py-2 px-md text-xs font-semibold text-text-muted tracking-wide text-left whitespace-nowrap align-top;
+  }
+  /* Data warehouse list — single header row, no filter row; tighter th padding */
+  .tbl-wrap.tbl-wrap--compact-th th {
+    @apply py-0;
+  }
+  .th-search-cell {
+    @apply py-1.5 px-2 pb-1.5 pt-1;
+  }
+  /* Beat `.tbl-wrap th` (py-2) — without this, filter `<th>` cells stay taller than body rows */
+  .tbl-wrap th.th-search-cell {
+    @apply py-1.5 px-2 align-middle;
+  }
+  .th-merged-filter {
+    @apply mt-1 whitespace-normal;
+  }
+  /* Match `.btn-comp-ghost--sort` (h-7) so sort and non-sort columns share one label row height */
+  .th-merged-label {
+    @apply flex min-h-7 items-center;
+  }
+  .th-sort-wrap {
+    @apply relative inline-flex items-center gap-1;
+  }
+  /* Only top-level rows of the main grid — avoids nested <table> rows stacking the same hover tint */
+  .tbl-wrap table.tv-grid-table > tbody > tr {
+    @apply border-b border-border transition-colors duration-75;
+  }
+  .tbl-wrap table.tv-grid-table > tbody > tr:last-child {
+    @apply border-b-0;
+  }
+  /* Row tint: 5% regular, 8% for sticky-ends / settings-active */
+  .tbl-wrap table.tv-grid-table > tbody > tr:hover,
+  .tbl-wrap table.tv-grid-table > tbody > tr:focus,
+  .tbl-wrap table.tv-grid-table > tbody > tr:focus-within,
+  .tbl-wrap table.tv-grid-table > tbody > tr.selected {
+    @apply bg-primary-subtle;
+  }
+  .tbl-wrap tbody tr[data-tv-nav-row="true"]:focus {
+    outline: none;
+  }
+  /* Configure panel open: pointer on cells (tr cursor alone is unreliable in tables) */
+  .tv-grid-wrap table.tv-grid-table tbody tr.tv-grid-row--clickable td {
+    cursor: pointer;
+  }
+  [data-tv-override] {
+    caret-color: transparent;
+  }
+  [data-tv-override]::selection {
+    background: transparent;
+    color: inherit;
+  }
+  .tbl-wrap td {
+    @apply py-1.5 px-md align-middle;
+  }
+  /* Inline edit rows: dense inputs/toggles — drop default cell vertical padding */
+  .tbl-wrap tr[data-tv-row-editing="true"] td {
+    @apply py-0;
+  }
+  /* Tree/list add rows: keep cell padding when expanded so row height matches the prompt */
+  .tbl-wrap tr.add-row[data-tv-row-editing="true"] td {
+    @apply py-1.5;
+  }
+  .tbl-wrap tbody td {
+    @apply text-xs;
+  }
+  .tv-grid-wrap .tbl-scroll {
+    position: relative;
+  }
+  /* Lift add-row above following tbody rows when an autocomplete panel is open */
+  .tv-grid-wrap table.tv-grid-table tbody tr.add-row:has([data-ac-list-open="true"]) {
+    position: relative;
+    z-index: 30;
+  }
+  .tv-grid-wrap table.tv-grid-table {
+    --tv-col-select-width: 50px;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+  }
+  .tv-grid-wrap table.tv-grid-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+  .tv-grid-wrap table.tv-grid-table thead tr,
+  .tv-grid-wrap table.tv-grid-table thead th {
+    @apply bg-surface-muted;
+  }
+  .tv-grid-wrap table.tv-grid-table thead th {
+    background-clip: padding-box;
+    z-index: 31 !important;
+    @apply shadow-[inset_0_-1px_0_theme(colors.border)];
+  }
+  /* Left-sticky header cells must sit above scrolling columns (blanket z-31 above flattens Tailwind z-50). */
+  .tv-grid-wrap table.tv-grid-table thead th.tv-col-select-th,
+  .tv-grid-wrap table.tv-grid-table thead th.tv-col-select-filter-th,
+  .tv-grid-wrap table.tv-grid-table thead th.tv-col-primary-sticky-th,
+  .tv-grid-wrap table.tv-grid-table thead th.tv-col-primary-sticky-filter-th,
+  .tv-grid-wrap table.tv-grid-table.tv-grid-cols-sticky-ends thead tr th:nth-child(2) {
+    z-index: 52 !important;
+  }
+  .tv-grid-wrap table.tv-grid-table thead th.tv-col-select-th,
+  .tv-grid-wrap table.tv-grid-table thead th.tv-col-select-filter-th,
+  .tv-grid-wrap table.tv-grid-table.tv-grid-cols-sticky-ends thead tr th:nth-child(1) {
+    z-index: 53 !important;
+  }
+  /* Right-sticky action header cells — same stacking tier as left sticky primary. */
+  .tv-grid-wrap table.tv-grid-table thead th.tv-col-actions-th-icon,
+  .tv-grid-wrap table.tv-grid-table thead th.tv-col-actions-filter-th-icon,
+  .tv-grid-wrap table.tv-grid-table thead th.tv-col-actions-th-dual,
+  .tv-grid-wrap table.tv-grid-table thead th.tv-col-actions-filter-th-dual,
+  .tv-grid-wrap table.tv-grid-table.tv-grid-cols-sticky-ends thead tr th:last-child {
+    z-index: 52 !important;
+  }
+  .tv-grid-wrap table.tv-grid-table > tbody > tr > td {
+    @apply border-b border-border;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* Top-level data cells only — nested tables inside expanded rows keep their own surfaces */
+  .tv-grid-wrap table.tv-grid-table > tbody > tr > td:not(.col-highlight) {
+    background: var(--tv-sticky-cell-bg);
+    background-clip: padding-box;
+  }
+  .tv-grid-wrap table.tv-grid-table > tbody > tr:last-child > td {
+    @apply border-b border-border;
+  }
+  /* Compute execution log — vertical rules between columns */
+  .tv-grid-wrap table.tv-grid-compute-log-detail > thead > tr > th:not(:last-child),
+  .tv-grid-wrap table.tv-grid-compute-log-detail > tbody > tr > td:not(:last-child) {
+    @apply border-r border-border;
+  }
+  .tv-grid-wrap table.tv-grid-compute-log-detail > tbody > tr > td {
+    vertical-align: middle;
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    overflow: hidden;
+  }
+  /* Compact headers for read-only jobs/source grids */
+  .tv-grid-wrap table.tv-grid-table.tv-grid-compute-log-detail > thead > tr > th {
+    @apply py-1.5 px-2 align-middle font-semibold text-xs text-text whitespace-nowrap;
+  }
+  .tv-grid-wrap table.tv-grid-table.tv-grid-compute-log-detail .th-merged-label {
+    @apply min-h-0;
+  }
+  .tv-grid-wrap table.tv-grid-table.tv-grid-compute-log-detail .th-merged-label > span {
+    @apply font-semibold text-xs text-text;
+  }
+  /* Compute log detail — summary row (single data row above jobs grid) */
+  .tv-grid-wrap table.tv-grid-compute-log-summary {
+    table-layout: fixed;
+  }
+  .tv-grid-wrap table.tv-grid-table > tbody > tr {
+    --tv-sticky-cell-bg: theme('colors.surface');
+  }
+  .tv-grid-wrap table.tv-grid-table > tbody > tr:hover,
+  .tv-grid-wrap table.tv-grid-table > tbody > tr.selected,
+  .tv-grid-wrap table.tv-grid-table > tbody > tr:focus,
+  .tv-grid-wrap table.tv-grid-table > tbody > tr:focus-within {
+    --tv-sticky-cell-bg: theme('colors.primary-subtle');
+  }
+  /* Grid column highlight — drag reorder affordance */
+  .col-highlight {
+    @apply bg-primary-subtle border-l border-r border-primary-emphasis;
+  }
+  .col-highlight-header {
+    @apply flex items-center justify-between gap-1 rounded border border-primary-emphasis
+           bg-primary-emphasis px-2 py-1 text-primary;
+  }
+  /* Grid column reorder (full-column drag affordance) */
+  .col-grab {
+    cursor: grab;
+  }
+  .col-grab:active {
+    cursor: grabbing;
+  }
+  .col-drag-source {
+    @apply shadow-[inset_4px_0_0_theme(colors.primary)];
+    @apply bg-primary-emphasis !important;
+  }
+  .col-drop-target {
+    @apply shadow-[inset_0_0_0_2px_theme(colors.primary)];
+    @apply bg-primary-emphasis !important;
+  }
+  /* Compact preview scrollbar — thin primary-coloured thumb */
+  .preview-scroll::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+  .preview-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .preview-scroll::-webkit-scrollbar-thumb {
+    /* Plain CSS — @apply inside ::-webkit-scrollbar-thumb breaks Tailwind/Turbopack */
+    background-color: var(--color-primary);
+    border-radius: 999px;
+  }
+  .preview-scroll::-webkit-scrollbar-button {
+    -webkit-appearance: none;
+    width: 0 !important;
+    height: 0 !important;
+    display: none;
+    background: transparent;
+  }
+  .preview-scroll::-webkit-scrollbar-button:single-button {
+    -webkit-appearance: none;
+    width: 0 !important;
+    height: 0 !important;
+    display: none;
+  }
+  /* Add-new row (empty row to create an We have) */
+  .add-row {
+    @apply bg-surface border-t border-b border-border [border-top-style:dashed];
+  }
+  .add-row.add-row-disabled {
+    @apply opacity-50 pointer-events-none select-none;
+  }
+  /* Block add-row clicks while another row is in edit; keep full opacity */
+  .add-row.add-row-interaction-blocked {
+    @apply pointer-events-none select-none;
+  }
+  .add-row td {
+    @apply py-1.5 px-md align-middle;
+  }
+  .add-row.add-row-collapsed td {
+    @apply border-b border-border;
+  }
+  /* Collapsed add-row trigger */
+  .add-row-prompt-btn {
+    @apply flex w-full min-w-0 items-center gap-2 rounded-sm border border-dashed
+      border-primary-emphasis bg-white px-2 py-1.5
+      text-left text-xs text-primary outline-none transition-colors hover:border-primary
+      focus:outline-none focus-visible:border-primary
+      disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .add-row-prompt-shell {
+    @apply rounded-sm border border-dashed
+      border-primary-emphasis;
+  }
+  .add-row-prompt-btn--surface {
+    @apply bg-surface shadow-none ring-0
+      focus:border-primary-emphasis
+      focus-visible:outline-none focus-visible:ring-2
+      focus-visible:ring-primary-soft;
+  }
+  .add-row-prompt-btn-icon {
+    @apply inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border border-dashed
+      border-muted-border bg-surface text-text-muted
+      transition-colors hover:border-primary-emphasis
+      hover:bg-primary-subtle hover:text-primary
+      disabled:cursor-not-allowed disabled:opacity-45;
+  }
+  .add-row-actions {
+    @apply text-right whitespace-nowrap;
+  }
+  .add-row-actions-center {
+    @apply text-center;
+  }
+  /* Match icon pair wrapper: inline-flex items-center gap-1 */
+  .add-row-action-btns {
+    @apply inline-flex items-center gap-1 align-middle;
+  }
+  .add-row-actions .add-row-action-btns {
+    @apply justify-end;
+  }
+  .add-row-actions-center .add-row-action-btns {
+    @apply w-full justify-center;
+  }
+  .cell-name {
+    @apply block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-xs text-text leading-normal font-normal font-body;
+  }
+  .cell-empty {
+    @apply text-xs text-text-muted;
+  }
+  /* Shared sticky ends + filter row for tv-grid-table */
+  .tv-col-select-th {
+    width: var(--tv-col-select-width, 36px);
+    min-width: var(--tv-col-select-width, 36px);
+    max-width: var(--tv-col-select-width, 36px);
+    @apply sticky left-0 z-50 box-border bg-surface-muted px-1.5 text-center;
+  }
+  .tbl-wrap th.tv-col-select-filter-th {
+    @apply px-1.5;
+  }
+  .tv-col-select-filter-th {
+    width: var(--tv-col-select-width, 36px);
+    min-width: var(--tv-col-select-width, 36px);
+    max-width: var(--tv-col-select-width, 36px);
+    @apply th-search-cell sticky left-0 z-50 box-border bg-surface-muted px-1.5;
+  }
+  .tv-col-select-td {
+    width: var(--tv-col-select-width, 36px);
+    min-width: var(--tv-col-select-width, 36px);
+    max-width: var(--tv-col-select-width, 36px);
+    @apply sticky left-0 z-20 box-border bg-surface px-1.5 text-center;
+  }
+  .tbl-wrap td.tv-col-select-td {
+    @apply px-1.5 text-center;
+  }
+  .tv-grid-wrap table.tv-grid-table th.tv-col-select-th,
+  .tv-grid-wrap table.tv-grid-table th.tv-col-select-filter-th,
+  .tv-grid-wrap table.tv-grid-table td.tv-col-select-td {
+    width: var(--tv-col-select-width, 36px) !important;
+    min-width: var(--tv-col-select-width, 36px) !important;
+    max-width: var(--tv-col-select-width, 36px) !important;
+  }
+  .tv-grid-table {
+    --tv-col-actions-dual-width: 148px;
+    --tv-col-actions-icon-width: 80px;
+  }
+  .tv-grid-wrap table.tv-grid-table th.tv-col-actions-th-icon,
+  .tv-grid-wrap table.tv-grid-table th.tv-col-actions-filter-th-icon,
+  .tv-grid-wrap table.tv-grid-table td.tv-col-actions-td-icon,
+  table.tv-grid-table th.tv-col-actions-th-icon,
+  table.tv-grid-table th.tv-col-actions-filter-th-icon,
+  table.tv-grid-table td.tv-col-actions-td-icon,
+  .tv-grid-wrap table.tv-grid-table tr.add-row > td.tv-col-actions-td-icon,
+  .tv-grid-wrap table.tv-grid-table col.tv-col-actions-col-icon {
+    width: var(--tv-col-actions-icon-width) !important;
+    min-width: var(--tv-col-actions-icon-width) !important;
+    max-width: var(--tv-col-actions-icon-width) !important;
+    box-sizing: border-box !important;
+  }
+  .tv-grid-wrap table.tv-grid-table th.tv-col-actions-th-dual,
+  .tv-grid-wrap table.tv-grid-table th.tv-col-actions-filter-th-dual,
+  .tv-grid-wrap table.tv-grid-table td.tv-col-actions-td-dual,
+  .tv-grid-wrap table.tv-grid-table tr.add-row > td.tv-col-actions-td-dual,
+  .tv-grid-wrap table.tv-grid-table col.tv-col-actions-col-dual {
+    width: var(--tv-col-actions-dual-width) !important;
+    min-width: var(--tv-col-actions-dual-width) !important;
+    max-width: var(--tv-col-actions-dual-width) !important;
+    box-sizing: border-box !important;
+  }
+  th.tv-col-actions-th-icon,
+  th.tv-col-actions-filter-th-icon {
+    @apply px-0.5;
+  }
+  th.tv-col-actions-th-icon .th-merged-label,
+  th.tv-col-actions-filter-th-icon .th-merged-label,
+  th.tv-col-actions-th-dual .th-merged-label,
+  th.tv-col-actions-filter-th-dual .th-merged-label {
+    @apply justify-center;
+  }
+  th.tv-col-actions-th-icon .th-merged-label > span:not(.sr-only),
+  th.tv-col-actions-filter-th-icon .th-merged-label > span:not(.sr-only),
+  th.tv-col-actions-th-icon .th-merged-label > span.block,
+  th.tv-col-actions-filter-th-icon .th-merged-label > span.block,
+  th.tv-col-actions-th-dual .th-merged-label > span:not(.sr-only),
+  th.tv-col-actions-filter-th-dual .th-merged-label > span:not(.sr-only) {
+    @apply w-full justify-center text-center;
+  }
+  .tv-col-primary-sticky-th {
+    left: var(--tv-col-select-width, 36px);
+    @apply sticky z-50 border-r border-border bg-surface-muted;
+  }
+  .tv-col-primary-sticky-filter-th {
+    left: var(--tv-col-select-width, 36px);
+    @apply th-search-cell sticky z-50 border-r border-border bg-surface-muted;
+  }
+  .tv-col-primary-sticky-td {
+    left: var(--tv-col-select-width, 36px);
+    @apply sticky z-20 border-r border-border bg-surface;
+  }
+  /* Main column — absorbs horizontal slack under table-layout: fixed */
+  .tv-grid-wrap table.tv-grid-table col.tv-col-main {
+    width: auto;
+  }
+  .tv-grid-wrap table.tv-grid-table th.tv-col-main,
+  .tv-grid-wrap table.tv-grid-table td.tv-col-main {
+    width: auto !important;
+    max-width: none !important;
+  }
+  /* Compute execute — process list */
+  .tv-grid-wrap table.tv-grid-table.tv-compute-process-grid > tbody > tr > td {
+    @apply overflow-hidden;
+  }
+  .tv-cp-select-expand-cell {
+    @apply inline-flex items-center justify-center gap-0;
+  }
+  .indicator-actions-col {
+    box-shadow: none;
+  }
+  /* Compact icon cells — keep row height aligned with text/toggle cells */
+  .tbl-wrap tbody td.add-row-actions-center .add-row-action-btns {
+    @apply leading-none;
+  }
+  .footer {
+    @apply bg-surface border-t border-border py-2.5 px-7 flex items-center justify-between flex-shrink-0 text-xs text-text-muted;
+  }
+  /* ---------------------------------------------------------------------------
+   * Modals & Overlays
+   * ------------------------------------------------------------------------- */
+  .modal-overlay {
+    @apply fixed inset-0 z-[600] flex items-center justify-center p-6 pointer-events-none;
+  }
+  .modal-backdrop {
+    @apply absolute inset-0 bg-[rgb(17_24_39/0.45)] pointer-events-auto;
+  }
+  .modal-panel {
+    @apply relative z-[1] w-full max-w-[520px] max-h-[min(90vh,720px)] flex flex-col bg-surface rounded-xl border border-border overflow-hidden pointer-events-auto
+           shadow-[0_25px_50px_-12px_rgb(0_0_0/0.25)];
+  }
+  .modal-header {
+    @apply flex items-center justify-between gap-3 px-[18px] py-4 border-b border-border shrink-0;
+  }
+  .modal-title {
+    @apply m-0 font-bold text-sm;
+  }
+  .modal-body {
+    @apply px-[18px] py-4 overflow-y-auto text-xs text-text font-body;
+  }
+  .modal-lead {
+    @apply m-0 mb-3 leading-normal text-text;
+  }
+  .modal-list {
+    @apply mb-4 pl-5 max-h-[160px] overflow-y-auto;
+  }
+  .modal-list li {
+    @apply mb-1.5;
+  }
+  .modal-list-name {
+    @apply font-semibold block;
+  }
+  .modal-list-meta {
+    @apply text-xs text-text-muted font-mono;
+  }
+  .modal-impact {
+    @apply py-3 px-[14px] rounded-lg bg-surface-muted border border-border;
+  }
+  .modal-impact-title {
+    @apply text-xs font-bold tracking-[0.04em] text-text-muted mb-2;
+  }
+  .modal-impact-list {
+    @apply m-0 pl-[1.15rem] leading-[1.55];
+  }
+  .modal-impact-list li {
+    @apply mb-1;
+  }
+  .modal-error {
+    @apply m-0 text-error text-xs leading-snug;
+  }
+  .modal-footer {
+    @apply flex justify-end gap-2.5 px-[18px] py-3.5 border-t border-border shrink-0 bg-surface;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Settings Panel & Drawers
+   * ------------------------------------------------------------------------- */
+  .sp-panel {
+    @apply fixed top-0 right-0 bottom-0 w-[52%] bg-surface flex flex-col z-[500] transition-[transform_0.28s_cubic-bezier(0.4,0,0.2,1)]
+           shadow-[-8px_0_40px_rgb(0_0_0/0.1)] border-l border-border;
+  }
+  .sp-header {
+    @apply flex items-center gap-3 px-5 h-14 shrink-0 border-b border-border bg-surface;
+  }
+  .sp-header-info {
+    @apply flex-1 min-w-0;
+  }
+  .sp-title {
+    @apply text-sm font-semibold text-text truncate;
+  }
+  .sp-body-wrap {
+    @apply relative flex flex-1 min-h-0 flex-col;
+  }
+  /* Full-area overlay over a tab's content */
+  .sp-panel-tab-loading-overlay {
+    @apply absolute inset-0 z-20 flex flex-col items-center justify-center gap-3
+           bg-surface-scrim
+           backdrop-blur-[2px];
+  }
+  .sp-body {
+    @apply flex-1 overflow-y-auto py-5 px-6;
+  }
+  .sp-body--validation,
+  .sp-body--subgroups {
+    @apply flex flex-col min-h-0 overflow-hidden;
+  }
+  .sp-body--metadata {
+    @apply flex flex-col min-h-0 overflow-hidden py-0 px-0;
+  }
+  .sp-body::-webkit-scrollbar {
+    width: 0.25rem;
+  }
+  .sp-body::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+  /* User config drawer — form + roles list */
+  .user-drawer-form {
+    @apply flex flex-col gap-4;
+  }
+  /* User drawer — roles assignment table fits panel width */
+  .tbl-wrap.user-drawer-roles-tbl {
+    @apply flex-none;
+  }
+  .tbl-wrap.user-drawer-roles-tbl table.tv-grid-table {
+    min-width: 0;
+  }
+  .tbl-wrap.user-drawer-roles-tbl th,
+  .tbl-wrap.user-drawer-roles-tbl td {
+    @apply px-2;
+  }
+  /* Drawer config — tab strip, cards, workflow users/review tables */
+  .drawer-tabs {
+    @apply gap-6 flex-wrap;
+  }
+  .drawer-tabs .btn-comp-tab.active {
+    border-bottom-width: 3px;
+  }
+  .drawer-body-muted {
+    @apply min-w-0 bg-surface-muted-blend;
+  }
+  .config-stack {
+    @apply flex min-w-0 max-w-full flex-col gap-5;
+  }
+  .config-card {
+    @apply rounded-xl border border-border bg-surface p-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)];
+  }
+  .config-card-title {
+    @apply m-0 mb-4 text-sm font-semibold text-text tracking-tight;
+  }
+  .config-card-inner {
+    @apply flex flex-col gap-4;
+  }
+  .config-toggle-row {
+    @apply flex w-full min-h-9 flex-row flex-nowrap items-center justify-start gap-3;
+  }
+  .config-toggle-row .form-label {
+    @apply m-0 min-w-0 shrink text-left;
+  }
+  .review-details {
+    @apply flex w-full min-w-0 max-w-full flex-col gap-2.5 pt-1;
+  }
+  .tbl-wrap table.review-levels-table thead th {
+    @apply align-bottom text-left font-semibold text-text-muted;
+  }
+  .tbl-wrap table.review-levels-table thead th,
+  .tbl-wrap table.review-levels-table tbody td {
+    min-width: 0;
+  }
+  .tbl-wrap table.review-levels-table,
+  .tbl-wrap table.users-assign-table {
+    display: table;
+    width: 100%;
+    min-width: 0 !important;
+    max-width: 100%;
+    table-layout: fixed;
+  }
+  .tbl-wrap.tv-grid-wrap table.review-levels-table.tv-grid-table {
+    min-width: 0 !important;
+    max-width: 100%;
+  }
+  .review-details .tbl-scroll {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .tbl-wrap table.review-levels-table thead th:last-child {
+    @apply bg-surface-muted;
+  }
+  .tbl-wrap table.review-levels-table tbody td:last-child {
+    background: var(--tv-sticky-cell-bg, theme('colors.surface'));
+  }
+  .tbl-wrap table.review-levels-table tbody tr:hover td:last-child,
+  .tbl-wrap table.review-levels-table tbody tr:focus td:last-child,
+  .tbl-wrap table.review-levels-table tbody tr:focus-within td:last-child {
+    background: var(--tv-sticky-cell-bg, theme('colors.surface'));
+  }
+  .config-stack .field-comp--md {
+    @apply text-xs;
+  }
+  .entry-fields {
+    @apply flex w-full min-w-0 max-w-full flex-col gap-4;
+  }
+  .entry-freq-area-row {
+    @apply grid w-full min-w-0 grid-cols-2 gap-x-4 gap-y-4 items-start;
+  }
+  .entry-fields .sp-field,
+  .entry-fields .field-comp--md {
+    @apply min-w-0 w-full max-w-full;
+  }
+  .entry-form-box {
+    @apply w-full min-w-0 max-w-full rounded-lg border border-border bg-surface-muted p-4;
+  }
+  .entry-form-title {
+    @apply m-0 mb-3 text-xs font-semibold tracking-tight;
+  }
+  .entry-form-grid {
+    @apply grid w-full min-w-0 grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 sm:items-start;
+  }
+  .entry-form-grid .sp-field {
+    @apply min-w-0;
+  }
+  .entry-preview-toggle {
+    @apply flex w-full min-w-0 flex-col items-start gap-2;
+  }
+  .entry-preview-toggle .form-label {
+    @apply m-0 min-w-0 text-left;
+  }
+  .entry-check-row {
+    @apply flex cursor-pointer items-center gap-2.5 select-none;
+  }
+  .segment-tabs {
+    @apply inline-flex w-fit max-w-full shrink-0 flex-wrap gap-0 self-start rounded-full border border-border bg-surface-muted p-0.5;
+  }
+  .segment-tabs button {
+    @apply rounded-full px-4 py-1.5 text-xs font-medium text-text-muted transition-colors;
+  }
+  .segment-tabs button.active {
+    @apply bg-primary-subtle text-primary shadow-sm;
+  }
+  .users-toolbar {
+    @apply mt-0 flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between;
+  }
+  .tbl-wrap table.users-assign-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+  }
+  .tbl-wrap table.users-assign-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+  .tbl-wrap table.users-assign-table thead tr,
+  .tbl-wrap table.users-assign-table thead th {
+    @apply bg-surface-muted;
+  }
+  .tbl-wrap.tv-grid-wrap table.users-assign-table.tv-grid-table thead th {
+    background-image: none;
+    background-clip: padding-box;
+    z-index: 31 !important;
+    @apply align-top px-2 text-left;
+    box-shadow: none !important;
+  }
+  .tbl-wrap.tv-grid-wrap table.users-assign-table.tv-grid-table thead tr:not(:last-child) > th {
+    @apply border-b border-border;
+  }
+  .tbl-wrap.tv-grid-wrap table.users-assign-table.tv-grid-table thead tr:last-child > th {
+    @apply border-b border-border;
+  }
+  .tbl-wrap table.users-assign-table thead th.users-th-check {
+    @apply align-middle text-center;
+  }
+  .tbl-wrap.tv-grid-wrap table.users-assign-table.tv-grid-table thead tr:first-child > th.users-stage-col {
+    white-space: normal;
+    min-width: 0;
+  }
+  .tbl-wrap.tv-grid-wrap table.users-assign-table.tv-grid-table .users-stage-head {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .tbl-wrap.tv-grid-wrap table.users-assign-table.tv-grid-table thead .field-comp--md {
+    font-weight: 400;
+  }
+  .label-required .label-required-star {
+    @apply ml-0.5 text-xs font-semibold text-red-600 dark:text-red-400;
+  }
+
+  .sp-grid {
+    @apply grid grid-cols-2 gap-x-5 gap-y-4;
+  }
+  .sp-full {
+    @apply col-span-full min-w-0;
+  }
+  .sp-field {
+    @apply flex flex-col gap-1.5;
+  }
+  /* Shared form field label (drawers, side panels, validation forms) */
+  .form-label {
+    @apply text-xs font-medium tracking-wide;
+  }
+  .sp-toggle-wrap {
+    @apply flex items-center min-h-9;
+  }
+  .sp-field-inline {
+    @apply flex-row items-center gap-2.5 min-h-9 self-center;
+  }
+  /* Option picker + checklist list (settings panels) */
+  .option-picker {
+    @apply border border-border rounded-sm bg-surface transition-[border-color_0.15s,box-shadow_0.15s] relative;
+  }
+  .option-picker.focused {
+    @apply border-primary shadow-focus-ring;
+  }
+  .option-picker-row {
+    @apply flex items-stretch gap-0 rounded-sm overflow-hidden;
+  }
+  .option-help {
+    @apply flex items-start gap-1.5 text-xs text-text-muted leading-[1.55] mb-2.5;
+  }
+  .option-list-header {
+    @apply grid grid-cols-[1fr_auto_auto] gap-3 items-center py-1.5 px-3 pb-2 text-xs font-semibold text-text-muted;
+  }
+  .option-list-header-flag {
+    @apply text-center min-w-[100px];
+  }
+  .option-list {
+    @apply list-none border border-border rounded-lg overflow-hidden bg-surface;
+  }
+  /* Scroll inside the list only (header row stays pinned above) */
+  .option-list.option-list--scrollable {
+    @apply min-h-0 flex-1 overflow-x-hidden overflow-y-auto;
+  }
+  .option-list.option-list--scrollable::-webkit-scrollbar {
+    width: 0.125rem;
+  }
+  .option-list.option-list--scrollable::-webkit-scrollbar-thumb {
+    /* Plain CSS — @apply inside pseudo-elements breaks Tailwind/Turbopack */
+    background-color: var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+  .option-list-item {
+    @apply grid grid-cols-[1fr_auto_auto] gap-3 items-center py-1.5 px-3 text-xs text-text border-b border-surface-muted transition-[background_0.08s];
+  }
+  .option-list-item:last-child {
+    @apply border-b-0;
+  }
+  .option-list-item:hover {
+    @apply bg-surface-muted;
+  }
+  .option-list-item.option-list-empty {
+    @apply block text-center p-4 [grid-template-columns:none];
+  }
+  .option-list-item-name {
+    @apply min-w-0 font-medium;
+  }
+  .option-list-item-actions {
+    @apply flex items-center gap-2 shrink-0 justify-end;
+  }
+  .option-list-flag-cell {
+    @apply min-w-[100px] text-center flex items-center justify-center;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Page-Specific: Metadata
+   * ------------------------------------------------------------------------- */
+  .meta-tab-root {
+    @apply flex flex-1 flex-col min-h-0;
+  }
+  .meta-layout {
+    @apply flex flex-1 gap-0 min-h-0;
+  }
+  /* Side nav column — metadata categories, compute subgroup picker */
+  .side-nav-col {
+    @apply shrink-0 flex flex-col border-r border-border bg-surface-muted overflow-x-hidden p-2 min-w-0;
+  }
+  .side-nav-list {
+    @apply flex flex-col flex-1 min-h-0 overflow-y-auto gap-0.5 py-px pb-1 text-xs;
+  }
+  .side-nav-list::-webkit-scrollbar {
+    width: 0.125rem;
+  }
+  .side-nav-list::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+  .side-nav-item {
+    @apply flex items-center justify-start text-left gap-2 min-h-8 px-2.5 rounded-md cursor-pointer text-xs text-text-muted transition-[background_0.08s] select-none min-w-0 shrink-0;
+  }
+  .side-nav-item:hover {
+    @apply bg-surface-hover-overlay;
+  }
+  .side-nav-item.active {
+    @apply bg-surface text-primary font-semibold border-l-[3px] border-l-primary pl-[7px] shadow-sm;
+  }
+  .side-nav-item-label {
+    @apply flex-1 min-w-0 truncate text-left;
+  }
+  .side-nav-item-label-expanded {
+    @apply flex-1 min-w-0 text-left break-words;
+    white-space: normal;
+    word-break: break-word;
+  }
+  .side-nav-empty {
+    @apply text-xs text-text-muted leading-relaxed px-2 py-3;
+  }
+  /* Metadata-only hooks (row also uses .side-nav-item) */
+  .side-nav-item.meta-cat-item.active input {
+    @apply font-semibold text-primary;
+  }
+  .side-nav-item.meta-cat-item.active input:focus {
+    @apply text-text;
+  }
+  .meta-cat-actions {
+    @apply flex items-center gap-0.5 shrink-0;
+  }
+  .meta-resizer {
+    @apply w-1.5 shrink-0 cursor-col-resize bg-transparent relative;
+  }
+  .meta-resizer::after {
+    content: "";
+    @apply absolute left-0.5 top-0 bottom-0 w-0.5 bg-border rounded-sm opacity-0 transition-opacity duration-150;
+  }
+  .meta-resizer:hover::after,
+  .meta-resizer:active::after {
+    @apply opacity-100;
+  }
+  .meta-resizer:active::after {
+    @apply bg-primary;
+  }
+  .meta-main {
+    @apply flex-1 min-w-0 min-h-0 flex flex-col;
+  }
+  .meta-wysiwyg-wrap {
+    @apply flex-1 flex flex-col min-h-0 py-1;
+  }
+  .meta-empty {
+    @apply flex flex-1 items-center justify-center text-sm text-text-muted px-6 py-16 text-center;
+  }
+  .wysiwyg-wrap {
+    @apply border border-border rounded-md overflow-hidden flex-1 flex flex-col min-h-0;
+  }
+  .wysiwyg-bar {
+    @apply flex items-center gap-px py-1.5 px-2 border-b border-border bg-surface-muted flex-wrap;
+  }
+  .wy-sep {
+    @apply w-px h-4 bg-border shrink-0 mx-1;
+  }
+  .wysiwyg-editor {
+    @apply flex-1 min-h-[200px] py-3.5 px-4 text-xs font-body text-text outline-none overflow-y-auto leading-relaxed bg-surface;
+  }
+  .wysiwyg-editor:empty::before {
+    @apply pointer-events-none text-text-muted [content:'Write_metadata_here\2026'];
+  }
+  .wysiwyg-editor img {
+    @apply my-1 max-h-[320px] max-w-full rounded-sm object-contain;
+  }
+  .wysiwyg-editor a {
+    @apply text-primary underline;
+  }
+  .wysiwyg-editor .meta-wysiwyg-table {
+    @apply my-2 w-full border-collapse text-xs;
+  }
+  .wysiwyg-editor .meta-wysiwyg-table td,
+  .wysiwyg-editor .meta-wysiwyg-table th {
+    @apply min-w-[48px] border border-border px-2 py-1 align-top;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Page-Specific: Compute (indicator settings panel)
+   * ------------------------------------------------------------------------- */
+  .compute-tab-root {
+    @apply flex flex-1 flex-col min-h-0;
+  }
+  .compute-layout {
+    @apply relative flex flex-1 gap-0 min-h-0;
+  }
+  .compute-main {
+    @apply flex flex-1 flex-col min-w-0 min-h-0 bg-surface;
+  }
+  .compute-card {
+    @apply flex-1 min-h-0 overflow-y-auto bg-surface p-4 shadow-sm;
+  }
+  .compute-section {
+    @apply flex flex-col gap-0 min-w-0;
+  }
+  .compute-check-row {
+    @apply flex items-start gap-2.5 cursor-pointer;
+  }
+  .compute-check-title {
+    @apply text-sm font-semibold text-text leading-snug;
+  }
+  .compute-hint {
+    @apply text-xs text-text-muted mt-1.5 ml-[22px] leading-relaxed;
+  }
+  /* Warning / notice banner above compute controls */
+  .compute-callout-warning {
+    @apply mb-3 ml-0 rounded-md border border-warning-border
+           bg-warning-subtle px-3 py-2.5 text-sm font-medium leading-snug
+           text-warning shadow-sm;
+  }
+  .compute-rule-sep {
+    @apply h-px bg-border my-4;
+  }
+  .compute-ius-slot {
+    @apply flex min-h-[72px] flex-col items-start justify-start gap-2 rounded-lg border border-dashed border-border
+           bg-primary-subtle px-3 py-4;
+  }
+  .compute-ius-chip {
+    @apply tone-pill--primary flex w-full max-w-full min-w-0 gap-0.5 rounded-full py-0.5 pl-2.5
+           pr-0.5 text-xs font-medium;
+  }
+  .compute-ius-chip__label {
+    @apply min-w-0 flex-1 truncate;
+  }
+  .compute-ius-chips {
+    @apply flex flex-col gap-1.5 list-none p-0 m-0 w-full;
+  }
+  .compute-ius-slot--pct {
+    @apply min-h-[100px] rounded-xl border-solid border-primary-emphasis
+           bg-primary-subtle py-5;
+  }
+  .compute-stack {
+    @apply flex flex-col gap-1 mt-4;
+  }
+  .compute-op-row {
+    @apply flex justify-center py-1 text-sm font-normal text-primary select-none;
+  }
+  .compute-op-div {
+    @apply text-sm py-0.5;
+  }
+  .compute-op-div--pct {
+    @apply text-sm font-medium py-1 text-primary;
+  }
+  .compute-pct-advanced {
+    @apply mt-2 grid gap-4 md:grid-cols-2 md:gap-8;
+  }
+  .compute-pct-options {
+    @apply flex flex-col gap-2 min-w-0;
+  }
+  /* Labels share row 1, selects row 2 — avoids staggered dropdowns when a label wraps */
+  .compute-tp-row {
+    @apply mt-2 grid grid-cols-1 gap-3;
+  }
+  .compute-tp-field {
+    @apply flex min-w-0 flex-col;
+  }
+  @media (min-width: 640px) {
+    .compute-tp-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: auto auto;
+      grid-auto-flow: column;
+      align-items: start;
+    }
+    .compute-tp-field {
+      display: contents;
+    }
+    .compute-tp-row .form-label {
+      @apply mb-0;
+    }
+  }
+  .compute-decimals {
+    @apply flex flex-col gap-1.5 max-w-[120px];
+  }
+  /* Row highlight when config panel is open */
+  .tbl-wrap tbody tr.settings-active {
+    @apply !bg-primary-subtle;
+  }
+  .tbl-wrap tbody tr.settings-active td {
+    @apply !border-b-primary-emphasis;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * App / system configuration panel
+   * ------------------------------------------------------------------------- */
+  .sys-config {
+    @apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden;
+  }
+  .sys-config__scroll {
+    @apply min-h-0 flex-1 overflow-y-auto bg-surface-muted;
+  }
+  .sys-config__panel {
+    @apply px-3 py-2;
+  }
+  .sys-config__label-fields {
+    @apply mb-3 grid grid-cols-1 sm:grid-cols-[minmax(160px,240px)_minmax(0,1fr)] sm:items-start;
+  }
+  .sys-config__label-field {
+    @apply flex flex-wrap items-center gap-1.5 pt-1.5;
+  }
+  .sys-config__field-info {
+    @apply inline-flex shrink-0 cursor-default rounded-sm text-text-muted outline-none
+      hover:text-primary
+      focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-surface;
+  }
+  .sys-config__input-field {
+    @apply min-w-0 max-w-md;
+  }
+  .sys-config__color-row {
+    @apply flex max-w-md flex-wrap items-center gap-2;
+  }
+  .sys-config__color-swatch {
+    @apply h-8 w-10 shrink-0 cursor-pointer rounded-sm border border-border bg-transparent p-0 outline-none
+      focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-surface;
+  }
+  .sys-config__color-swatch::-webkit-color-swatch-wrapper {
+    padding: 2px;
+  }
+  .sys-config__color-swatch::-webkit-color-swatch {
+    border: none;
+    border-radius: calc(var(--radius-md, 0.375rem) - 1px);
+  }
+  .sys-config__color-swatch::-moz-color-swatch {
+    border: none;
+    border-radius: calc(var(--radius-md, 0.375rem) - 1px);
+  }
+  .sys-config__file-input {
+    max-width: 100%;
+    cursor: pointer;
+    @apply text-xs text-text;
+  }
+  .sys-config__file-input::file-selector-button {
+    /* Plain CSS — @apply inside ::file-selector-button breaks Tailwind/Turbopack */
+    margin-right: 0.5rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface-muted);
+    padding: 0.25rem 0.5rem;
+    font-size: var(--font-size-xs);
+    color: var(--color-text);
+  }
+  .sys-config__hint {
+    @apply mt-1 block text-xs text-text-muted;
+  }
+  .sys-config__error {
+    @apply mt-1 block text-xs font-medium text-rose-600;
+  }
+  .sys-config__preview {
+    @apply relative mt-2 inline-flex max-h-24 max-w-full items-center justify-center overflow-hidden rounded border border-border bg-surface-muted p-1;
+  }
+  .sys-config__preview img {
+    @apply max-h-20 max-w-full object-contain;
+  }
+  .sys-config__actions {
+    @apply flex shrink-0 flex-wrap items-center gap-2 border-t border-border bg-surface px-4 py-2 sm:px-6;
+  }
+  .sys-config__types-panel {
+    @apply max-w-xl space-y-3;
+  }
+  .sys-config__types-intro {
+    @apply text-xs leading-relaxed text-text-muted;
+  }
+  .sys-config__types-list {
+    @apply divide-y divide-border rounded-md border border-border bg-surface;
+  }
+  .sys-config__type-row {
+    @apply flex items-center gap-3 px-3 py-2.5;
+  }
+  .sys-config__type-row label {
+    @apply flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-xs text-text;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Layout, gallery, filter panel, tooltips
+   * ------------------------------------------------------------------------- */
+  [dir="rtl"] body {
+    font-family: var(--font-noto-arabic), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .app-body {
+    @apply min-h-screen bg-surface text-text antialiased;
+  }
+  .app-main-body {
+    @apply flex flex-col items-stretch justify-center flex-1 min-h-0 overflow-y-auto;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Not-found (404) page
+   * ------------------------------------------------------------------------- */
+  .not-found-content {
+    @apply mx-auto max-w-6xl px-md py-xl;
+  }
+  .not-found-content h1 {
+    @apply text-lg font-bold text-text;
+  }
+  .not-found-content p {
+    @apply mt-sm text-text-muted;
+  }
+
+  /* Transparent ghost icon button — toolbar / inline edit controls */
+  .btn-comp-icon--ghost {
+    @apply p-1 text-text-muted hover:bg-surface-muted hover:text-primary rounded transition-colors;
+  }
+
+  /* Gallery filter pill toggle */
+  .btn-comp-pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-border bg-surface
+           text-xs font-medium text-text-muted py-1
+           transition-colors hover:bg-surface-muted hover:text-text;
+  }
+  .btn-comp-pill--active {
+    @apply border-primary bg-primary-subtle text-primary;
+  }
+
+  .gallery-cards-grid {
+    /* layout intentionally handled by Tailwind grid utilities in markup */
+  }
+
+  .mui-icon-outlined {
+    @apply text-lg flex-shrink-0 inline-block leading-none;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Tooltip — CustomTooltip component (fixed-position, JS-positioned)
+   * ------------------------------------------------------------------------- */
+  .tooltip {
+    @apply fixed z-tooltip py-sm px-md rounded-md border text-sm leading-normal
+           whitespace-normal max-w-[calc(100vw-var(--spacing-md))] break-words pointer-events-none
+           opacity-0 invisible
+           bg-surface text-text border-border shadow-md;
+    transition: opacity 0.15s ease-out, visibility 0.15s ease-out, transform 0.15s ease-out;
+    transform: translateY(6px);
+  }
+  .tooltip.tooltip-visible {
+    @apply opacity-100 visible;
+    transform: translateY(0);
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Filter panel — visualizer data filters sidebar
+   * Custom properties (--fp-*) allow theming without overriding Tailwind tokens.
+   * ------------------------------------------------------------------------- */
+  .filter-panel {
+    --fp-primary-bg: #e9e9e9;
+    --fp-card-bg: #f3f4f6;
+    --fp-card-border: #D0D0D1;
+    --fp-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --fp-label-color: #4a5565;
+    --fp-badge-text: theme('colors.text-muted');
+    --fp-chip-border: var(--fp-card-border);
+    --fp-chip-text: theme('colors.text');
+    --fp-chip-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    background-color: var(--fp-primary-bg);
+  }
+  .filter-panel__label {
+    color: var(--fp-label-color);
+  }
+  .filter-panel__card {
+    background-color: var(--fp-card-bg);
+    border: 1px solid var(--fp-card-border);
+  }
+  .filter-panel__badge {
+    background-color: var(--fp-primary-bg);
+    color: var(--fp-badge-text);
+  }
+  .filter-panel__badge_collapsed {
+    background-color: var(--fp-primary-bg);
+    color: var(--fp-badge-text);
+    border: 1px solid #c5bdbd;
+  }
+  .filter-panel .filter-panel__chip {
+    @apply bg-surface;
+    color: var(--fp-chip-text);
+    border: 1.5px solid var(--fp-chip-border);
+    box-shadow: var(--fp-chip-shadow);
+    font-size: calc(0.625rem * var(--font-scale, 1));
+    padding-top: 1.6px;
+    padding-bottom: 1.6px;
+    padding-left: 2.6px;
+    padding-right: 2.6px;
+  }
+  .filter-panel .filter-panel__chip .filter-panel__label {
+    font-size: inherit;
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Visualizer content area — main visualization canvas background
+   * ------------------------------------------------------------------------- */
+  .content-canvas {
+    --content-canvas-bg: #f8f8f8;
+    background-color: var(--content-canvas-bg);
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Accessibility floating anchor — keyboard-accessible overlay button
+   * (e.g. "Skip to content", a11y font-size controls).
+   * RTL variant mirrors the horizontal position to the right edge.
+   * ------------------------------------------------------------------------- */
+  .a11y-floating-anchor {
+    bottom: max(var(--spacing-xl), env(safe-area-inset-bottom));
+    left: max(var(--spacing-md), env(safe-area-inset-left));
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  [dir="rtl"] .a11y-floating-anchor {
+    left: auto;
+    right: max(var(--spacing-md), env(safe-area-inset-right));
+  }
+
+}
+
+
+/* =============================================================================
+ * Utilities — outside @layer components so they beat component rules
+ * ============================================================================= */
+@layer utilities {
+  /* Hides scrollbar chrome; trackpad / wheel / touch scroll still works */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
+/* =============================================================================
+ * Keyframes — defined outside @layer so they are globally available
+ * ============================================================================= */
+
+/* Sidebar DW switcher open / row selection notice fade-in */
+@keyframes indicator-fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Loader logo fill animation (upward sweep) */
+@keyframes loader-fill {
+  0%, 100% {
+    transform: translateY(100%);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

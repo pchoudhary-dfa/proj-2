@@ -1,0 +1,302 @@
+<?php
+
+use Drupal\Core\Database\Database;
+
+define('DFA_APP_ID', 'dfaportal');
+define('DFA_APP_SECRET', 'dfaportal');
+define('MONITORING_CORE_URL', '/monservice');
+define('MONWEB_URL', '/monweb');
+define('DATA_MANAGER_CORE_URL', '/datamanager');
+define('RMISS_CORE_URL', '/rmiss');
+define('MONITORING_CORE_AUTO_LOGIN_URL', MONWEB_URL . '/#');
+define('MONITORING_CORE_AUTO_LOGIN_WORKSPACE_URL', MONWEB_URL . '/#/Workspace/');
+define('DATA_MANAGER_AUTO_LOGIN_URL', DATA_MANAGER_CORE_URL . '/Login/#');
+define('RMISS_URL_AUTO_LOGIN_URL', RMISS_CORE_URL . '/Login/#');
+define('API_GET_TOKEN', 'api/v1/token');
+define('API_CREATE_WORKSPACE', 'api/v1/createWorkspace');
+define('API_DELETE_WORKSPACE', 'api/v1/deleteWorkspace');
+define('MON_API', '/monservice/api/v1/');
+define('MON_MODULES', '/modules/');
+define('API_CREATE_USER', 'api/v1/setUserRole');
+define('API_DELETE_USER', 'api/v1/deleteUser');
+define('API_ASSOSIATE_WORKSPACE', 'api/v1/associateUserWorkspace');
+define('SEE_THE_DATA_SECTION', '/Reports');
+define('UNDAF_SECTION', '/Plans/PLANNING/RC');
+define('BOS_SECTION', '/Plans/PLANNING/BOS');
+define('MAX_FILE_ALLOWED_SIZE', 5);
+
+// Data Manager indicator URLs (placeholders replaced at runtime).
+define('MON_QUERY_SERVICE_APP_CONFIG', '/apiservice/queryService/920');
+define('DATA_MANAGER_VERSION_V5', 'v5');
+define('DATA_MANAGER_VERSION_V6', 'v6');
+define('DATA_MANAGER_INDICATOR_URL_V5', '{HOST}' . DATA_MANAGER_CORE_URL . '/#/DatabaseManagement/{WORKSPACE_GID}/Template/Indicator');
+define('DATA_MANAGER_INDICATOR_URL_V6', '{DM_BASE_URL}/{LANG}/{WORKSPACE_GID}/indicator');
+
+function doCurlPostRequest($url, $postFields = [], $headers = [])
+{
+	$ch = curl_init();
+
+	if (!empty($headers)) {
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	}
+
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_POST, 1);
+
+	if (!empty($postFields) && is_array($postFields)) {
+		$strPostFields = http_build_query($postFields);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $strPostFields);
+	}
+
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$serverOutput = curl_exec($ch);
+
+	curl_close($ch);
+	return $serverOutput;
+}
+
+function doCurlGetRequest($url, $getFields = [])
+{
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$serverOutput = curl_exec($ch);
+	curl_close($ch);
+	return $serverOutput;
+}
+
+
+// Get Token for API
+function getApiToken(string $appId = '', string $appSecret = ''): string
+{
+	//global $base_url
+	$base_url = isset($_ENV['APP_URL']) ? trim($_ENV['APP_URL']) : '';
+	if ($base_url === '') {
+		$request = \Drupal::request();
+		$base_url = $request ? $request->getSchemeAndHttpHost() : '';
+	}
+	//$base_url='https://tunisia.dataforall.org';
+
+	if (stripos($base_url, 'http://') === 0) {
+		$base_url = 'https://' . substr($base_url, 7);
+	}
+
+	$token = '';
+	if ($base_url === '') {
+		return $token;
+	}
+	$postFlds['app_id'] = !empty($appId) ? $appId : DFA_APP_ID;
+	$postFlds['app_secret'] = !empty($appSecret) ? $appSecret : DFA_APP_SECRET;
+	$base_url = rtrim($base_url, '/');
+	$monitoring_path = '/' . ltrim(MONITORING_CORE_URL, '/');
+	$requestTokenUrl = $base_url . $monitoring_path . '/' . API_GET_TOKEN;
+	$response = doCurlPostRequest($requestTokenUrl, $postFlds);
+
+	$result = json_decode($response, true);
+
+	if ($result['success'] == true) {
+		return $result['data']['token'];
+	} else {
+		return $token;
+	}
+}
+
+// Get selected language
+function getSelectedLanguageCode()
+{
+
+	$currSiteLang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+	if ($currSiteLang == 'pt-pt')
+		$currSiteLang = 'pt';
+
+	return $currSiteLang;
+}
+
+/**
+ * Returns the application host URL (https, no trailing slash).
+ */
+function getAppHostUrl(): string
+{
+	$host = isset($_ENV['APP_URL']) ? trim($_ENV['APP_URL']) : '';
+	if ($host === '') {
+		$request = \Drupal::request();
+		$host = $request ? $request->getSchemeAndHttpHost() : '';
+	}
+	if (stripos($host, 'http://') === 0) {
+		$host = 'https://' . substr($host, 7);
+	}
+
+	return rtrim($host, '/');
+}
+
+/**
+ * Fetches Data Manager settings from monservice queryService/920.
+ *
+ * @see https://guinea.dataforall.org/monservice/apiservice/queryService/920
+ */
+function getDataManagerQueryServiceConfig(string $host = ''): array
+{
+	static $config = NULL;
+
+	if ($config !== NULL) {
+		return $config;
+	}
+
+	$host = $host !== '' ? rtrim($host, '/') : getAppHostUrl();
+	$config = [
+		'dm_version' => DATA_MANAGER_VERSION_V5,
+		'data_manager_base_url' => $host . DATA_MANAGER_CORE_URL,
+	];
+
+	if ($host === '') {
+		return $config;
+	}
+
+	$url = $host . MONITORING_CORE_URL . MON_QUERY_SERVICE_APP_CONFIG;
+	$response = doCurlGetRequest($url);
+	$result = json_decode($response, true);
+
+	if (!is_array($result) || empty($result['success']) || !isset($result['data'])) {
+		return $config;
+	}
+
+	$data = $result['data'];
+	$config['dm_version'] = $data['DM_VERSION']['v'] ?? DATA_MANAGER_VERSION_V5;
+	$config['data_manager_base_url'] = rtrim(
+		$data['DATA_MANAGER_BASE_URL']['v'] ?? $config['data_manager_base_url'],
+		'/'
+	);
+
+	return $config;
+}
+
+/**
+ * Resolves {DM_BASE_URL} for v6 when queryService/920 does not provide it.
+ */
+function getDataManagerV6BaseUrl(string $host, array $dmConfig): string
+{
+	$baseUrl = rtrim($dmConfig['data_manager_base_url'] ?? '', '/');
+	if ($baseUrl !== '') {
+		return $baseUrl;
+	}
+
+	$parsed = parse_url(rtrim($host, '/'));
+	$hostname = $parsed['host'] ?? '';
+
+	return $hostname !== '' ? 'https://datamanager.' . $hostname : rtrim($host, '/') . DATA_MANAGER_CORE_URL;
+}
+
+/**
+ * Extracts lang and workspace from the modules API INDICATORS url template.
+ *
+ * Examples:
+ * - "{DM_URL}/fr/9/indicator"  => lang=fr, workspace=9
+ * - ".../DatabaseManagement/1/Template/Indicator" => workspace=1
+ */
+function parseIndicatorUrlParams(string $apiUrlTemplate, string $fallbackLang, string $fallbackWorkspace): array
+{
+	$lang = $fallbackLang;
+	$workspace = $fallbackWorkspace;
+
+	// v6: /{lang}/{workspace}/indicator
+	if (preg_match('#/([a-z]{2}(?:-[a-z]{2})?)/(\d+)/indicator#i', $apiUrlTemplate, $matches)) {
+		return [
+			'lang' => $matches[1],
+			'workspace' => $matches[2],
+		];
+	}
+
+	// v5: /DatabaseManagement/{workspace}/Template/Indicator
+	if (preg_match('#/DatabaseManagement/(\d+)/Template/Indicator#i', $apiUrlTemplate, $matches)) {
+		return [
+			'lang' => $lang,
+			'workspace' => $matches[1],
+		];
+	}
+
+	return [
+		'lang' => $lang,
+		'workspace' => $workspace,
+	];
+}
+
+/**
+ * Builds the Indicators menu URL based on DM_VERSION from queryService/920.
+ *
+ * v5: {HOST}/datamanager/#/DatabaseManagement/{WORKSPACE_GID}/Template/Indicator
+ * v6: {DM_BASE_URL}/{LANG}/{WORKSPACE_GID}/indicator
+ *
+ * Lang and workspace are taken from the modules API INDICATORS url when present
+ * (e.g. "{DM_URL}/fr/9/indicator"), so "GLOBAL" is not used in the final link.
+ */
+function buildIndicatorUrl(string $host, string $lang, string $workspace, array $dmConfig = [], string $apiUrlTemplate = ''): string
+{
+	$host = rtrim($host, '/');
+	$dmConfig = $dmConfig ?: getDataManagerQueryServiceConfig($host);
+
+	if ($apiUrlTemplate !== '') {
+		$params = parseIndicatorUrlParams($apiUrlTemplate, $lang, $workspace);
+		$lang = $params['lang'];
+		$workspace = $params['workspace'];
+	}
+
+	$version = strtolower($dmConfig['dm_version'] ?? DATA_MANAGER_VERSION_V5);
+	$isV6 = ($version === DATA_MANAGER_VERSION_V6);
+	$template = $isV6 ? DATA_MANAGER_INDICATOR_URL_V6 : DATA_MANAGER_INDICATOR_URL_V5;
+
+	$replacements = [
+		'{HOST}' => $host,
+		'{LANG}' => $lang,
+		'{WORKSPACE_GID}' => $workspace,
+		'{DM_BASE_URL}' => $isV6 ? getDataManagerV6BaseUrl($host, $dmConfig) : '',
+	];
+
+	return str_replace(array_keys($replacements), array_values($replacements), $template);
+}
+
+/**
+ * Resolves the Data Manager URL for the secure dashboard block.
+ */
+function resolveSecureDashboardDataManagerUrl(): string
+{
+	$host = getAppHostUrl();
+	if ($host === '') {
+		return '';
+	}
+
+	$lang = getSelectedLanguageCode();
+	$workspace = 'GLOBAL';
+	$uid = \Drupal::currentUser()->id();
+	$apiUrlTemplate = '';
+
+	if ($uid) {
+		$workspace_ids = Database::getConnection()
+			->select('user__field_workspaces', 'w')
+			->fields('w', ['field_workspaces_target_id'])
+			->condition('entity_id', $uid)
+			->execute()
+			->fetchCol();
+
+		if (count($workspace_ids) === 1) {
+			$term = \Drupal\taxonomy\Entity\Term::load($workspace_ids[0]);
+			if ($term && !$term->get('field_wrkspc_uni_gid')->isEmpty()) {
+				$workspace = $term->get('field_wrkspc_uni_gid')->value;
+			}
+		}
+
+		$user = \Drupal\user\Entity\User::load($uid);
+		if ($user) {
+			$user_name = str_replace(' ', '%20', $user->getAccountName());
+			$mon_url = $host . MON_API . $workspace . '/' . $lang . MON_MODULES . $user_name;
+			$response = doCurlGetRequest($mon_url);
+			$resp = json_decode($response, true);
+			if (isset($resp['data']['rc']['INDICATORS']['url'])) {
+				$apiUrlTemplate = $resp['data']['rc']['INDICATORS']['url'];
+			}
+		}
+	}
+
+	$dmConfig = getDataManagerQueryServiceConfig($host);
+
+	return buildIndicatorUrl($host, $lang, $workspace, $dmConfig, $apiUrlTemplate);
+}

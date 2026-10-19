@@ -1,0 +1,75 @@
+{#
+/**
+ * @file
+ * Full view for Ressources – publication detail layout (matches publication-detail markup).
+ *
+ * @see guinea_preprocess_node()
+ */
+#}
+<div class="container publication-detail-container">
+  <a href="{{ publication_back_url }}" class="publication-detail-back d-inline-flex align-items-center gap-2 text-decoration-none text-mineshaft mb-4" id="publication-detail-back" aria-label="{{ 'Retour à la page précédente'|t }}">
+    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+    <span>{{ 'Retour'|t }}</span>
+  </a>
+  <article class="publication-detail-card rounded-3 overflow-hidden shadow-sm bg-white border-0">
+    <div class="row g-0 publication-detail-row">
+      <div class="col-12 col-md publication-detail-img-col">
+        <div class="publication-detail-img-wrap">
+          {% if publication_image_url %}
+          <img id="detail-image" src="{{ publication_image_url }}" alt="{{ publication_title|e }}" class="w-100 h-100 object-fit-cover" loading="lazy" />
+          {% endif %}
+        </div>
+        <div class="publication-detail-actions publication-detail-pdf-actions">
+          <button type="button" class="publication-detail-btn publication-detail-btn-download" data-publication-pdf-action="download" aria-label="{{ 'Download this page as PDF'|t }}">
+            <i class="fas fa-download me-2" aria-hidden="true"></i> {{ 'Télécharger'|t }}
+          </button>
+          <button type="button" class="publication-detail-btn publication-detail-btn-view" data-publication-pdf-action="open" aria-label="{{ 'Open the PDF in a new tab'|t }}">
+            <i class="fas fa-external-link-alt me-2" aria-hidden="true"></i> {{ 'Voir'|t }}
+          </button>
+        </div>
+      </div>
+      <div class="col-12 col-md publication-detail-content-col">
+        <div class="publication-detail-content p-4 p-lg-4">
+          {% if publication_tag %}
+          <span id="detail-tag" class="publication-detail-tag d-inline-block mb-2">{{ publication_tag }}</span>
+          {% endif %}
+          <h1 id="detail-title" class="publication-detail-title fw-bold text-mineshaft mb-3">{{ label }}</h1>
+          {% if publication_theme or publication_institution or publication_year %}
+          <div id="detail-meta-inline" class="publication-detail-meta-inline text-secondary small mb-4">
+            {% if publication_theme %}
+            <span id="detail-theme">{{ publication_theme }}</span>
+            {% endif %}
+            {% if publication_theme and publication_institution %}
+            <span class="publication-detail-meta-sep" aria-hidden="true"></span>
+            {% endif %}
+            {% if publication_institution %}
+            <span id="detail-institution">{{ publication_institution }}</span>
+            {% endif %}
+            {% if publication_institution and publication_year %}
+            <span class="publication-detail-meta-sep" aria-hidden="true"></span>
+            {% endif %}
+            {% if publication_year %}
+            <span id="detail-meta">{{ publication_year }}</span>
+            {% endif %}
+          </div>
+          {% endif %}
+          <div id="detail-description" class="publication-detail-description text-secondary mb-4">
+            {{ content.field_ressources_body }}
+          </div>
+          <div class="publication-detail-share">
+            <span class="publication-detail-share-label text-muted small fw-semibold text-uppercase me-3">{{ 'Partager'|t }}</span>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ publication_share_url|url_encode }}" class="publication-detail-share-icon" aria-label="{{ 'Partager sur Facebook'|t }}" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ publication_share_url|url_encode }}" class="publication-detail-share-icon" aria-label="{{ 'Partager sur LinkedIn'|t }}" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="{{ publication_gmail_compose_url }}" class="publication-detail-share-icon publication-detail-share-icon--email" aria-label="{{ 'Partager par e-mail (Gmail)'|t }}" target="_blank" rel="noopener noreferrer">
+              <i class="fas fa-envelope" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>

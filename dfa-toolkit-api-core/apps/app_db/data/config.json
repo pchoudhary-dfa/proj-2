@@ -1,0 +1,62 @@
+{
+  "DFA_VIZ": {
+    "APP_NAME": { "value": "DFA Visualizer", "description": "Application display name" },
+    "APP_TITLE": { "value": "DFA Visualizer", "description": "Application page title" },
+    "FLAVOR_COLOR": { "value": "", "description": "Primary flavor color" },
+    "FLAVOR_COLOR_HOVER": { "value": "", "description": "Flavor hover color" },
+    "FLAVOR_FAVICON": { "value": "", "description": "Favicon asset path or key" },
+    "FLAVOR_LOGO": { "value": "", "description": "Application logo asset path or key" },
+    "LANGUAGE_ENABLED": { "value": "no", "description": "When yes, show the header language selector; available languages come from GET /system-language" },
+    "LANGUAGE_DEFAULT": { "value": "en", "description": "Default language locale" },
+    "DWS_ENABLED": { "value": "no", "description": "Enable datawarehouse switcher" },
+    "DWS_DEFAULT": { "value": "1", "description": "Default datawarehouse id" },
+    "APP_ID": { "value": "DFA_VIZ", "description": "Application identifier key" },
+    "DWS_DEFAULT_AREA": { "value": "", "description": "Default area identifier for datawarehouse" },
+    "DFA_DML_URL": { "value": "", "description": "Base URL of the hosted DML map library application (empty = choropleth maps disabled)" },
+    "DW_MAPS": { "value": "{}", "description": "JSON choropleth basemap paths per area level (L1/L2/L3); per-warehouse override in db_configuration (app_key DFA_VIZ)" },
+    "APP_FOOTER_NOTE": { "value": "Copyright © 2026 DFA. All rights reserved.", "description": "Footer content displayed at the bottom of the application" },
+    "ENABLE_INSIGHTS": { "value": "no", "description": "Enable AI/insights features (yes/no)" },
+    "AI_PROVIDER": { "value": "", "description": "AI provider identifier" },
+    "AI_API_KEY": { "value": "", "description": "AI API key (stored securely; redacted in GET responses)" }
+  },
+  "DFA_DASH": {
+    "APP_NAME": { "value": "DFA Dashboard", "description": "Application display name" },
+    "APP_TITLE": { "value": "DFA Dashboard", "description": "Application page title" },
+    "FLAVOR_COLOR": { "value": "", "description": "Primary flavor color" },
+    "FLAVOR_COLOR_HOVER": { "value": "", "description": "Flavor hover color" },
+    "FLAVOR_FAVICON": { "value": "", "description": "Favicon asset path or key" },
+    "FLAVOR_LOGO": { "value": "", "description": "Application logo asset path or key" },
+    "LANGUAGE_ENABLED": { "value": "no", "description": "Enable multi-language support" },
+    "LANGUAGE_DEFAULT": { "value": "en", "description": "Default language locale" },
+    "DWS_ENABLED": { "value": "no", "description": "Enable datawarehouse switcher" },
+    "DWS_DEFAULT": { "value": "1", "description": "Default datawarehouse id" },
+    "APP_ID": { "value": "DFA_DASH", "description": "Application identifier key" },
+    "APP_FOOTER_NOTE": { "value": "Copyright © 2026 DFA. All rights reserved.", "description": "Footer content displayed at the bottom of the application" },
+    "ALLOWED_IMPORT_FILE_SIZE_MB": { "value": "50", "description": "Max upload size in MB (MiB, 1024² bytes) for XLSX/CSV import endpoints (translations, workflow datapoints, areas); default 50 MiB." }
+  },
+  "DFA_DM": {
+    "APP_NAME": { "value": "DFA DataManager", "description": "Application display name" },
+    "APP_TITLE": { "value": "DFA DataManager", "description": "Application page title" },
+    "FLAVOR_COLOR": { "value": "", "description": "Primary flavor color" },
+    "FLAVOR_COLOR_HOVER": { "value": "", "description": "Flavor hover color" },
+    "FLAVOR_FAVICON": { "value": "", "description": "Favicon asset path or key" },
+    "FLAVOR_LOGO": { "value": "", "description": "Application logo asset path or key" },
+    "APP_ID": { "value": "DFA_DM", "description": "Application identifier key" },
+    "LANGUAGE_ENABLED": { "value": "yes", "description": "Enable multi-language support" },
+    "LANGUAGE_DEFAULT": { "value": "en", "description": "Default language locale" },
+    "ENABLED_IC_TYPES": { "value": "[]", "description": "JSON array of enabled IC type codes. Possible values: SC (Sector), GL (Goal), CF (Framework), TH (Theme), IT (Institution), CN (Convention). E.g. [\"SC\",\"TH\"]. Empty string or empty array means all types are enabled." },
+    "APP_FOOTER_NOTE": {"value": "Copyright © 2026 DFA. All rights reserved.", "description": "Footer content displayed at the bottom of the application" },
+    "IND_CLASSIFICATIONS_SETTINGS": { "value": "[{\"type\":\"SC\", \"name\":\"Sector\", \"visible\":true}, {\"type\":\"GL\", \"name\":\"Goal\", \"visible\":true}, {\"type\":\"CF\", \"name\":\"Framework\", \"visible\":true}, {\"type\":\"TH\", \"name\":\"Theme\", \"visible\":true}, {\"type\":\"IT\", \"name\":\"Institution\", \"visible\":true},{\"type\":\"CN\", \"name\":\"Convention\", \"visible\":true}]", "description": "Indicator classification types visibility (JSON); also synced to db_configuration when configuration_sync runs" },
+    "IUS_DEF_VALIDATION": { "value": "TEXT", "description": "Default IUS validation mode; also synced to db_configuration when configuration_sync runs" },
+    "ALLOWED_IMPORT_FILE_SIZE_MB": { "value": "50", "description": "Max upload size in MB (MiB, 1024² bytes) for XLSX/CSV import endpoints (translations, workflow datapoints, areas); default 50 MiB." },
+    "UNIT_DATA_FORMAT_CATALOG": {
+      "value": "",
+      "description": "Unit format catalog JSON (codes + formatting_enabled). Labels from UNIT_DATA_FORMAT_* translations. Formatting rules in API code. Seeded from unit_data_format_catalog.json."
+    }
+  },
+  "DFA_CORE": {
+    "SSO_ENABLED": { "value": "false", "description": "SSO login mode toggle (platform-wide): true = SSO-only, false = local-only" },
+    "IUS_GID_SEPARATOR": { "value": "|", "description": "Separator character used to join/split composite IUS GID (i_gid<sep>u_gid<sep>s_gid). Platform-wide; must not be empty." }
+  }
+}
+

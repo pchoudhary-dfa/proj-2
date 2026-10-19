@@ -1,0 +1,372 @@
+{
+  "welcome": {
+    "name": "Welcome Email",
+    "translations": {
+      "en": {
+        "subject": "Welcome to DFA — your account is ready",
+        "html_content": "<p>Hi {{full_name}},</p><p>Your DFA account has been created successfully.</p><p>Username: <strong>{{username}}</strong></p><p>You can log in at: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Best regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nYour DFA account has been created successfully.\n\nUsername: {{username}}\n\nYou can log in at: {{login_url}}\n\nBest regards,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "مرحباً بك في DFA — حسابك جاهز",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>تم إنشاء حسابك في DFA بنجاح.</p><p>اسم المستخدم: <strong>{{username}}</strong></p><p>يمكنك تسجيل الدخول على: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>مع أطيب التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nتم إنشاء حسابك في DFA بنجاح.\n\nاسم المستخدم: {{username}}\n\nيمكنك تسجيل الدخول على: {{login_url}}\n\nمع أطيب التحيات،\n{{from_name}}"
+      },
+      "zh": {
+        "subject": "欢迎加入 DFA —— 您的账户已准备就绪",
+        "html_content": "<p>你好 {{full_name}}，</p><p>您的 DFA 账户已成功创建。</p><p>用户名：<strong>{{username}}</strong></p><p>登录地址：<a href=\"{{login_url}}\">{{login_url}}</a></p><p>祝好，<br>{{from_name}}</p>",
+        "text_content": "你好 {{full_name}}，\n\n您的 DFA 账户已成功创建。\n\n用户名：{{username}}\n\n登录地址：{{login_url}}\n\n祝好，\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Bienvenue sur DFA — votre compte est prêt",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Votre compte DFA a été créé avec succès.</p><p>Nom d’utilisateur : <strong>{{username}}</strong></p><p>Vous pouvez vous connecter ici : <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nVotre compte DFA a été créé avec succès.\n\nNom d’utilisateur : {{username}}\n\nVous pouvez vous connecter ici : {{login_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ru": {
+        "subject": "Добро пожаловать в DFA — ваш аккаунт готов",
+        "html_content": "<p>Здравствуйте, {{full_name}}!</p><p>Ваш аккаунт DFA успешно создан.</p><p>Имя пользователя: <strong>{{username}}</strong></p><p>Вы можете войти по адресу: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>С уважением,<br>{{from_name}}</p>",
+        "text_content": "Здравствуйте, {{full_name}}!\n\nВаш аккаунт DFA успешно создан.\n\nИмя пользователя: {{username}}\n\nВы можете войти по адресу: {{login_url}}\n\nС уважением,\n{{from_name}}"
+      },
+      "es": {
+        "subject": "Bienvenido a DFA — tu cuenta está lista",
+        "html_content": "<p>Hola {{full_name}},</p><p>Tu cuenta DFA ha sido creada exitosamente.</p><p>Nombre de usuario: <strong>{{username}}</strong></p><p>Puedes iniciar sesión en: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Saludos,<br>{{from_name}}</p>",
+        "text_content": "Hola {{full_name}},\n\nTu cuenta DFA ha sido creada exitosamente.\n\nNombre de usuario: {{username}}\n\nPuedes iniciar sesión en: {{login_url}}\n\nSaludos,\n{{from_name}}"
+      }
+    }
+  },
+  "welcome_auto_password": {
+    "name": "Welcome with Temporary Password",
+    "translations": {
+      "en": {
+        "subject": "Your DFA account has been created",
+        "html_content": "<p>Hi {{full_name}},</p><p>An account has been set up for you.</p><p>Username: <strong>{{username}}</strong><br>Temporary Password: <strong>{{plain_password}}</strong></p><p>Please log in at <a href=\"{{login_url}}\">{{login_url}}</a> and change your password.</p><p>Best regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nAn account has been set up for you.\n\nUsername: {{username}}\nTemporary Password: {{plain_password}}\n\nPlease log in at {{login_url}} and change your password.\n\nBest regards,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "تم إنشاء حسابك في DFA",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>تم إعداد حساب لك.</p><p>اسم المستخدم: <strong>{{username}}</strong><br>كلمة المرور المؤقتة: <strong>{{plain_password}}</strong></p><p>يرجى تسجيل الدخول على <a href=\"{{login_url}}\">{{login_url}}</a> وتغيير كلمة المرور.</p><p>مع أطيب التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nتم إعداد حساب لك.\n\nاسم المستخدم: {{username}}\nكلمة المرور المؤقتة: {{plain_password}}\n\nيرجى تسجيل الدخول على {{login_url}} وتغيير كلمة المرور.\n\nمع أطيب التحيات،\n{{from_name}}"
+      },
+      "zh": {
+        "subject": "您的 DFA 账户已创建",
+        "html_content": "<p>你好 {{full_name}}，</p><p>已为您设置了账户。</p><p>用户名：<strong>{{username}}</strong><br>临时密码：<strong>{{plain_password}}</strong></p><p>请登录 <a href=\"{{login_url}}\">{{login_url}}</a> 并修改密码。</p><p>祝好，<br>{{from_name}}</p>",
+        "text_content": "你好 {{full_name}}，\n\n已为您设置了账户。\n\n用户名：{{username}}\n临时密码：{{plain_password}}\n\n请登录 {{login_url}} 并修改密码。\n\n祝好，\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Votre compte DFA a été créé",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Un compte a été créé pour vous.</p><p>Nom d’utilisateur : <strong>{{username}}</strong><br>Mot de passe temporaire : <strong>{{plain_password}}</strong></p><p>Veuillez vous connecter sur <a href=\"{{login_url}}\">{{login_url}}</a> et changer votre mot de passe.</p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nUn compte a été créé pour vous.\n\nNom d’utilisateur : {{username}}\nMot de passe temporaire : {{plain_password}}\n\nVeuillez vous connecter sur {{login_url}} et changer votre mot de passe.\n\nCordialement,\n{{from_name}}"
+      },
+      "ru": {
+        "subject": "Ваш аккаунт DFA создан",
+        "html_content": "<p>Здравствуйте, {{full_name}}!</p><p>Для вас создан аккаунт.</p><p>Имя пользователя: <strong>{{username}}</strong><br>Временный пароль: <strong>{{plain_password}}</strong></p><p>Пожалуйста, войдите на <a href=\"{{login_url}}\">{{login_url}}</a> и смените пароль.</p><p>С уважением,<br>{{from_name}}</p>",
+        "text_content": "Здравствуйте, {{full_name}}!\n\nДля вас создан аккаунт.\n\nИмя пользователя: {{username}}\nВременный пароль: {{plain_password}}\n\nПожалуйста, войдите на {{login_url}} и смените пароль.\n\nС уважением,\n{{from_name}}"
+      },
+      "es": {
+        "subject": "Tu cuenta DFA ha sido creada",
+        "html_content": "<p>Hola {{full_name}},</p><p>Se ha configurado una cuenta para ti.</p><p>Nombre de usuario: <strong>{{username}}</strong><br>Contraseña temporal: <strong>{{plain_password}}</strong></p><p>Por favor, inicia sesión en <a href=\"{{login_url}}\">{{login_url}}</a> y cambia tu contraseña.</p><p>Saludos,<br>{{from_name}}</p>",
+        "text_content": "Hola {{full_name}},\n\nSe ha configurado una cuenta para ti.\n\nNombre de usuario: {{username}}\nContraseña temporal: {{plain_password}}\n\nPor favor, inicia sesión en {{login_url}} y cambia tu contraseña.\n\nSaludos,\n{{from_name}}"
+      }
+    }
+  },
+  "account_invite_set_password": {
+    "name": "Account created — set password",
+    "translations": {
+      "en": {
+        "subject": "Set your DFA password",
+        "html_content": "<p>Hi {{full_name}},</p><p>An account has been created for you. Username: <strong>{{username}}</strong></p><p><a href=\"{{reset_url}}\">Set your password</a></p><p>This link expires in {{expires_in}}. After you set your password, you can sign in at <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Best regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nAn account has been created for you. Username: {{username}}\n\nSet your password: {{reset_url}}\n\nThis link expires in {{expires_in}}. After you set your password, you can sign in at {{login_url}}\n\nBest regards,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "تعيين كلمة مرور DFA",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>تم إنشاء حساب لك. اسم المستخدم: <strong>{{username}}</strong></p><p><a href=\"{{reset_url}}\">تعيين كلمة المرور</a></p><p>ينتهي الرابط خلال {{expires_in}}. بعد الإعداد يمكنك تسجيل الدخول عبر <a href=\"{{login_url}}\">{{login_url}}</a></p><p>مع أطيب التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nتم إنشاء حساب لك. اسم المستخدم: {{username}}\n\nرابط التعيين: {{reset_url}}\n\nينتهي الرابط خلال {{expires_in}}. تسجيل الدخول: {{login_url}}\n\nمع أطيب التحيات،\n{{from_name}}"
+      },
+      "zh": {
+        "subject": "设置您的 DFA 密码",
+        "html_content": "<p>你好 {{full_name}}，</p><p>已为您创建账户。用户名：<strong>{{username}}</strong></p><p><a href=\"{{reset_url}}\">点此设置密码</a></p><p>链接将在 {{expires_in}} 内失效。设置后可在 <a href=\"{{login_url}}\">{{login_url}}</a> 登录。</p><p>祝好，<br>{{from_name}}</p>",
+        "text_content": "你好 {{full_name}}，\n\n已为您创建账户。用户名：{{username}}\n\n设置密码：{{reset_url}}\n\n链接在 {{expires_in}} 内有效。登录：{{login_url}}\n\n祝好，\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Définissez votre mot de passe DFA",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Un compte a été créé pour vous. Nom d’utilisateur : <strong>{{username}}</strong></p><p><a href=\"{{reset_url}}\">Définir votre mot de passe</a></p><p>Ce lien expire dans {{expires_in}}. Après cela, connectez-vous sur <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nUn compte a été créé pour vous. Nom d’utilisateur : {{username}}\n\nDéfinir le mot de passe : {{reset_url}}\n\nCe lien expire dans {{expires_in}}. Connexion : {{login_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ru": {
+        "subject": "Задайте пароль DFA",
+        "html_content": "<p>Здравствуйте, {{full_name}}!</p><p>Для вас создана учётная запись. Имя пользователя: <strong>{{username}}</strong></p><p><a href=\"{{reset_url}}\">Задать пароль</a></p><p>Ссылка действительна {{expires_in}}. После этого войдите на <a href=\"{{login_url}}\">{{login_url}}</a></p><p>С уважением,<br>{{from_name}}</p>",
+        "text_content": "Здравствуйте, {{full_name}}!\n\nДля вас создана учётная запись. Имя: {{username}}\n\nЗадать пароль: {{reset_url}}\n\nСрок действия ссылки: {{expires_in}}. Вход: {{login_url}}\n\nС уважением,\n{{from_name}}"
+      },
+      "es": {
+        "subject": "Configura tu contraseña de DFA",
+        "html_content": "<p>Hola {{full_name}},</p><p>Se ha creado una cuenta para ti. Nombre de usuario: <strong>{{username}}</strong></p><p><a href=\"{{reset_url}}\">Establecer contraseña</a></p><p>Este enlace caduca en {{expires_in}}. Luego inicia sesión en <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Saludos,<br>{{from_name}}</p>",
+        "text_content": "Hola {{full_name}},\n\nSe ha creado una cuenta para ti. Usuario: {{username}}\n\nEnlace: {{reset_url}}\n\nEl enlace caduca en {{expires_in}}. Inicio de sesión: {{login_url}}\n\nSaludos,\n{{from_name}}"
+      }
+    }
+  },
+  "password_reset_link": {
+    "name": "Password reset link",
+    "translations": {
+      "en": {
+        "subject": "Reset your DFA password",
+        "html_content": "<p>Hi {{full_name}},</p><p>We received a request to reset the password for username <strong>{{username}}</strong>.</p><p><a href=\"{{reset_url}}\">Reset your password</a></p><p>This link expires in {{expires_in}}. If you did not request a reset, you can ignore this email.</p><p>Sign in anytime at <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Best regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nWe received a request to reset the password for username {{username}}.\n\nReset your password: {{reset_url}}\n\nThis link expires in {{expires_in}}. If you did not request a reset, you can ignore this email.\n\nSign in: {{login_url}}\n\nBest regards,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "إعادة تعيين كلمة مرور DFA",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>تلقينا طلبًا لإعادة تعيين كلمة المرور لحساب <strong>{{username}}</strong>.</p><p><a href=\"{{reset_url}}\">إعادة تعيين كلمة المرور</a></p><p>ينتهي الرابط خلال {{expires_in}}. إذا لم طلب ذلك، يمكنك تجاهل هذه الرسالة.</p><p>تسجيل الدخول: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>مع أطيب التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nتلقينا طلبًا لإعادة تعيين كلمة المرور لحساب {{username}}.\n\nالرابط: {{reset_url}}\n\nينتهي الرابط خلال {{expires_in}}.\n\nتسجيل الدخول: {{login_url}}\n\nمع أطيب التحيات،\n{{from_name}}"
+      },
+      "zh": {
+        "subject": "重置您的 DFA 密码",
+        "html_content": "<p>你好 {{full_name}}，</p><p>我们收到了用户名 <strong>{{username}}</strong> 重置密码的请求。</p><p><a href=\"{{reset_url}}\">点此重置密码</a></p><p>链接将在 {{expires_in}} 内失效。如非本人操作，请忽略此邮件。</p><p>登录：<a href=\"{{login_url}}\">{{login_url}}</a></p><p>祝好，<br>{{from_name}}</p>",
+        "text_content": "你好 {{full_name}}，\n\n我们收到了用户名 {{username}} 重置密码的请求。\n\n链接：{{reset_url}}\n\n链接在 {{expires_in}} 内有效。如非本人请求，请忽略。\n\n登录：{{login_url}}\n\n祝好，\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Réinitialisez votre mot de passe DFA",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Nous avons reçu une demande de réinitialisation du mot de passe pour le compte <strong>{{username}}</strong>.</p><p><a href=\"{{reset_url}}\">Réinitialiser votre mot de passe</a></p><p>Ce lien expire dans {{expires_in}}. Si vous n’êtes pas à l’origine de cette demande, ignorez cet e-mail.</p><p>Connexion : <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nNous avons reçu une demande de réinitialisation du mot de passe pour le compte {{username}}.\n\nLien : {{reset_url}}\n\nCe lien expire dans {{expires_in}}. Si vous n’êtes pas à l’origine de cette demande, ignorez cet e-mail.\n\nConnexion : {{login_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ru": {
+        "subject": "Сброс пароля DFA",
+        "html_content": "<p>Здравствуйте, {{full_name}}!</p><p>Мы получили запрос на сброс пароля для учётной записи <strong>{{username}}</strong>.</p><p><a href=\"{{reset_url}}\">Сбросить пароль</a></p><p>Ссылка действительна {{expires_in}}. Если вы этого не запрашивали, проигнорируйте письмо.</p><p>Вход: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>С уважением,<br>{{from_name}}</p>",
+        "text_content": "Здравствуйте, {{full_name}}!\n\nМы получили запрос на сброс пароля для {{username}}.\n\nСсылка: {{reset_url}}\n\nСсылка действительна {{expires_in}}.\n\nВход: {{login_url}}\n\nС уважением,\n{{from_name}}"
+      },
+      "es": {
+        "subject": "Restablece tu contraseña de DFA",
+        "html_content": "<p>Hola {{full_name}},</p><p>Recibimos una solicitud para restablecer la contraseña de la cuenta <strong>{{username}}</strong>.</p><p><a href=\"{{reset_url}}\">Restablecer contraseña</a></p><p>Este enlace caduca en {{expires_in}}. Si no fuiste tú, puedes ignorar este mensaje.</p><p>Iniciar sesión: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Saludos,<br>{{from_name}}</p>",
+        "text_content": "Hola {{full_name}},\n\nRecibimos una solicitud para restablecer la contraseña de la cuenta {{username}}.\n\nEnlace: {{reset_url}}\n\nEl enlace caduca en {{expires_in}}. Si no fuiste tú, ignora este mensaje.\n\nInicio de sesión: {{login_url}}\n\nSaludos,\n{{from_name}}"
+      }
+    }
+  },
+  "password_reset": {
+    "name": "Password reset confirmation",
+    "translations": {
+      "en": {
+        "subject": "Your DFA password has been reset",
+        "html_content": "<p>Hi {{full_name}},</p><p>This confirms that the password for your DFA account was successfully reset.</p><p>Username: <strong>{{username}}</strong></p><p>Sign in at: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>If you did not make this change, secure your account and contact your administrator.</p><p>Best regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nThis confirms that the password for your DFA account was successfully reset.\n\nUsername: {{username}}\n\nSign in at: {{login_url}}\n\nIf you did not make this change, secure your account and contact your administrator.\n\nBest regards,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "تم تغيير كلمة مرور DFA",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>هذه رسالة تأكيد أن كلمة مرور حسابك في DFA قد تم تغييرها بنجاح.</p><p>اسم المستخدم: <strong>{{username}}</strong></p><p>تسجيل الدخول: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>إذا لم تقم أنت بهذا الإجراء، يرجى تأمين حسابك والاتصال بمسؤولك.</p><p>مع أطيب التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nهذه رسالة تأكيد أن كلمة مرور حسابك في DFA قد تم تغييرها بنجاح.\n\nاسم المستخدم: {{username}}\n\nتسجيل الدخول: {{login_url}}\n\nإذا لم تقم أنت بهذا الإجراء، يرجى تأمين حسابك والاتصال بمسؤولك.\n\nمع أطيب التحيات،\n{{from_name}}"
+      },
+      "zh": {
+        "subject": "您的 DFA 密码已更改",
+        "html_content": "<p>你好 {{full_name}}，</p><p>本邮件用于确认您的 DFA 账户密码已成功更改。</p><p>用户名：<strong>{{username}}</strong></p><p>登录地址：<a href=\"{{login_url}}\">{{login_url}}</a></p><p>如果此操作非本人所为，请立即保护账户并联系管理员。</p><p>祝好，<br>{{from_name}}</p>",
+        "text_content": "你好 {{full_name}}，\n\n本邮件用于确认您的 DFA 账户密码已成功更改。\n\n用户名：{{username}}\n\n登录地址：{{login_url}}\n\n如果此操作非本人所为，请立即保护账户并联系管理员。\n\n祝好，\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Votre mot de passe DFA a été modifié",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Nous vous confirmons que le mot de passe de votre compte DFA a été modifié avec succès.</p><p>Nom d’utilisateur : <strong>{{username}}</strong></p><p>Connexion : <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Si vous n’êtes pas à l’origine de ce changement, sécurisez votre compte et contactez votre administrateur.</p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nNous vous confirmons que le mot de passe de votre compte DFA a été modifié avec succès.\n\nNom d’utilisateur : {{username}}\n\nConnexion : {{login_url}}\n\nSi vous n’êtes pas à l’origine de ce changement, sécurisez votre compte et contactez votre administrateur.\n\nCordialement,\n{{from_name}}"
+      },
+      "ru": {
+        "subject": "Пароль к учётной записи DFA изменён",
+        "html_content": "<p>Здравствуйте, {{full_name}}!</p><p>Это подтверждение: пароль вашей учётной записи DFA был успешно изменён.</p><p>Имя пользователя: <strong>{{username}}</strong></p><p>Вход: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Если вы этого не делали, защитите аккаунт и свяжитесь с администратором.</p><p>С уважением,<br>{{from_name}}</p>",
+        "text_content": "Здравствуйте, {{full_name}}!\n\nЭто подтверждение: пароль вашей учётной записи DFA был успешно изменён.\n\nИмя пользователя: {{username}}\n\nВход: {{login_url}}\n\nЕсли вы этого не делали, защитите аккаунт и свяжитесь с администратором.\n\nС уважением,\n{{from_name}}"
+      },
+      "es": {
+        "subject": "Tu contraseña de DFA ha sido modificada",
+        "html_content": "<p>Hola {{full_name}},</p><p>Te confirmamos que la contraseña de tu cuenta DFA se ha cambiado correctamente.</p><p>Nombre de usuario: <strong>{{username}}</strong></p><p>Inicia sesión en: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Si no fuiste tú, protege tu cuenta y contacta a tu administrador.</p><p>Saludos,<br>{{from_name}}</p>",
+        "text_content": "Hola {{full_name}},\n\nTe confirmamos que la contraseña de tu cuenta DFA se ha cambiado correctamente.\n\nNombre de usuario: {{username}}\n\nInicia sesión en: {{login_url}}\n\nSi no fuiste tú, protege tu cuenta y contacta a tu administrador.\n\nSaludos,\n{{from_name}}"
+      }
+    }
+  },
+  "password_changed": {
+    "name": "Password changed notification",
+    "translations": {
+      "en": {
+        "subject": "Your DFA password was changed",
+        "html_content": "<p>Hi {{full_name}},</p><p>This confirms that the password for your DFA account was successfully changed.</p><p>Username: <strong>{{username}}</strong></p><p>Sign in at: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>If you did not make this change, secure your account and contact your administrator.</p><p>Best regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nThis confirms that the password for your DFA account was successfully changed.\n\nUsername: {{username}}\n\nSign in at: {{login_url}}\n\nIf you did not make this change, secure your account and contact your administrator.\n\nBest regards,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "تم تغيير كلمة مرور DFA",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>هذه رسالة تأكيد أن كلمة مرور حسابك في DFA قد تم تغييرها بنجاح.</p><p>اسم المستخدم: <strong>{{username}}</strong></p><p>تسجيل الدخول: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>إذا لم تقم أنت بهذا الإجراء، يرجى تأمين حسابك والاتصال بمسؤولك.</p><p>مع أطيب التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nهذه رسالة تأكيد أن كلمة مرور حسابك في DFA قد تم تغييرها بنجاح.\n\nاسم المستخدم: {{username}}\n\nتسجيل الدخول: {{login_url}}\n\nإذا لم تقم أنت بهذا الإجراء، يرجى تأمين حسابك والاتصال بمسؤولك.\n\nمع أطيب التحيات،\n{{from_name}}"
+      },
+      "zh": {
+        "subject": "您的 DFA 密码已更改",
+        "html_content": "<p>你好 {{full_name}}，</p><p>本邮件用于确认您的 DFA 账户密码已成功更改。</p><p>用户名：<strong>{{username}}</strong></p><p>登录地址：<a href=\"{{login_url}}\">{{login_url}}</a></p><p>如果此操作非本人所为，请立即保护账户并联系管理员。</p><p>祝好，<br>{{from_name}}</p>",
+        "text_content": "你好 {{full_name}}，\n\n本邮件用于确认您的 DFA 账户密码已成功更改。\n\n用户名：{{username}}\n\n登录地址：{{login_url}}\n\n如果此操作非本人所为，请立即保护账户并联系管理员。\n\n祝好，\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Votre mot de passe DFA a été modifié",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Nous vous confirmons que le mot de passe de votre compte DFA a été modifié avec succès.</p><p>Nom d’utilisateur : <strong>{{username}}</strong></p><p>Connexion : <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Si vous n’êtes pas à l’origine de ce changement, sécurisez votre compte et contactez votre administrateur.</p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nNous vous confirmons que le mot de passe de votre compte DFA a été modifié avec succès.\n\nNom d’utilisateur : {{username}}\n\nConnexion : {{login_url}}\n\nSi vous n’êtes pas à l’origine de ce changement, sécurisez votre compte et contactez votre administrateur.\n\nCordialement,\n{{from_name}}"
+      },
+      "ru": {
+        "subject": "Пароль к учётной записи DFA изменён",
+        "html_content": "<p>Здравствуйте, {{full_name}}!</p><p>Это подтверждение: пароль вашей учётной записи DFA был успешно изменён.</p><p>Имя пользователя: <strong>{{username}}</strong></p><p>Вход: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Если вы этого не делали, защитите аккаунт и свяжитесь с администратором.</p><p>С уважением,<br>{{from_name}}</p>",
+        "text_content": "Здравствуйте, {{full_name}}!\n\nЭто подтверждение: пароль вашей учётной записи DFA был успешно изменён.\n\nИмя пользователя: {{username}}\n\nВход: {{login_url}}\n\nЕсли вы этого не делали, защитите аккаунт и свяжитесь с администратором.\n\nС уважением,\n{{from_name}}"
+      },
+      "es": {
+        "subject": "Tu contraseña de DFA ha sido modificada",
+        "html_content": "<p>Hola {{full_name}},</p><p>Te confirmamos que la contraseña de tu cuenta DFA se ha cambiado correctamente.</p><p>Nombre de usuario: <strong>{{username}}</strong></p><p>Inicia sesión en: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Si no fuiste tú, protege tu cuenta y contacta a tu administrador.</p><p>Saludos,<br>{{from_name}}</p>",
+        "text_content": "Hola {{full_name}},\n\nTe confirmamos que la contraseña de tu cuenta DFA se ha cambiado correctamente.\n\nNombre de usuario: {{username}}\n\nInicia sesión en: {{login_url}}\n\nSi no fuiste tú, protege tu cuenta y contacta a tu administrador.\n\nSaludos,\n{{from_name}}"
+      }
+    }
+  },
+  "dataset_submitted": {
+    "name": "Dataset Submitted — Reviewer Notification",
+    "translations": {
+      "en": {
+        "subject": "New dataset ready for your review — {{dataset_name}}",
+        "html_content": "<p>Hi {{full_name}},</p><p>A new dataset has been submitted and is ready for your review.</p><p><strong>Dataset:</strong> {{dataset_name}}<br><strong>Submitted by:</strong> {{submitter_name}}<br><strong>Submitted on:</strong> {{submitted_at}}<br><strong>Workflow:</strong> {{workflow_name}}</p><p>Please log in to review the submission: <a href=\"{{review_url}}\">{{review_url}}</a></p><p>Regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nA new dataset has been submitted and is ready for your review.\n\nDataset: {{dataset_name}}\nSubmitted by: {{submitter_name}}\nSubmitted on: {{submitted_at}}\nWorkflow: {{workflow_name}}\n\nPlease log in to review: {{review_url}}\n\nRegards,\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Nouvel ensemble de données prêt pour révision — {{dataset_name}}",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Un nouvel ensemble de données a été soumis et est prêt pour votre révision.</p><p><strong>Ensemble de données :</strong> {{dataset_name}}<br><strong>Soumis par :</strong> {{submitter_name}}<br><strong>Soumis le :</strong> {{submitted_at}}<br><strong>Flux de travail :</strong> {{workflow_name}}</p><p>Veuillez vous connecter pour réviser : <a href=\"{{review_url}}\">{{review_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nUn nouvel ensemble de données a été soumis et est prêt pour votre révision.\n\nEnsemble de données : {{dataset_name}}\nSoumis par : {{submitter_name}}\nSoumis le : {{submitted_at}}\nFlux de travail : {{workflow_name}}\n\nConnectez-vous pour réviser : {{review_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "مجموعة بيانات جديدة جاهزة للمراجعة — {{dataset_name}}",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>تم تقديم مجموعة بيانات جديدة وهي جاهزة لمراجعتك.</p><p><strong>مجموعة البيانات:</strong> {{dataset_name}}<br><strong>مقدم من:</strong> {{submitter_name}}<br><strong>تاريخ التقديم:</strong> {{submitted_at}}<br><strong>سير العمل:</strong> {{workflow_name}}</p><p>يرجى تسجيل الدخول للمراجعة: <a href=\"{{review_url}}\">{{review_url}}</a></p><p>مع التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nتم تقديم مجموعة بيانات جديدة وهي جاهزة لمراجعتك.\n\nمجموعة البيانات: {{dataset_name}}\nمقدم من: {{submitter_name}}\nتاريخ التقديم: {{submitted_at}}\nسير العمل: {{workflow_name}}\n\nيرجى تسجيل الدخول للمراجعة: {{review_url}}\n\nمع التحيات،\n{{from_name}}"
+      }
+    }
+  },
+  "dataset_approved": {
+    "name": "Dataset Approved — Operator Notification",
+    "translations": {
+      "en": {
+        "subject": "Your dataset has been approved — {{dataset_name}}",
+        "html_content": "<p>Hi {{full_name}},</p><p>Your dataset has been reviewed and approved.</p><p><strong>Dataset:</strong> {{dataset_name}}<br><strong>Approved on:</strong> {{approved_on}}<br><strong>Workflow:</strong> {{workflow_name}}</p><p>You can view the approved submission here: <a href=\"{{dataset_url}}\">{{dataset_url}}</a></p><p>Regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nYour dataset has been reviewed and approved.\n\nDataset: {{dataset_name}}\nApproved on: {{approved_on}}\nWorkflow: {{workflow_name}}\n\nView the submission: {{dataset_url}}\n\nRegards,\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Votre ensemble de données a été approuvé — {{dataset_name}}",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Votre ensemble de données a été examiné et approuvé.</p><p><strong>Ensemble de données :</strong> {{dataset_name}}<br><strong>Approuvé le :</strong> {{approved_on}}<br><strong>Flux de travail :</strong> {{workflow_name}}</p><p>Consultez la soumission : <a href=\"{{dataset_url}}\">{{dataset_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nVotre ensemble de données a été examiné et approuvé.\n\nEnsemble de données : {{dataset_name}}\nApprouvé le : {{approved_on}}\nFlux de travail : {{workflow_name}}\n\nConsultez la soumission : {{dataset_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "تمت الموافقة على مجموعة بياناتك — {{dataset_name}}",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>تمت مراجعة مجموعة بياناتك والموافقة عليها.</p><p><strong>مجموعة البيانات:</strong> {{dataset_name}}<br><strong>تاريخ الموافقة:</strong> {{approved_on}}<br><strong>سير العمل:</strong> {{workflow_name}}</p><p>عرض التقديم: <a href=\"{{dataset_url}}\">{{dataset_url}}</a></p><p>مع التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nتمت مراجعة مجموعة بياناتك والموافقة عليها.\n\nمجموعة البيانات: {{dataset_name}}\nتاريخ الموافقة: {{approved_on}}\nسير العمل: {{workflow_name}}\n\nعرض التقديم: {{dataset_url}}\n\nمع التحيات،\n{{from_name}}"
+      }
+    }
+  },
+  "dataset_rejected": {
+    "name": "Dataset Rejected — Operator Notification",
+    "translations": {
+      "en": {
+        "subject": "Your dataset has been rejected — {{dataset_name}}",
+        "html_content": "<p>Hi {{full_name}},</p><p>Your dataset has been reviewed and rejected. Please review the feedback below and submit a new dataset.</p><p><strong>Dataset:</strong> {{dataset_name}}<br><strong>Rejected on:</strong> {{rejected_on}}<br><strong>Rejection reason(s):</strong> {{rejection_reasons}}</p><p><strong>Reviewer comments:</strong><br>{{reviewer_remarks}}</p><p>Please log in to view the details: <a href=\"{{dataset_url}}\">{{dataset_url}}</a></p><p>Regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nYour dataset has been reviewed and rejected.\n\nDataset: {{dataset_name}}\nRejected on: {{rejected_on}}\nRejection reason(s): {{rejection_reasons}}\n\nReviewer comments:\n{{reviewer_remarks}}\n\nLog in to view details: {{dataset_url}}\n\nRegards,\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Votre ensemble de données a été rejeté — {{dataset_name}}",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Votre ensemble de données a été examiné et rejeté. Veuillez consulter les commentaires ci-dessous et soumettre un nouvel ensemble de données.</p><p><strong>Ensemble de données :</strong> {{dataset_name}}<br><strong>Rejeté le :</strong> {{rejected_on}}<br><strong>Raison(s) de rejet :</strong> {{rejection_reasons}}</p><p><strong>Commentaires du réviseur :</strong><br>{{reviewer_remarks}}</p><p>Connectez-vous pour voir les détails : <a href=\"{{dataset_url}}\">{{dataset_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nVotre ensemble de données a été examiné et rejeté.\n\nEnsemble de données : {{dataset_name}}\nRejeté le : {{rejected_on}}\nRaison(s) de rejet : {{rejection_reasons}}\n\nCommentaires du réviseur :\n{{reviewer_remarks}}\n\nConnectez-vous pour voir les détails : {{dataset_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "تم رفض مجموعة بياناتك — {{dataset_name}}",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>تمت مراجعة مجموعة بياناتك ورفضها. يرجى الاطلاع على التعليقات أدناه وتقديم مجموعة بيانات جديدة.</p><p><strong>مجموعة البيانات:</strong> {{dataset_name}}<br><strong>تاريخ الرفض:</strong> {{rejected_on}}<br><strong>سبب (أسباب) الرفض:</strong> {{rejection_reasons}}</p><p><strong>تعليقات المراجع:</strong><br>{{reviewer_remarks}}</p><p>تسجيل الدخول لعرض التفاصيل: <a href=\"{{dataset_url}}\">{{dataset_url}}</a></p><p>مع التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nتمت مراجعة مجموعة بياناتك ورفضها.\n\nمجموعة البيانات: {{dataset_name}}\nتاريخ الرفض: {{rejected_on}}\nسبب (أسباب) الرفض: {{rejection_reasons}}\n\nتعليقات المراجع:\n{{reviewer_remarks}}\n\nتسجيل الدخول لعرض التفاصيل: {{dataset_url}}\n\nمع التحيات،\n{{from_name}}"
+      }
+    }
+  },
+  "dataset_returned": {
+    "name": "Dataset Returned for Correction — Operator Notification",
+    "translations": {
+      "en": {
+        "subject": "{{corrected_count}} indicator(s) returned for correction — {{dataset_name}}",
+        "html_content": "<p>Hi {{full_name}},</p><p>Your dataset has been partially reviewed. <strong>{{corrected_count}} indicator(s)</strong> have been returned for correction.</p><p><strong>Dataset:</strong> {{dataset_name}}<br><strong>Returned on:</strong> {{returned_on}}<br><strong>Rejection reason(s):</strong> {{rejection_reasons}}</p><p><strong>Reviewer comments:</strong><br>{{reviewer_remarks}}</p><p>Please log in to correct the flagged indicators and resubmit: <a href=\"{{dataset_url}}\">{{dataset_url}}</a></p><p>Regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nYour dataset has been partially reviewed. {{corrected_count}} indicator(s) have been returned for correction.\n\nDataset: {{dataset_name}}\nReturned on: {{returned_on}}\nRejection reason(s): {{rejection_reasons}}\n\nReviewer comments:\n{{reviewer_remarks}}\n\nLog in to correct and resubmit: {{dataset_url}}\n\nRegards,\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "{{corrected_count}} indicateur(s) retourné(s) pour correction — {{dataset_name}}",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Votre ensemble de données a été partiellement examiné. <strong>{{corrected_count}} indicateur(s)</strong> ont été retournés pour correction.</p><p><strong>Ensemble de données :</strong> {{dataset_name}}<br><strong>Retourné le :</strong> {{returned_on}}<br><strong>Raison(s) de rejet :</strong> {{rejection_reasons}}</p><p><strong>Commentaires du réviseur :</strong><br>{{reviewer_remarks}}</p><p>Connectez-vous pour corriger et soumettre à nouveau : <a href=\"{{dataset_url}}\">{{dataset_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nVotre ensemble de données a été partiellement examiné. {{corrected_count}} indicateur(s) ont été retournés pour correction.\n\nEnsemble de données : {{dataset_name}}\nRetourné le : {{returned_on}}\nRaison(s) de rejet : {{rejection_reasons}}\n\nCommentaires du réviseur :\n{{reviewer_remarks}}\n\nConnectez-vous pour corriger et soumettre à nouveau : {{dataset_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "تم إعادة {{corrected_count}} مؤشر(ات) للتصحيح — {{dataset_name}}",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>تمت مراجعة مجموعة بياناتك جزئياً. تم إعادة <strong>{{corrected_count}} مؤشر(ات)</strong> للتصحيح.</p><p><strong>مجموعة البيانات:</strong> {{dataset_name}}<br><strong>تاريخ الإعادة:</strong> {{returned_on}}<br><strong>سبب (أسباب) الرفض:</strong> {{rejection_reasons}}</p><p><strong>تعليقات المراجع:</strong><br>{{reviewer_remarks}}</p><p>تسجيل الدخول للتصحيح وإعادة التقديم: <a href=\"{{dataset_url}}\">{{dataset_url}}</a></p><p>مع التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nتمت مراجعة مجموعة بياناتك جزئياً. تم إعادة {{corrected_count}} مؤشر(ات) للتصحيح.\n\nمجموعة البيانات: {{dataset_name}}\nتاريخ الإعادة: {{returned_on}}\nسبب (أسباب) الرفض: {{rejection_reasons}}\n\nتعليقات المراجع:\n{{reviewer_remarks}}\n\nتسجيل الدخول للتصحيح وإعادة التقديم: {{dataset_url}}\n\nمع التحيات،\n{{from_name}}"
+      }
+    }
+  },
+  "review_assigned": {
+    "name": "Review Assigned — Reviewer Notification",
+    "translations": {
+      "en": {
+        "subject": "Dataset resubmitted and ready for re-review — {{dataset_name}}",
+        "html_content": "<p>Hi {{full_name}},</p><p>A dataset you previously reviewed has been corrected and resubmitted for your review.</p><p><strong>Dataset:</strong> {{dataset_name}}<br><strong>Resubmitted by:</strong> {{submitter_name}}<br><strong>Resubmitted on:</strong> {{submitted_at}}<br><strong>Revision:</strong> #{{revision_count}}</p><p>Please log in to complete your review: <a href=\"{{review_url}}\">{{review_url}}</a></p><p>Regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nA dataset you previously reviewed has been corrected and resubmitted.\n\nDataset: {{dataset_name}}\nResubmitted by: {{submitter_name}}\nResubmitted on: {{submitted_at}}\nRevision: #{{revision_count}}\n\nLog in to complete your review: {{review_url}}\n\nRegards,\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Ensemble de données resoumis pour révision — {{dataset_name}}",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Un ensemble de données que vous avez précédemment examiné a été corrigé et resoumis.</p><p><strong>Ensemble de données :</strong> {{dataset_name}}<br><strong>Resoumis par :</strong> {{submitter_name}}<br><strong>Resoumis le :</strong> {{submitted_at}}<br><strong>Révision :</strong> n°{{revision_count}}</p><p>Connectez-vous pour terminer votre révision : <a href=\"{{review_url}}\">{{review_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nUn ensemble de données que vous avez précédemment examiné a été corrigé et resoumis.\n\nEnsemble de données : {{dataset_name}}\nResoumis par : {{submitter_name}}\nResoumis le : {{submitted_at}}\nRévision : n°{{revision_count}}\n\nConnectez-vous pour terminer votre révision : {{review_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "تمت إعادة تقديم مجموعة البيانات للمراجعة — {{dataset_name}}",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>تمت تصحيح مجموعة البيانات التي راجعتها سابقاً وإعادة تقديمها.</p><p><strong>مجموعة البيانات:</strong> {{dataset_name}}<br><strong>أعيد تقديمها من قبل:</strong> {{submitter_name}}<br><strong>تاريخ إعادة التقديم:</strong> {{submitted_at}}<br><strong>المراجعة:</strong> #{{revision_count}}</p><p>تسجيل الدخول لإكمال المراجعة: <a href=\"{{review_url}}\">{{review_url}}</a></p><p>مع التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nتمت تصحيح مجموعة البيانات التي راجعتها سابقاً وإعادة تقديمها.\n\nمجموعة البيانات: {{dataset_name}}\nأعيد تقديمها من قبل: {{submitter_name}}\nتاريخ إعادة التقديم: {{submitted_at}}\nالمراجعة: #{{revision_count}}\n\nتسجيل الدخول لإكمال المراجعة: {{review_url}}\n\nمع التحيات،\n{{from_name}}"
+      }
+    }
+  },
+  "dataset_status_changed": {
+    "name": "Dataset Status Changed — Stakeholder Broadcast",
+    "translations": {
+      "en": {
+        "subject": "Dataset status update — {{dataset_name}} is now {{new_status}}",
+        "html_content": "<p>Hi {{full_name}},</p><p>The dataset <strong>{{dataset_name}}</strong> has changed status.</p><p><strong>Previous:</strong> {{previous_status}}<br><strong>New:</strong> {{new_status}}<br><strong>Workflow:</strong> {{workflow_name}}<br><strong>When:</strong> {{changed_at}}<br><strong>Changed by:</strong> {{actor_name}}</p><p>Log in to open the app: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nThe dataset {{dataset_name}} has changed status.\n\nPrevious: {{previous_status}}\nNew: {{new_status}}\nWorkflow: {{workflow_name}}\nWhen: {{changed_at}}\nChanged by: {{actor_name}}\n\nLog in: {{login_url}}\n\nRegards,\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Mise à jour du statut — {{dataset_name}} est maintenant {{new_status}}",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>L’ensemble de données <strong>{{dataset_name}}</strong> a changé de statut.</p><p><strong>Précédent :</strong> {{previous_status}}<br><strong>Nouveau :</strong> {{new_status}}<br><strong>Flux de travail :</strong> {{workflow_name}}<br><strong>Date :</strong> {{changed_at}}<br><strong>Modifié par :</strong> {{actor_name}}</p><p>Connexion : <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nL’ensemble de données {{dataset_name}} a changé de statut.\n\nPrécédent : {{previous_status}}\nNouveau : {{new_status}}\nFlux de travail : {{workflow_name}}\nDate : {{changed_at}}\nModifié par : {{actor_name}}\n\nConnexion : {{login_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "تحديث حالة مجموعة البيانات — {{dataset_name}} أصبحت {{new_status}}",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>تغيّرت حالة مجموعة البيانات <strong>{{dataset_name}}</strong>.</p><p><strong>السابق:</strong> {{previous_status}}<br><strong>الجديد:</strong> {{new_status}}<br><strong>سير العمل:</strong> {{workflow_name}}<br><strong>الوقت:</strong> {{changed_at}}<br><strong>بواسطة:</strong> {{actor_name}}</p><p>تسجيل الدخول: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>مع التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nتغيّرت حالة مجموعة البيانات {{dataset_name}}.\n\nالسابق: {{previous_status}}\nالجديد: {{new_status}}\nسير العمل: {{workflow_name}}\nالوقت: {{changed_at}}\nبواسطة: {{actor_name}}\n\nتسجيل الدخول: {{login_url}}\n\nمع التحيات،\n{{from_name}}"
+      }
+    }
+  },
+  "data_points_reviewed": {
+    "name": "Data Points Reviewed — Operator Notification",
+    "translations": {
+      "en": {
+        "subject": "Review update — {{summary_line}} — {{dataset_name}}",
+        "html_content": "<p>Hi {{full_name}},</p><p>A reviewer has updated data points in your dataset.</p><p><strong>Dataset:</strong> {{dataset_name}}<br><strong>Workflow:</strong> {{workflow_name}}<br><strong>Reviewer:</strong> {{reviewer_name}}<br><strong>Reviewed at:</strong> {{reviewed_at}}<br><strong>Previous status:</strong> {{previous_status}}<br><strong>Current status:</strong> {{dataset_status}}</p><p><strong>Summary:</strong> {{summary_line}}</p>{{points_detail_html}}<p>Log in to continue: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nA reviewer has updated data points in your dataset.\n\nDataset: {{dataset_name}}\nWorkflow: {{workflow_name}}\nReviewer: {{reviewer_name}}\nReviewed at: {{reviewed_at}}\nPrevious status: {{previous_status}}\nCurrent status: {{dataset_status}}\n\nSummary: {{summary_line}}\n\n{{points_detail_text}}\n\nLog in: {{login_url}}\n\nRegards,\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "Mise à jour de révision — {{summary_line}} — {{dataset_name}}",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>Un réviseur a mis à jour des points de données dans votre ensemble de données.</p><p><strong>Ensemble de données :</strong> {{dataset_name}}<br><strong>Flux de travail :</strong> {{workflow_name}}<br><strong>Réviseur :</strong> {{reviewer_name}}<br><strong>Date de révision :</strong> {{reviewed_at}}<br><strong>Statut précédent :</strong> {{previous_status}}<br><strong>Statut actuel :</strong> {{dataset_status}}</p><p><strong>Résumé :</strong> {{summary_line}}</p>{{points_detail_html}}<p>Connexion : <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nUn réviseur a mis à jour des points de données dans votre ensemble de données.\n\nEnsemble de données : {{dataset_name}}\nFlux de travail : {{workflow_name}}\nRéviseur : {{reviewer_name}}\nDate de révision : {{reviewed_at}}\nStatut précédent : {{previous_status}}\nStatut actuel : {{dataset_status}}\n\nRésumé : {{summary_line}}\n\n{{points_detail_text}}\n\nConnexion : {{login_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "تحديث المراجعة — {{summary_line}} — {{dataset_name}}",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>قام مراجع بتحديث نقاط بيانات في مجموعة بياناتك.</p><p><strong>مجموعة البيانات:</strong> {{dataset_name}}<br><strong>سير العمل:</strong> {{workflow_name}}<br><strong>المراجع:</strong> {{reviewer_name}}<br><strong>وقت المراجعة:</strong> {{reviewed_at}}<br><strong>الحالة السابقة:</strong> {{previous_status}}<br><strong>الحالة الحالية:</strong> {{dataset_status}}</p><p><strong>الملخص:</strong> {{summary_line}}</p>{{points_detail_html}}<p>تسجيل الدخول للمتابعة: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>مع التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nقام مراجع بتحديث نقاط بيانات في مجموعة بياناتك.\n\nمجموعة البيانات: {{dataset_name}}\nسير العمل: {{workflow_name}}\nالمراجع: {{reviewer_name}}\nوقت المراجعة: {{reviewed_at}}\nالحالة السابقة: {{previous_status}}\nالحالة الحالية: {{dataset_status}}\n\nالملخص: {{summary_line}}\n\n{{points_detail_text}}\n\nتسجيل الدخول: {{login_url}}\n\nمع التحيات،\n{{from_name}}"
+      }
+    }
+  },
+  "period_open": {
+    "name": "Data Entry Period Open",
+    "translations": {
+      "en": {
+        "subject": "Data entry period is now open — {{period_name}}",
+        "html_content": "<p>Hi {{full_name}},</p><p>The data entry period <strong>{{period_name}}</strong> is now open.</p><p><strong>Workflow:</strong> {{workflow_name}}<br><strong>Opens:</strong> {{open_at}}<br><strong>Closes:</strong> {{close_at}}</p><p>{{role_message}}</p><p>Please log in to get started: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Regards,<br>{{from_name}}</p>",
+        "text_content": "Hi {{full_name}},\n\nThe data entry period {{period_name}} is now open.\n\nWorkflow: {{workflow_name}}\nOpens: {{open_at}}\nCloses: {{close_at}}\n\n{{role_message}}\n\nLog in to get started: {{login_url}}\n\nRegards,\n{{from_name}}"
+      },
+      "fr": {
+        "subject": "La période de saisie est maintenant ouverte — {{period_name}}",
+        "html_content": "<p>Bonjour {{full_name}},</p><p>La période de saisie <strong>{{period_name}}</strong> est maintenant ouverte.</p><p><strong>Flux de travail :</strong> {{workflow_name}}<br><strong>Ouverture :</strong> {{open_at}}<br><strong>Fermeture :</strong> {{close_at}}</p><p>{{role_message}}</p><p>Connectez-vous pour commencer : <a href=\"{{login_url}}\">{{login_url}}</a></p><p>Cordialement,<br>{{from_name}}</p>",
+        "text_content": "Bonjour {{full_name}},\n\nLa période de saisie {{period_name}} est maintenant ouverte.\n\nFlux de travail : {{workflow_name}}\nOuverture : {{open_at}}\nFermeture : {{close_at}}\n\n{{role_message}}\n\nConnectez-vous pour commencer : {{login_url}}\n\nCordialement,\n{{from_name}}"
+      },
+      "ar": {
+        "subject": "فترة إدخال البيانات مفتوحة الآن — {{period_name}}",
+        "html_content": "<div dir=\"rtl\"><p>مرحباً {{full_name}}،</p><p>فترة إدخال البيانات <strong>{{period_name}}</strong> مفتوحة الآن.</p><p><strong>سير العمل:</strong> {{workflow_name}}<br><strong>تاريخ الفتح:</strong> {{open_at}}<br><strong>تاريخ الإغلاق:</strong> {{close_at}}</p><p>{{role_message}}</p><p>تسجيل الدخول للبدء: <a href=\"{{login_url}}\">{{login_url}}</a></p><p>مع التحيات،<br>{{from_name}}</p></div>",
+        "text_content": "مرحباً {{full_name}}،\n\nفترة إدخال البيانات {{period_name}} مفتوحة الآن.\n\nسير العمل: {{workflow_name}}\nتاريخ الفتح: {{open_at}}\nتاريخ الإغلاق: {{close_at}}\n\n{{role_message}}\n\nتسجيل الدخول للبدء: {{login_url}}\n\nمع التحيات،\n{{from_name}}"
+      }
+    }
+  }
+}

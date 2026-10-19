@@ -1,0 +1,59 @@
+/* Help Button Styles */
+.helpButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--dfa-help-primary-color, #6f42c1);
+  color: var(--dfa-help-primary-foreground, #ffffff);
+  border: none;
+  border-radius: 6px; /* can be overridden by inline style when circle */
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.helpButton:hover {
+  background: var(--dfa-help-primary-hover, #5a32a3);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.helpButton:active {
+  background: var(--dfa-help-primary-active, #4a2a8a);
+  transform: translateY(0);
+}
+
+.helpButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.3);
+}
+
+.buttonText {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Icon only button */
+.helpButton:not(:has(.buttonText)) {
+  padding: 8px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+}
+
+/* Disabled state */
+.helpButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.helpButton:disabled:hover {
+  background: var(--dfa-help-primary-color, #6f42c1);
+  transform: none;
+  box-shadow: none;
+}

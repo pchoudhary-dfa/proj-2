@@ -1,0 +1,6 @@
+services:
+  usermanagemnet_function_unset.user_form_theme_negotiator:
+    class: Drupal\usermanagemnet_function_unset\Theme\UserFormThemeNegotiator
+    arguments: ['@config.factory']
+    tags:
+      - { name: theme_negotiator, priority: 1001 }

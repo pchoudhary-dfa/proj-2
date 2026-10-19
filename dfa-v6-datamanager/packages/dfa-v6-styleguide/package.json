@@ -1,0 +1,20 @@
+{
+  "name": "@dfa-v6/styleguide",
+  "version": "1.0.0",
+  "description": "DFA v6 shared design tokens, component CSS, and Tailwind config",
+  "main": "globals.css",
+  "exports": {
+    ".": "./globals.css",
+    "./globals.css": "./globals.css",
+    "./tokens.css": "./tokens.css",
+    "./tailwind-preset": "./tailwind.config.ts"
+  },
+  "files": [
+    "tokens.css",
+    "globals.css",
+    "tailwind.config.ts"
+  ],
+  "peerDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

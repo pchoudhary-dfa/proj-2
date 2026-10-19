@@ -1,0 +1,70 @@
+mon-dashboard:
+  js:
+    'js/highchart/jquery.min.js': {}
+    'js/highchart/highcharts.js': {}
+    'js/highchart/highcharts-more.js': {}
+    'js/highchart/exporting.js': {}
+    'js/highchart/export-data.js': {}
+    'js/highchart/accessibility.js': {}
+    '/genericDashboard/main/app-settings.js': {}
+    'https://guinea.dataforall.org/monweb/assets/dashboard/dashboard-v2-main.js': { type: external, attributes: { type: module } }
+
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupalSettings
+
+ressources-result-count:
+  js:
+    js/ressources-result-count.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+
+apprentissage-result-count:
+  js:
+    js/apprentissage-result-count.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+
+publication-detail-pdf:
+  js:
+    https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js: { type: external, minified: true }
+    js/publication-detail-pdf.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+
+guinea-styling:
+  css:
+    theme:
+      'https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap': { type: external }
+      'css/font-awesome-6-all-min.css': {}
+      'css/bootstrap.min.css': {}
+      'css/select2.css': {}
+      'css/dfa_help_renderer.css': {}
+      'css/icomoon.css': {}
+      'css/metadata.css': {}
+      'css/mon_dashboard.css': {}
+      'css/monitoring_tool.css': {}
+      'css/style.css': {}
+
+  js:
+    'js/hero-slider.js': {}
+    'js/jquery-ui.js': {}
+    'js/metadata.js': {}
+    'js/dfa_help_renderer.js': {}
+    'js/customselect.js': {}
+    'js/select2.js': {}
+    # 'js/mon_dashboard.js': {}
+    'js/monitoring_tool.js': {}
+    'js/custom.js': {}
+    
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupalSettings
+    - core/jquery.ui.autocomplete
+
+

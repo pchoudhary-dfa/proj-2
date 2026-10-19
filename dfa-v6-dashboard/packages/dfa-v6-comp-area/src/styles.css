@@ -1,0 +1,341 @@
+/*
+ * Area select: filter, search, actions, tree list, summary.
+ * Uses design tokens from packages/design-tokens/tokens.css when the app loads them.
+ * Variables below either reference tokens or define component-specific values.
+ */
+:root {
+  /* Global tokens: from packages/design-tokens/tokens.css */
+  /* 
+  --color-primary: #FF3366;
+  --color-primary-hover: #CC2952;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f9fafb;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --font-body: Inter, system-ui, sans-serif;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px; */
+
+  /* Component-specific (not in tokens.css) */
+  --color-border-input: #d1d5db;
+  --color-overlay-hover: rgba(198, 57, 48, 0.08);
+  --radius-control: 0.375rem;
+  --font-size-control: 0.75rem;
+  --spacing-panel-y: 0.5rem;
+  --spacing-panel-x: 0.75rem;
+  --spacing-control-y: 0.375rem;
+  --spacing-control-inline: 0.5rem;
+  --spacing-empty-y: 2rem;
+  --spacing-empty-x: 1rem;
+  --size-icon-sm: 1rem;
+  --spacing-input-icon: 0.625rem;
+  --width-select-arrow: 2.25rem;
+  --font-size-empty: 0.8125rem;
+}
+
+.dtk-ar-root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+/* Wraps controls + main content; selected-items panel is absolutely positioned to cover all of this */
+.dtk-ar-stack {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-ar-controls {
+  flex-shrink: 0;
+  padding: var(--spacing-panel-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.dtk-ar-label {
+  display: block;
+  font-size: var(--font-size-control);
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.dtk-ar-select-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.dtk-ar-select-arrow-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--width-select-arrow);
+  height: 100%;
+  cursor: pointer;
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
+  transition: background-color 0.15s ease;
+}
+
+.dtk-ar-select-arrow-overlay:hover {
+  background-color: var(--color-overlay-hover);
+}
+
+.dtk-ar-select-wrap:has(.dtk-ar-select-arrow-overlay:hover) .dtk-ar-select {
+  border-color: var(--color-primary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C63930'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.dtk-ar-select {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-control-y) 1.75rem var(--spacing-control-y) var(--spacing-control-inline);
+  font-size: var(--font-size-control);
+  line-height: 1.25;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-control);
+  background-color: var(--color-surface);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-control-inline) center;
+  background-size: var(--size-icon-sm) var(--size-icon-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  appearance: none;
+}
+
+.dtk-ar-select-wrap:hover .dtk-ar-select {
+  border-color: var(--color-primary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C63930'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.dtk-ar-select:hover,
+.dtk-ar-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C63930'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.dtk-ar-search-wrap {
+  position: relative;
+  margin-top: var(--spacing-panel-y);
+}
+
+.dtk-ar-search-icon {
+  position: absolute;
+  left: var(--spacing-input-icon);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E") center/contain no-repeat;
+  pointer-events: none;
+}
+
+.dtk-ar-search-clear {
+  position: absolute;
+  right: var(--spacing-input-icon);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.dtk-ar-search-clear:hover {
+  color: var(--color-text);
+}
+
+.dtk-ar-search {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-control-y) var(--spacing-input-icon) var(--spacing-control-y) 2rem;
+  font-size: var(--font-size-control);
+  line-height: 1.25;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.dtk-ar-search::placeholder {
+  color: var(--color-text-muted);
+}
+
+.dtk-ar-search:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.dtk-ar-actions {
+  flex-shrink: 0;
+  padding: var(--spacing-control-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-control-inline) var(--spacing-sm);
+}
+
+.dtk-ar-action-link {
+  font-size: var(--font-size-control);
+  font-weight: 500;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dtk-ar-action-link:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+.dtk-ar-tree-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dtk-ar-summary {
+  flex-shrink: 0;
+  padding: var(--spacing-control-y) var(--spacing-panel-x);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--font-size-control);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.dtk-ar-summary .dtk-ar-count {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.dtk-ar-empty {
+  padding: var(--spacing-empty-y) var(--spacing-empty-x);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-empty);
+}
+
+.dtk-ar-empty.dtk-ar-loading {
+  color: var(--color-text-muted);
+}
+
+.dtk-ar-loading-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+}
+
+.dtk-ar-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-ar-summary.dtk-ar-summary-clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.dtk-ar-summary.dtk-ar-summary-clickable:hover {
+  background-color: var(--color-surface-muted);
+}
+
+.dtk-ar-summary.dtk-ar-summary-clickable:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+/* Selected-only panel (click-triggered slide-up overlay) */
+.dtk-ar-selected-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.25s ease-out, opacity 0.2s ease-out;
+}
+
+.dtk-ar-selected-panel.dtk-ar-selected-panel-is-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.dtk-ar-selected-panel-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-panel-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dtk-ar-selected-panel-title {
+  font-size: var(--font-size-control);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.dtk-ar-selected-panel-close {
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dtk-ar-selected-panel-close:hover {
+  color: var(--color-text);
+}
+
+.dtk-ar-selected-panel-list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-ar-selected-panel-list .dtk-lv-list-wrap {
+  flex: 1;
+  min-height: 0;
+}

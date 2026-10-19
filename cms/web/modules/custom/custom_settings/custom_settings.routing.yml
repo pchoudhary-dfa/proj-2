@@ -1,0 +1,56 @@
+custom_settings.sdg_detail:
+  path: '/sdg-detail/{sdg_val}'
+  defaults:
+    _controller: '\Drupal\custom_settings\Controller\Sdg::sdgDetail'
+    #_title_callback: '\Drupal\custom_settings\Controller\CustomTitle::sdgTitle'
+  requirements:
+    _permission: 'access content'
+
+custom_settings.sdg_ajax:
+  path: 'sdg-ajax'
+  defaults:
+    _controller: '\Drupal\custom_settings\Controller\Sdg:sdgAjax'
+    _title: 'SDG Ajax'
+  requirements:
+    _permission: 'access content'
+
+custom_settings.metadata_ajax:
+  path: '/metadata-ajax'
+  defaults:
+    _controller: '\Drupal\custom_settings\Controller\Metadata::metaDataAjax'
+  requirements:
+    _permission: 'access content'
+
+custom_settings.metadata_by_ctype:
+  path: '/metadata/ctype/{ctype}'
+  defaults:
+    _controller: '\Drupal\custom_settings\Controller\Metadata::cType'
+    #_title_callback: '\Drupal\custom_settings\Controller\CustomTitle::ctypeTitle'
+  requirements:
+    _permission: 'access content'
+
+custom_settings.metadata_sdg:
+  path: '/metadata/sdg/{sdg}'
+  defaults:
+    _controller: '\Drupal\custom_settings\Controller\Metadata::sdgMetadata'
+    _title_callback: '\Drupal\custom_settings\Controller\CustomTitle::metaSDGTitle'
+  requirements:
+    _permission: 'access content'
+
+custom_settings.metadata_sector:
+  path: '/metadata/indcl/{indcl}'
+  defaults:
+    _controller: '\Drupal\custom_settings\Controller\Metadata::indCL'
+    #_title_callback: '\Drupal\custom_settings\Controller\CustomTitle::metaIndclTitle'
+  requirements:
+    _permission: 'access content'
+
+custom_settings.download_metadata:
+  path: 'download-metadata/{indicator_gid}'
+  defaults:
+    _controller: '\Drupal\custom_settings\Controller\Metadata::downloadPdf'
+    _title: 'Metadata Download'
+  options:
+    no_cache: 'TRUE'
+  requirements:
+    _permission: 'access content'

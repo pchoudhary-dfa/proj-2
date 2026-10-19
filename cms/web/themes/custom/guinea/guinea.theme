@@ -1,0 +1,749 @@
+<?php
+
+use Drupal\taxonomy\Entity\Term;
+use \Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
+use Drupal\Core\Mail\MailManagerInterface;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
+use Drupal\media\Entity\Media;
+use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\paragraphs\Entity\Paragraph;
+use \Drupal\Core\Routing;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityStorageBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\node\NodeInterface;
+use Drupal\Core\Path\PathMatcherInterface;
+use Drupal\Core\Path\PathAliasManagerInterface;
+use Drupal\Core\Path\CurrentPathStack;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\views\ViewExecutable;
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_views_pre_render() for the theme.
+ *
+ * Exposes selected page view result counts to JS.
+ */
+function guinea_views_pre_render(ViewExecutable $view) {
+  $display_id = (string) ($view->current_display ?? '');
+  if ($display_id === '' || !str_starts_with($display_id, 'page')) {
+    return;
+  }
+
+  $count = (int) $view->total_rows;
+  if (!isset($view->element['#attached']['drupalSettings']['guinea'])) {
+    $view->element['#attached']['drupalSettings']['guinea'] = [];
+  }
+
+  if (in_array($view->id(), ['ressources', 'resources'], TRUE)) {
+    $view->element['#attached']['drupalSettings']['guinea']['ressourcesResultCount'] = $count;
+    $view->element['#attached']['library'][] = 'guinea/ressources-result-count';
+    return;
+  }
+
+  // Use display path to avoid hard dependency on one specific view machine name.
+  $path = trim((string) ($view->display_handler ? $view->display_handler->getOption('path') : ''), '/');
+  if ($path === 'apprentissage') {
+    $view->element['#attached']['drupalSettings']['guinea']['apprentissageResultCount'] = $count;
+    $view->element['#attached']['library'][] = 'guinea/apprentissage-result-count';
+  }
+}
+
+function guinea_theme_suggestions_page_alter(array &$suggestions, array $variables)
+{
+  // 404 and 403 template suggestions.
+  $request = \Drupal::requestStack()->getCurrentRequest();
+  $exception = $request->attributes->get('exception');
+  if ($exception) {
+    $status_code = $exception->getStatusCode();
+    if ($status_code == 404 || $status_code == 403) {
+      $suggestions[] = 'page__' . $status_code;
+    }
+  }
+
+  // Checks for node pages and adds page URL alias-based template name.
+  if ($node = \Drupal::routeMatch()->getParameter('node')) {
+    if ($node instanceof NodeInterface) {
+      $suggestions[] = 'page__node__' . $node->bundle();
+    }
+    $current_path = \Drupal::service('path.current')->getPath();
+    $alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+    $clean_alias = str_replace('-', '', ltrim($alias, '/'));
+    $suggestions[] = 'page__node__' . $clean_alias;
+  }
+
+  // Add template suggestions for user password pages.
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name == 'user.pass') {
+    // Template file: page--user--password.html.twig
+    $suggestions[] = 'page__user__password';
+  }
+  // Check for user reset form route (can be user.reset.form or user.reset)
+  if ($route_name == 'user.reset.form' || $route_name == 'user.reset' || strpos($route_name, 'user.reset') !== false) {
+    $suggestions[] = 'page__user__reset';
+  }
+  if ($route_name === 'user.logout.confirm') {
+    $suggestions[] = 'page__user__logout__confirm';
+  }
+  if ($route_name === 'entity.user.edit_form') {
+    $request = \Drupal::request();
+    $token = $request->query->get('pass-reset-token');
+    if ($token !== NULL && $token !== '') {
+      $suggestions[] = 'page__user__password_reset';
+    }
+    else {
+      $suggestions[] = 'page__user__edit';
+    }
+  }
+  if ($route_name === 'entity.user.create_form') {
+    $suggestions[] = 'page__admin__people__create';
+  }
+}
+
+
+
+function guinea_preprocess_page(array &$variables)
+{
+  $site_config = \Drupal::config('system.site');
+  $variables['site_name'] = $site_config->get('name');
+  $variables['site_slogan'] = $site_config->get('slogan');
+
+  // logo needs to be placed within specified folder
+  $variables['logopath'] = \Drupal::service('file_url_generator')->generateString(theme_get_setting('logo.url'));
+  $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+
+  $host = \Drupal::request()->getSchemeAndHttpHost();
+  $variables['host'] = $host;
+
+  // Hero section from Home Slider content type (front page only).
+  if (!empty($variables['is_front'])) {
+    $variables['hero_slides'] = [];
+    try {
+      $storage = \Drupal::entityTypeManager()->getStorage('node');
+      $ids = $storage->getQuery()
+        ->accessCheck(TRUE)
+        ->condition('type', 'home_slider')
+        ->condition('status', 1)
+        ->sort('created', 'DESC')
+        ->execute();
+      if (!empty($ids)) {
+        $nodes = $storage->loadMultiple($ids);
+        $file_url_generator = \Drupal::service('file_url_generator');
+        /** @var \Drupal\node\NodeInterface $node */
+        foreach ($nodes as $node) {
+          $variables['#cache']['tags'][] = 'node:' . $node->id();
+          $slide = [
+            'title' => $node->getTitle(),
+            'title_2' => $node->hasField('field_home_slider_title_2') && !$node->get('field_home_slider_title_2')->isEmpty()
+              ? $node->get('field_home_slider_title_2')->value
+              : '',
+            'subtitle' => $node->hasField('field_home_slider_subtitle') && !$node->get('field_home_slider_subtitle')->isEmpty()
+              ? $node->get('field_home_slider_subtitle')->value
+              : '',
+            'subtitle_2' => $node->hasField('field_home_slider_subtitle_2') && !$node->get('field_home_slider_subtitle_2')->isEmpty()
+              ? $node->get('field_home_slider_subtitle_2')->value
+              : '',
+          ];
+          if ($node->hasField('field_home_slider_image') && !$node->get('field_home_slider_image')->isEmpty()) {
+            $file = $node->get('field_home_slider_image')->entity;
+            if ($file && $file->getFileUri()) {
+              $slide['image_url'] = $file_url_generator->generateAbsoluteString($file->getFileUri());
+            }
+          }
+          if (!empty($slide['image_url']) || !empty($slide['title']) || $slide['title_2'] !== '' || $slide['subtitle'] !== '' || $slide['subtitle_2'] !== '') {
+            $variables['hero_slides'][] = $slide;
+          }
+        }
+      }
+    } catch (\Exception $e) {
+      \Drupal::logger('guinea')->warning('Hero slides load failed: @message', ['@message' => $e->getMessage()]);
+    }
+    $variables['#attached']['library'][] = 'guinea/hero-slider';
+  }
+
+  //===============for Mon Dashboard Page  =================================
+
+  $current_path = \Drupal::service('path.current')->getPath();
+  $alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+
+  if ($alias === '/secure-dashboard') {
+    $variables['data_manager_url'] = function_exists('resolveSecureDashboardDataManagerUrl')
+      ? resolveSecureDashboardDataManagerUrl()
+      : rtrim($host, '/') . '/datamanager/Login/#';
+    $current_user = \Drupal::currentUser();
+    $roles = $current_user->getRoles();
+    $variables['hide_other_icons'] = (in_array('dm_data_reporter', $roles) || in_array('dm_data_reviewer', $roles));
+    $variables['#cache']['contexts'][] = 'user';
+    $variables['#cache']['contexts'][] = 'languages:language_interface';
+  }
+
+  if ($alias === '/monitoring-dashboard') {
+    $variables['#attached']['library'][] = 'guinea/mon-dashboard';
+
+    $app_url = isset($_ENV['APP_URL']) ? trim($_ENV['APP_URL']) : '';
+    $api_url = $app_url . '/monservice/api/v1/GLOBAL/fr/readDashboardPlanStats';
+    //$api_url = 'https://guinea.dataforall.org/monservice/api/v1/GLOBAL/fr/readDashboardPlanStats';
+
+    $client = \Drupal::httpClient();
+    try {
+      $response = $client->get($api_url);
+      $data = json_decode($response->getBody(), true);
+      //dd($data);
+
+      // Extract the parts we want
+      $indScore = $data['data']['indScore'] ?? [];
+      $actStatus = $data['data']['actStatus'] ?? [];
+      $financialData = $data['data']['financialData'] ?? [];
+
+      // Pass data to Twig
+      $variables['ind_score'] = $indScore;
+      $variables['act_status'] = $actStatus;
+      $variables['financial_data'] = $financialData;
+
+      // Pass data to JS via drupalSettings
+      $settings = [
+        'indScore' => $indScore,
+        'actStatus' => $actStatus,
+        'financialData' => $financialData,
+      ];
+      //$variables['#attached']['library'][] = 'guinea/mon-dashboard'; // defined in guinea.libraries.yml
+      $variables['#attached']['drupalSettings']['guinea'] = $settings;
+    } catch (\Exception $e) {
+      \Drupal::logger('guinea')->error('API call failed: @message', ['@message' => $e->getMessage()]);
+    }
+  }
+  //========================  For Mon Dashboard Page ====================================
+
+  //========================  For DFA Help Settings =====================================
+  // Pass DFA Help settings from .env to JavaScript
+  $dfa_help_url = isset($_ENV['DFA_HELP_URL']) ? trim($_ENV['DFA_HELP_URL']) : '';
+  $dfa_help_enabled = isset($_ENV['IS_DFA_HELP_ENABLED']) ? trim($_ENV['IS_DFA_HELP_ENABLED']) : 'false';
+
+  // Debug logging (remove after testing)
+  if (empty($dfa_help_url)) {
+    \Drupal::logger('guinea')->warning('DFA_HELP_URL is empty or not set in .env file');
+  }
+  if (empty($dfa_help_enabled)) {
+    \Drupal::logger('guinea')->warning('IS_DFA_HELP_ENABLED is empty or not set in .env file');
+  }
+
+  if (!isset($variables['#attached']['drupalSettings']['guinea'])) {
+    $variables['#attached']['drupalSettings']['guinea'] = [];
+  }
+  $variables['#attached']['drupalSettings']['guinea']['DFA_HELP_URL'] = $dfa_help_url;
+  $variables['#attached']['drupalSettings']['guinea']['IS_DFA_HELP_ENABLED'] = $dfa_help_enabled;
+
+  //========================  For DFA Help Settings ===============================================
+}
+
+
+// function guinea_preprocess_item_list__search_results(array &$variables)
+// {
+//   // Get the total items count from the pager.
+//   $pager = \Drupal::service('pager.manager')->getPager();
+//   if (!empty($pager)) {
+//     $variables['total_items_count'] = $pager->getTotalItems();
+//   } else {
+//     $variables['total_items_count'] = 0;
+//   }
+//   //$variables['total_items_count'] = $pager->getTotalItems();
+
+//   // Get the current path.
+//   $current_path = \Drupal::service('path.current')->getPath();
+
+//   // Check if on the search results page.
+//   if ($current_path === '/search/node') {
+//     $query = \Drupal::request()->query;
+
+//     // Check for 'keys' in the query parameters.
+//     if ($query->has('keys')) {
+//       $variables['keyword'] = $query->get('keys');
+//     }
+//   }
+// }
+
+
+
+function guinea_preprocess_html(&$variables)
+{
+  $front_page = \Drupal::service('path.matcher')->isFrontPage();
+  if ($front_page) {
+    $site_name = \Drupal::config('system.site')->get('name');
+    $head_title = array(t('Home'), $site_name);
+    $variables['head_title_array'] = $head_title;
+    $variables['head_title'] = implode(' | ', $head_title);
+  }
+
+  $route = \Drupal::routeMatch();
+  if ($route->getRouteName() === 'entity.node.canonical') {
+    $node = $route->getParameter('node');
+    if ($node instanceof NodeInterface && $node->bundle() === 'ressources') {
+      $attributes = $variables['attributes'];
+      if ($attributes instanceof Attribute) {
+        $attributes->addClass('publication-detail-page');
+      }
+      else {
+        $variables['attributes']['class'][] = 'publication-detail-page';
+      }
+    }
+    if ($node instanceof NodeInterface && $node->bundle() === 'apprentissage') {
+      $attributes = $variables['attributes'];
+      if ($attributes instanceof Attribute) {
+        $attributes->addClass('story-detail-page');
+      }
+      else {
+        $variables['attributes']['class'][] = 'story-detail-page';
+      }
+    }
+  }
+}
+
+/**
+ * Prepares variables for the Ressources publication detail template.
+ */
+function guinea_preprocess_node(&$variables) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
+  if ($node->bundle() === 'ressources') {
+    $variables['#cache']['contexts'][] = 'url.site';
+    $variables['#cache']['tags'][] = 'node:' . $node->id();
+
+    $file_url_generator = \Drupal::service('file_url_generator');
+
+    $variables['publication_back_url'] = Url::fromUserInput('/ressources')->toString();
+    $variables['publication_image_url'] = _guinea_ressources_image_url($node, $file_url_generator);
+    $variables['publication_title'] = $node->getTitle();
+    $variables['publication_theme'] = _guinea_ressources_first_available_label($node, ['field_ressources_domain']);
+    $variables['publication_year'] = _guinea_ressources_first_available_label($node, ['field_ressources_year']);
+    $variables['publication_institution'] = _guinea_ressources_first_available_label($node, ['field_ressources_institution']);
+    $variables['publication_doc_type'] = _guinea_ressources_doc_type_label($node);
+    $variables['publication_tag'] = _guinea_ressources_tag_upper($variables['publication_doc_type']);
+    $variables['publication_download_url'] = _guinea_ressources_file_url($node, $file_url_generator);
+    $variables['publication_view_url'] = _guinea_ressources_view_url($node);
+    $share_url = Url::fromRoute('entity.node.canonical', ['node' => $node->id()], ['absolute' => TRUE])->toString();
+    $variables['publication_share_url'] = $share_url;
+    // Gmail web compose (works without a local mail client; mailto: is unreliable on many setups).
+    $variables['publication_gmail_compose_url'] = 'https://mail.google.com/mail/?' . http_build_query([
+      'view' => 'cm',
+      'fs' => '1',
+      'su' => $node->getTitle(),
+      'body' => $share_url,
+    ], '', '&', PHP_QUERY_RFC3986);
+
+    if (($variables['view_mode'] ?? '') === 'full') {
+      $variables['#attached']['library'][] = 'guinea/publication-detail-pdf';
+      if (!isset($variables['#attached']['drupalSettings']['guinea'])) {
+        $variables['#attached']['drupalSettings']['guinea'] = [];
+      }
+      $variables['#attached']['drupalSettings']['guinea']['publicationPdfFilename'] = _guinea_sanitize_publication_pdf_filename($node->getTitle());
+    }
+    return;
+  }
+
+  if ($node->bundle() !== 'apprentissage') {
+    return;
+  }
+
+  $variables['#cache']['contexts'][] = 'url.site';
+  $variables['#cache']['tags'][] = 'node:' . $node->id();
+
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $share_url = Url::fromRoute('entity.node.canonical', ['node' => $node->id()], ['absolute' => TRUE])->toString();
+
+  $variables['story_back_url'] = Url::fromUserInput('/apprentissage')->toString();
+  $variables['story_title'] = $node->getTitle();
+  $variables['story_image_url'] = _guinea_node_first_image_url($node, $file_url_generator, [
+    'field_apprentissage_image',
+    'field_contenu_image',
+    'field_story_image',
+    'field_image',
+  ]);
+  $variables['story_tag'] = _guinea_node_first_label($node, [
+    'field_apprentissage_domain',
+    'field_apprentissage_tag',
+    'field_contenu_domain',
+    'field_contenu_tag',
+    'field_domain',
+    'field_tag',
+  ]);
+  $variables['story_region'] = _guinea_node_first_label($node, [
+    'field_apprentissage_region',
+    'field_contenu_region',
+    'field_region',
+  ]);
+  $variables['story_author'] = _guinea_node_first_label($node, [
+    'field_apprentissage_author',
+    'field_contenu_author',
+    'field_author',
+  ]);
+  if ($variables['story_author'] === '') {
+    $variables['story_author'] = $node->getOwner() ? $node->getOwner()->getDisplayName() : '';
+  }
+  $variables['story_date'] = _guinea_node_story_date($node);
+  $variables['story_tag_modifier_class'] = 'story-detail-tag--' . _guinea_normalize_css_token($variables['story_tag']);
+  $variables['story_share_url'] = $share_url;
+  $variables['story_gmail_compose_url'] = 'https://mail.google.com/mail/?' . http_build_query([
+    'view' => 'cm',
+    'fs' => '1',
+    'su' => $node->getTitle(),
+    'body' => $share_url,
+  ], '', '&', PHP_QUERY_RFC3986);
+  $variables['story_body'] = _guinea_node_first_body_render($variables, [
+    'field_apprentissage_body',
+    'field_contenu_body',
+    'body',
+  ]);
+}
+
+/**
+ * Sanitizes node title for client-side PDF download filename.
+ */
+function _guinea_sanitize_publication_pdf_filename($title) {
+  $s = preg_replace('/[^\p{L}\p{N}\-_]+/u', '-', (string) $title);
+  $s = trim($s, '-');
+  return $s !== '' ? $s : 'publication';
+}
+
+/**
+ * Returns the absolute URL for the cover image field.
+ */
+function _guinea_ressources_image_url(NodeInterface $node, $file_url_generator) {
+  if (!$node->hasField('field_ressources_image') || $node->get('field_ressources_image')->isEmpty()) {
+    return '';
+  }
+  $field = $node->get('field_ressources_image');
+  $first = $field->first();
+  $type = $field->getFieldDefinition()->getType();
+  if ($type === 'image') {
+    $file = $first->entity;
+    if ($file instanceof FileInterface && $file->getFileUri()) {
+      return $file_url_generator->generateAbsoluteString($file->getFileUri());
+    }
+  }
+  if ($type === 'entity_reference') {
+    $entity = $first->entity;
+    if ($entity && $entity->getEntityTypeId() === 'media') {
+      foreach (['field_media_image', 'field_image', 'thumbnail'] as $media_field) {
+        if ($entity->hasField($media_field) && !$entity->get($media_field)->isEmpty()) {
+          $file = $entity->get($media_field)->entity;
+          if ($file instanceof FileInterface && $file->getFileUri()) {
+            return $file_url_generator->generateAbsoluteString($file->getFileUri());
+          }
+        }
+      }
+    }
+  }
+  return '';
+}
+
+/**
+ * Returns a plain string for simple text/list fields.
+ */
+function _guinea_ressources_plain_field(NodeInterface $node, $field_name) {
+  if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+    return '';
+  }
+  $field = $node->get($field_name);
+  $value = $field->first()->getValue();
+  if (isset($value['value'])) {
+    return (string) $value['value'];
+  }
+  return '';
+}
+
+/**
+ * Returns a human-readable document type (taxonomy term, link title, or text).
+ */
+function _guinea_ressources_doc_type_label(NodeInterface $node) {
+  if (!$node->hasField('field_ressources_doc_type') || $node->get('field_ressources_doc_type')->isEmpty()) {
+    return '';
+  }
+  $field = $node->get('field_ressources_doc_type');
+  $first = $field->first();
+  $type = $field->getFieldDefinition()->getType();
+  if ($type === 'link') {
+    $title = $first->get('title')->value;
+    if ($title !== NULL && $title !== '') {
+      return $title;
+    }
+    $uri = $first->get('uri')->value;
+    return $uri ? _guinea_uri_to_display_string($uri) : '';
+  }
+  if ($type === 'entity_reference') {
+    $entity = $first->entity;
+    return $entity ? $entity->label() : '';
+  }
+  $value = $first->getValue();
+  if (isset($value['value'])) {
+    return (string) $value['value'];
+  }
+  return '';
+}
+
+/**
+ * Returns the first non-empty label/value from candidate fields.
+ */
+function _guinea_ressources_first_available_label(NodeInterface $node, array $field_names) {
+  foreach ($field_names as $field_name) {
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+    $field = $node->get($field_name);
+    $first = $field->first();
+    $type = $field->getFieldDefinition()->getType();
+
+    if ($type === 'entity_reference') {
+      $entity = $first->entity;
+      if ($entity) {
+        return (string) $entity->label();
+      }
+    }
+    elseif ($type === 'link') {
+      $title = $first->get('title')->value;
+      if ($title !== NULL && $title !== '') {
+        return (string) $title;
+      }
+    }
+
+    $value = $first->getValue();
+    if (isset($value['value']) && $value['value'] !== '') {
+      return (string) $value['value'];
+    }
+  }
+  return '';
+}
+
+/**
+ * Uppercase tag for the badge (same style as listing cards).
+ */
+function _guinea_ressources_tag_upper($label) {
+  if ($label === '') {
+    return '';
+  }
+  return mb_strtoupper($label);
+}
+
+/**
+ * Converts internal URI to a short display string.
+ */
+function _guinea_uri_to_display_string($uri) {
+  if (!$uri) {
+    return '';
+  }
+  try {
+    $url = Url::fromUri($uri);
+    return $url->toString();
+  }
+  catch (\Exception $e) {
+    return '';
+  }
+}
+
+/**
+ * Returns the absolute URL for the first file attachment.
+ */
+function _guinea_ressources_file_url(NodeInterface $node, $file_url_generator) {
+  foreach (['field_ressources_file', 'field_ressources_document', 'field_ressources_attachment'] as $field_name) {
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+    $file = $node->get($field_name)->entity;
+    if ($file instanceof FileInterface && $file->getFileUri()) {
+      return $file_url_generator->generateAbsoluteString($file->getFileUri());
+    }
+  }
+  return '';
+}
+
+/**
+ * Returns a URL for the external "Voir" action (dedicated link field or doc type link).
+ */
+function _guinea_ressources_view_url(NodeInterface $node) {
+  foreach (['field_ressources_link', 'field_ressources_external_link', 'field_ressources_url'] as $field_name) {
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+    $first = $node->get($field_name)->first();
+    if ($first->getFieldDefinition()->getType() === 'link') {
+      $uri = $first->get('uri')->value;
+      if ($uri) {
+        try {
+          return Url::fromUri($uri)->toString();
+        }
+        catch (\Exception $e) {
+        }
+      }
+    }
+  }
+  if ($node->hasField('field_ressources_doc_type') && !$node->get('field_ressources_doc_type')->isEmpty()) {
+    $first = $node->get('field_ressources_doc_type')->first();
+    if ($first->getFieldDefinition()->getType() === 'link') {
+      $uri = $first->get('uri')->value;
+      if ($uri) {
+        try {
+          return Url::fromUri($uri)->toString();
+        }
+        catch (\Exception $e) {
+        }
+      }
+    }
+  }
+  return '';
+}
+
+/**
+ * Returns first label/value from candidate node fields.
+ */
+function _guinea_node_first_label(NodeInterface $node, array $field_names) {
+  foreach ($field_names as $field_name) {
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+    $field = $node->get($field_name);
+    $first = $field->first();
+    $type = $field->getFieldDefinition()->getType();
+
+    if ($type === 'entity_reference') {
+      $entity = $first->entity;
+      if ($entity) {
+        return (string) $entity->label();
+      }
+    }
+    elseif ($type === 'link') {
+      $title = (string) $first->get('title')->value;
+      if ($title !== '') {
+        return $title;
+      }
+    }
+
+    $value = $first->getValue();
+    if (!empty($value['value'])) {
+      return (string) $value['value'];
+    }
+  }
+  return '';
+}
+
+/**
+ * Returns first renderable body field from preprocess variables.
+ */
+function _guinea_node_first_body_render(array $variables, array $field_names) {
+  foreach ($field_names as $field_name) {
+    if (!empty($variables['content'][$field_name])) {
+      return $variables['content'][$field_name];
+    }
+  }
+  return [];
+}
+
+/**
+ * Returns first image URL from candidate fields.
+ */
+function _guinea_node_first_image_url(NodeInterface $node, $file_url_generator, array $field_names) {
+  foreach ($field_names as $field_name) {
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+    $field = $node->get($field_name);
+    $first = $field->first();
+    $type = $field->getFieldDefinition()->getType();
+
+    if ($type === 'image') {
+      $file = $first->entity;
+      if ($file instanceof FileInterface && $file->getFileUri()) {
+        return $file_url_generator->generateAbsoluteString($file->getFileUri());
+      }
+    }
+
+    if ($type === 'entity_reference') {
+      $entity = $first->entity;
+      if ($entity instanceof Media) {
+        foreach (['field_media_image', 'field_image', 'thumbnail'] as $media_field) {
+          if ($entity->hasField($media_field) && !$entity->get($media_field)->isEmpty()) {
+            $file = $entity->get($media_field)->entity;
+            if ($file instanceof FileInterface && $file->getFileUri()) {
+              return $file_url_generator->generateAbsoluteString($file->getFileUri());
+            }
+          }
+        }
+      }
+      if ($entity instanceof FileInterface && $entity->getFileUri()) {
+        return $file_url_generator->generateAbsoluteString($entity->getFileUri());
+      }
+    }
+  }
+  return '';
+}
+
+/**
+ * Returns formatted story date from common date fields or node created date.
+ */
+function _guinea_node_story_date(NodeInterface $node) {
+  $timestamp = NULL;
+
+  foreach (['field_apprentissage_date', 'field_contenu_date', 'field_story_date', 'field_date'] as $field_name) {
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+    $item = $node->get($field_name)->first();
+    if (!empty($item->value)) {
+      try {
+        $timestamp = strtotime((string) $item->value);
+      }
+      catch (\Exception $e) {
+        $timestamp = NULL;
+      }
+    }
+    if (!empty($item->date)) {
+      $timestamp = $item->date->getTimestamp();
+    }
+    if ($timestamp) {
+      break;
+    }
+  }
+
+  if (!$timestamp) {
+    $timestamp = $node->getCreatedTime();
+  }
+
+  return \Drupal::service('date.formatter')->format($timestamp, 'custom', 'j F Y');
+}
+
+/**
+ * Normalizes labels into CSS-friendly token.
+ */
+function _guinea_normalize_css_token($value) {
+  $s = trim((string) $value);
+  if ($s === '') {
+    return 'default';
+  }
+  $class = Html::getClass($s);
+  return $class !== '' ? $class : 'default';
+}
+
+/**
+ * Implements hook_form_alter() for logout confirmation page.
+ */
+function guinea_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id !== 'user_logout_confirm') {
+    return;
+  }
+
+  unset($form['#title']);
+  if (isset($form['description'])) {
+    $form['description']['#access'] = FALSE;
+  }
+  if (isset($form['actions']['submit'])) {
+    $form['actions']['submit']['#value'] = t('Se déconnecter');
+  }
+  if (isset($form['actions']['cancel'])) {
+    $form['actions']['cancel']['#title'] = t('Annuler');
+  }
+}

@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: apps-dfa-v6-demo
+
+namePrefix: demo-
+
+resources:
+- ../../base
+- env-config.yaml
+- ingress.yaml
+
+images:
+- name: dfav6-web
+  newName: me-dubai-1.ocir.io/axrfhwznxtja/dtk-devops/viz-adap
+  newTag: IMAGE_TAG
+
+patches:
+- patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/envFrom
+      value:
+      - configMapRef:
+          name: dfav6-env
+      - secretRef:
+          name: demo-dfav6-secrets
+  target:
+    kind: Deployment
+    name: dfav6-web

@@ -1,0 +1,102 @@
+[
+  {
+    "reason_code": "VALUE_OUT_OF_RANGE",
+    "reason_text": "Value is outside the expected statistical range",
+    "display_order": 1,
+    "i18n": {
+      "en": "Value is outside the expected statistical range",
+      "fr": "La valeur est en dehors de la plage statistique attendue",
+      "ar": "القيمة خارج النطاق الإحصائي المتوقع"
+    }
+  },
+  {
+    "reason_code": "VALUE_INCONSISTENT",
+    "reason_text": "Value is inconsistent with related indicators or prior periods",
+    "display_order": 2,
+    "i18n": {
+      "en": "Value is inconsistent with related indicators or prior periods",
+      "fr": "La valeur est incohérente avec les indicateurs associés ou les périodes précédentes",
+      "ar": "القيمة غير متسقة مع المؤشرات ذات الصلة أو الفترات السابقة"
+    }
+  },
+  {
+    "reason_code": "SOURCE_NOT_VERIFIED",
+    "reason_text": "Source document has not been verified or is missing",
+    "display_order": 3,
+    "i18n": {
+      "en": "Source document has not been verified or is missing",
+      "fr": "Le document source n'a pas été vérifié ou est manquant",
+      "ar": "لم يتم التحقق من المستند المصدر أو أنه مفقود"
+    }
+  },
+  {
+    "reason_code": "DATA_ENTRY_ERROR",
+    "reason_text": "Apparent typographical or data entry error",
+    "display_order": 4,
+    "i18n": {
+      "en": "Apparent typographical or data entry error",
+      "fr": "Erreur de saisie ou faute de frappe apparente",
+      "ar": "خطأ واضح في الكتابة أو إدخال البيانات"
+    }
+  },
+  {
+    "reason_code": "MISSING_FOOTNOTE",
+    "reason_text": "Required footnote or contextual note is absent",
+    "display_order": 5,
+    "i18n": {
+      "en": "Required footnote or contextual note is absent",
+      "fr": "La note de bas de page ou la note contextuelle requise est absente",
+      "ar": "الحاشية المطلوبة أو الملاحظة السياقية غائبة"
+    }
+  },
+  {
+    "reason_code": "DUPLICATE_ENTRY",
+    "reason_text": "Duplicate record detected for the same indicator, area, and time period",
+    "display_order": 6,
+    "i18n": {
+      "en": "Duplicate record detected for the same indicator, area, and time period",
+      "fr": "Enregistrement en double détecté pour le même indicateur, la même zone et la même période",
+      "ar": "تم اكتشاف سجل مكرر لنفس المؤشر والمنطقة والفترة الزمنية"
+    }
+  },
+  {
+    "reason_code": "WRONG_TIMEPERIOD",
+    "reason_text": "Value belongs to a different time period than indicated",
+    "display_order": 7,
+    "i18n": {
+      "en": "Value belongs to a different time period than indicated",
+      "fr": "La valeur appartient à une période différente de celle indiquée",
+      "ar": "القيمة تنتمي إلى فترة زمنية مختلفة عن المشار إليها"
+    }
+  },
+  {
+    "reason_code": "WRONG_AREA",
+    "reason_text": "Value is attributed to the wrong area or administrative unit",
+    "display_order": 8,
+    "i18n": {
+      "en": "Value is attributed to the wrong area or administrative unit",
+      "fr": "La valeur est attribuée à une zone ou une unité administrative incorrecte",
+      "ar": "القيمة منسوبة إلى منطقة أو وحدة إدارية خاطئة"
+    }
+  },
+  {
+    "reason_code": "UNIT_MISMATCH",
+    "reason_text": "Measurement unit does not match the indicator definition",
+    "display_order": 9,
+    "i18n": {
+      "en": "Measurement unit does not match the indicator definition",
+      "fr": "L'unité de mesure ne correspond pas à la définition de l'indicateur",
+      "ar": "وحدة القياس لا تتطابق مع تعريف المؤشر"
+    }
+  },
+  {
+    "reason_code": "OTHER",
+    "reason_text": "Other reason (see reviewer comment for details)",
+    "display_order": 10,
+    "i18n": {
+      "en": "Other reason (see reviewer comment for details)",
+      "fr": "Autre raison (voir le commentaire du réviseur pour plus de détails)",
+      "ar": "سبب آخر (راجع تعليق المراجع للتفاصيل)"
+    }
+  }
+]

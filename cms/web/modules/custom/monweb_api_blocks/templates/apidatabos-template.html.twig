@@ -1,0 +1,27 @@
+<div class="dropdown-menu business">
+	<div class="searchContainer">
+		{% if test_var == 1 %}
+			{% for key, value in myvariable %}
+				{% set innerArrCap = value.cap %}
+				{% if value[innerArrCap] is defined %}
+					<span class="dropdownSubmenu">
+						<a href="javascript:void(0);">{{innerArrCap}}</a>
+						<ul class="dropdownMenu">
+							{% for innerKey, innerValue in value[innerArrCap] %}
+								<li>
+									<a href="{{innerValue.childUrl}}" target="{{ innerValue.childTarget }}">{{ innerValue.childCap }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</span>
+				{% else %}
+					<a href="{{ value.url }}" target="{{ value.target|default('_blank') }}">{{ value.cap }}</a>
+				{% endif %}
+			{% endfor %}
+		{% else %}
+			{% for type, items in myvariable %}
+				<a href="{{ items.url }}" target="{{ items.target|default('_blank') }}">{{ items.cap }}</a>
+			{% endfor %}
+		{% endif %}
+	</div>
+</div>

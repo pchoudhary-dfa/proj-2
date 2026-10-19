@@ -1,0 +1,1115 @@
+/**
+ * Data Manager theme for `dfa-mailer-templates` — same class names as the package;
+ * loaded after `dist/index.css` so these rules override the bundle. Scoped to
+ * `.dm-mailer-package-host` so generic names like `.btn` do not leak app-wide.
+ */
+
+/* `--dm-mailer-shell-inline`: same as former PageToolbar `px-5` — chrome rows only, not table */
+.dm-mailer-package-host {
+  --dm-mailer-shell-inline: 1.25rem;
+  min-height: 0;
+  min-width: 0;
+}
+
+.dm-mailer-package-host .email-templates-container,
+.dm-mailer-package-host .email-logs-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  border-radius: 0;
+  box-shadow: none;
+  width: 100%;
+  max-width: none;
+}
+
+/* Package page headers replace PageToolbar on mailer sections — match PageToolbar strip */
+.dm-mailer-package-host .email-templates-header,
+.dm-mailer-package-host .email-logs-header {
+  position: relative;
+  z-index: 12;
+  isolation: isolate;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  row-gap: 8px;
+  column-gap: 12px;
+  box-sizing: border-box;
+  min-height: var(--height-breadcrumb);
+  padding-block: 0;
+  padding-inline: var(--dm-mailer-shell-inline);
+  background: var(--color-surface);
+  border-bottom: none;
+}
+
+.dm-mailer-package-host .email-templates-header .header-left,
+.dm-mailer-package-host .email-logs-header .header-left {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 10px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* Icon box — same visual as PageToolbar leading `bg-primary-soft` + Material icon */
+.dm-mailer-package-host .email-templates-header .header-left::before,
+.dm-mailer-package-host .email-logs-header .header-left::before {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-inline-end: 8px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 24%, var(--color-border));
+  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  color: var(--color-primary);
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: var(--font-size-sm);
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+}
+
+.dm-mailer-package-host .email-templates-header .header-left::before {
+  content: "mark_email_read";
+}
+
+.dm-mailer-package-host .email-logs-header .header-left::before {
+  content: "history";
+}
+
+.dm-mailer-package-host .header-left h1 {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.25;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.dm-mailer-package-host .email-templates-header .header-left h1 .create-btn {
+  margin-left: 0 !important;
+}
+
+.dm-mailer-package-host .email-templates-header .header-right,
+.dm-mailer-package-host .email-logs-header .header-right {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.dm-mailer-package-host .email-templates-header .header-right .btn,
+.dm-mailer-package-host .email-logs-header .header-right .btn {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+}
+
+.dm-mailer-package-host .subtitle {
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+}
+
+.dm-mailer-package-host .action-buttons-group {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Header toolbar (Filters / export / refresh): beat bundled package `.btn-secondary:hover`
+   (primary fill + white text) so our hover background never pairs with invisible white copy. */
+.dm-mailer-package-host .email-templates-header .action-buttons-group .btn,
+.dm-mailer-package-host .email-logs-header .action-buttons-group .btn {
+  position: relative;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: none;
+}
+
+.dm-mailer-package-host .email-templates-header .action-buttons-group .btn:hover:not(:disabled),
+.dm-mailer-package-host .email-templates-header .action-buttons-group .btn:focus-visible,
+.dm-mailer-package-host .email-logs-header .action-buttons-group .btn:hover:not(:disabled),
+.dm-mailer-package-host .email-logs-header .action-buttons-group .btn:focus-visible {
+  color: var(--color-text);
+  background: var(--color-surface-muted);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.dm-mailer-package-host .email-templates-header .action-buttons-group .refresh-btn,
+.dm-mailer-package-host .email-logs-header .action-buttons-group .refresh-btn {
+  color: var(--color-text);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: none;
+}
+
+.dm-mailer-package-host .email-templates-header .action-buttons-group .refresh-btn:hover:not(:disabled),
+.dm-mailer-package-host .email-logs-header .action-buttons-group .refresh-btn:hover:not(:disabled) {
+  color: var(--color-text);
+  background: var(--color-surface-muted);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.dm-mailer-package-host .email-templates-header .action-buttons-group .btn svg,
+.dm-mailer-package-host .email-logs-header .action-buttons-group .btn svg {
+  display: inline-block;
+  flex-shrink: 0;
+  opacity: 1;
+  color: inherit;
+}
+
+/* Toolbar buttons — align with btn-comp / administration toolbars */
+.dm-mailer-package-host .btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: 1.25;
+  border-radius: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    color 0.15s ease;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.dm-mailer-package-host .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dm-mailer-package-host .btn-primary,
+.dm-mailer-package-host .create-btn {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.dm-mailer-package-host .btn-primary:hover:not(:disabled),
+.dm-mailer-package-host .create-btn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.dm-mailer-package-host .btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.dm-mailer-package-host .btn-secondary:hover:not(:disabled) {
+  color: var(--color-text);
+  background: var(--color-surface-muted);
+  box-shadow: var(--shadow-md);
+}
+
+.dm-mailer-package-host .refresh-btn {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.dm-mailer-package-host .refresh-btn:hover:not(:disabled) {
+  color: var(--color-text);
+  background: var(--color-surface-muted);
+  box-shadow: var(--shadow-md);
+}
+
+.dm-mailer-package-host .btn-sm {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: var(--font-size-xs);
+}
+
+.dm-mailer-package-host .btn:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus-ring);
+}
+
+.dm-mailer-package-host .btn-danger {
+  background: var(--color-error);
+  color: var(--color-on-primary);
+  border-color: var(--color-error);
+}
+
+.dm-mailer-package-host .btn-danger:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+/* Tables — mirror `.tv-grid-wrap table.tv-grid-table` surfaces and borders */
+.dm-mailer-package-host .email-templates-table-container,
+.dm-mailer-package-host .email-logs-table-container {
+  height: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-right: none;
+  background: var(--color-surface);
+  margin-top: 0;
+}
+
+.dm-mailer-package-host .email-templates-table,
+.dm-mailer-package-host .email-logs-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto;
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-xs);
+  background: var(--color-surface);
+}
+
+/* Package CSS sets UniversLTPro on `th`/`td` — force app body font for parity with TableView */
+.dm-mailer-package-host .email-templates-table th,
+.dm-mailer-package-host .email-templates-table td,
+.dm-mailer-package-host .email-logs-table th,
+.dm-mailer-package-host .email-logs-table td {
+  font-family: var(--font-body) !important;
+}
+
+/* Mirror `tbl-wrap` / `tv-grid-table` header + body rhythm (TableView / th-sort-wrap) */
+.dm-mailer-package-host .email-templates-table thead,
+.dm-mailer-package-host .email-logs-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  font-size: var(--font-size-xs);
+  font-family: var(--font-body) !important;
+}
+
+.dm-mailer-package-host .email-templates-table thead tr,
+.dm-mailer-package-host .email-logs-table thead tr {
+  font-size: var(--font-size-xs);
+  font-family: var(--font-body) !important;
+  background: var(--color-surface-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dm-mailer-package-host .email-templates-table thead th,
+.dm-mailer-package-host .email-logs-table thead th {
+  /* `.tbl-wrap th` + `tv-grid-table thead th` */
+  background: var(--color-surface-muted);
+  background-clip: padding-box;
+  color: var(--color-text);
+  font-family: var(--font-body) !important;
+  font-weight: 600;
+  font-size: var(--font-size-xs);
+  line-height: 1.25;
+  text-align: left;
+  white-space: nowrap;
+  letter-spacing: 0.025em;
+  padding: 8px var(--spacing-md);
+  border: none;
+  box-shadow: inset 0 -1px 0 var(--color-border);
+  z-index: 31;
+  vertical-align: middle;
+  min-width: 0;
+  transition: background-color 0.15s ease;
+}
+
+/* `.indicator-actions-col` — sticky actions column (package last col is Actions) */
+.dm-mailer-package-host .email-templates-table thead th:last-child,
+.dm-mailer-package-host .email-logs-table thead th:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 50;
+  width: 170px;
+  min-width: 170px;
+  max-width: 170px;
+  box-sizing: border-box;
+  text-align: center;
+  border-left: 1px solid var(--color-border);
+  box-shadow: inset 0 -1px 0 var(--color-border);
+  padding-right: var(--spacing-md);
+}
+
+.dm-mailer-package-host .email-templates-table > tbody > tr > td,
+.dm-mailer-package-host .email-logs-table > tbody > tr > td {
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  background-clip: padding-box;
+  color: var(--color-text);
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-xs);
+  line-height: 1.25;
+  /* `.tbl-wrap tbody td` — py-1.5 px-md */
+  vertical-align: middle;
+  transition: background-color 0.15s ease;
+}
+
+.dm-mailer-package-host .email-templates-table > tbody > tr:last-child > td,
+.dm-mailer-package-host .email-logs-table > tbody > tr:last-child > td {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dm-mailer-package-host .email-templates-table > tbody > tr:hover > td,
+.dm-mailer-package-host .email-logs-table > tbody > tr:hover > td {
+  background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+}
+
+.dm-mailer-package-host .email-templates-table > tbody > tr > td:last-child,
+.dm-mailer-package-host .email-logs-table > tbody > tr > td:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 20;
+  width: 170px;
+  min-width: 170px;
+  max-width: 170px;
+  box-sizing: border-box;
+  text-align: center;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-surface);
+  background-clip: padding-box;
+}
+
+.dm-mailer-package-host .email-templates-table > tbody > tr:hover > td:last-child,
+.dm-mailer-package-host .email-logs-table > tbody > tr:hover > td:last-child {
+  background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+  background-clip: padding-box;
+}
+
+.dm-mailer-package-host .email-logs-table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+.dm-mailer-package-host .action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+/* Match `btn-comp-secondary !h-8 !w-8 … flex … text-primary` (e.g. roles configure) */
+.dm-mailer-package-host .action-buttons .btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-sizing: border-box;
+  cursor: pointer;
+  box-shadow: none;
+  font-size: 0;
+  line-height: 0;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    color 0.15s ease;
+}
+
+.dm-mailer-package-host .action-buttons .btn:hover:not(:disabled) {
+  background: var(--color-surface-muted);
+  box-shadow: var(--shadow-md);
+}
+
+.dm-mailer-package-host .action-buttons .btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus-ring);
+}
+
+.dm-mailer-package-host .action-buttons .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hide Font Awesome — use Material Icons like the rest of the app */
+.dm-mailer-package-host .action-buttons .btn svg {
+  display: none !important;
+}
+
+.dm-mailer-package-host .action-buttons .btn::after {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: var(--font-size-sm);
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.dm-mailer-package-host .action-buttons .btn-edit {
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+}
+
+.dm-mailer-package-host .action-buttons .btn-edit::after {
+  content: "edit";
+}
+
+.dm-mailer-package-host .action-buttons .btn-delete {
+  color: var(--color-text-muted);
+}
+
+.dm-mailer-package-host .action-buttons .btn-delete::after {
+  content: "delete_outline";
+}
+
+.dm-mailer-package-host .action-buttons .btn-delete:hover:not(:disabled) {
+  color: var(--color-error);
+  background: color-mix(in srgb, var(--color-error) 8%, var(--color-surface));
+}
+
+/* Email logs “view” icon button — same chrome, visibility glyph */
+.dm-mailer-package-host td .btn.action-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  box-sizing: border-box;
+  cursor: pointer;
+  box-shadow: none;
+  font-size: 0;
+  line-height: 0;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    color 0.15s ease;
+}
+
+.dm-mailer-package-host td .btn.action-btn:hover:not(:disabled) {
+  background: var(--color-surface-muted);
+  box-shadow: var(--shadow-md);
+}
+
+.dm-mailer-package-host td .btn.action-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus-ring);
+}
+
+.dm-mailer-package-host td .btn.action-btn svg {
+  display: none !important;
+}
+
+.dm-mailer-package-host td .btn.action-btn::after {
+  content: "visibility";
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: var(--font-size-sm);
+  line-height: 1;
+  -webkit-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Pagination footer — strip package inline 5px horizontal padding for shell alignment */
+.dm-mailer-package-host .pagination-footer {
+  align-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  margin-top: 0;
+  margin-inline: 0;
+  /* Match header gutter; overrides package inline 5px */
+  padding-inline: var(--dm-mailer-shell-inline) !important;
+  padding-block: var(--spacing-sm);
+}
+
+.dm-mailer-package-host .pagination-info,
+.dm-mailer-package-host .page-info {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.dm-mailer-package-host .page-info {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.dm-mailer-package-host .page-size-selector label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text);
+}
+
+.dm-mailer-package-host .page-size-select {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: var(--font-size-xs);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 4px 8px;
+  min-height: 28px;
+}
+
+.dm-mailer-package-host .page-size-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus-ring);
+}
+
+/* Filter panels (templates + logs) */
+.dm-mailer-package-host .filter-panel {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  padding-block: 12px;
+  padding-inline: var(--dm-mailer-shell-inline);
+  font-family: var(--font-body);
+}
+
+.dm-mailer-package-host .filter-header h3 {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+.dm-mailer-package-host .filter-item label {
+  color: var(--color-text);
+}
+
+.dm-mailer-package-host .filter-input,
+.dm-mailer-package-host .filter-select {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+.dm-mailer-package-host .filter-input:focus,
+.dm-mailer-package-host .filter-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus-ring);
+}
+
+.dm-mailer-package-host .email-logs-filters {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+  margin-inline: 0;
+  padding-block: var(--spacing-md);
+  padding-inline: var(--dm-mailer-shell-inline);
+}
+
+.dm-mailer-package-host .filter-group label {
+  color: var(--color-text-muted);
+}
+
+.dm-mailer-package-host .filter-group input,
+.dm-mailer-package-host .filter-group select {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.dm-mailer-package-host .filter-group input:focus,
+.dm-mailer-package-host .filter-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus-ring);
+}
+
+.dm-mailer-package-host .email-logs-summary {
+  background: color-mix(in srgb, var(--color-info) 8%, var(--color-surface-muted));
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-right: none;
+  color: var(--color-text);
+  border-radius: 0;
+  margin-inline: 0;
+  padding-inline: var(--dm-mailer-shell-inline);
+}
+
+.dm-mailer-package-host .recipient-email {
+  color: var(--color-text);
+}
+
+.dm-mailer-package-host .recipient-name {
+  color: var(--color-text-muted);
+}
+
+.dm-mailer-package-host .status-badge,
+.dm-mailer-package-host .priority-badge {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.dm-mailer-package-host .error-message {
+  color: var(--color-error);
+}
+
+.dm-mailer-package-host .loading {
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  padding-inline: var(--dm-mailer-shell-inline);
+}
+
+/* --------------------------------------------------------------------------
+ * Email template add / edit form — match DM typography, fields, scroll, icons
+ * -------------------------------------------------------------------------- */
+
+.dm-mailer-package-host .template-form-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding-inline: 0;
+  padding-block: 0;
+  overflow: hidden;
+  font-family: var(--font-body) !important;
+  background: var(--color-surface);
+}
+
+.dm-mailer-package-host .template-form-container .form-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: var(--height-breadcrumb);
+  padding-block: 0;
+  padding-inline: var(--dm-mailer-shell-inline);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.dm-mailer-package-host .template-form-container .form-header h3 {
+  margin: 0;
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+}
+
+/* Back: Font Awesome not loaded in app — Material `arrow_back` + text */
+.dm-mailer-package-host .custom-back-action,
+.dm-mailer-package-host .form-header .btn.btn-primary {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 6px;
+}
+
+.dm-mailer-package-host .custom-back-action svg,
+.dm-mailer-package-host .form-header .btn.btn-primary svg {
+  display: none !important;
+}
+
+.dm-mailer-package-host .custom-back-action::before {
+  content: "arrow_back";
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: var(--font-size-sm);
+  line-height: 1;
+  color: inherit;
+  -webkit-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+}
+
+.dm-mailer-package-host .template-form {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--spacing-md) var(--dm-mailer-shell-inline);
+  box-sizing: border-box;
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-xs);
+}
+
+.dm-mailer-package-host .template-form .form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.dm-mailer-package-host .template-form .form-group label,
+.dm-mailer-package-host .template-form .checkbox-label {
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.dm-mailer-package-host .template-form .form-group label .asterisk {
+  color: var(--color-error);
+}
+
+/* Grid inputs — same rhythm as grid filter / `h-7` compact fields */
+.dm-mailer-package-host .template-form .form-group input,
+.dm-mailer-package-host .template-form .form-group select,
+.dm-mailer-package-host .template-form .form-group textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+  line-height: 1.25;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.dm-mailer-package-host .template-form .form-group textarea {
+  min-height: 100px;
+  padding: var(--spacing-sm);
+  resize: vertical;
+  font-family: var(--font-body), ui-monospace, monospace;
+}
+
+.dm-mailer-package-host .template-form .form-group input::placeholder,
+.dm-mailer-package-host .template-form .form-group textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.dm-mailer-package-host .template-form .form-group input:focus,
+.dm-mailer-package-host .template-form .form-group select:focus,
+.dm-mailer-package-host .template-form .form-group textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus-ring);
+}
+
+.dm-mailer-package-host .template-form .form-group input.error,
+.dm-mailer-package-host .template-form .form-group select.error,
+.dm-mailer-package-host .template-form .form-group textarea.error,
+.dm-mailer-package-host .template-form .ck-wrapper.error {
+  border-color: var(--color-error);
+}
+
+.dm-mailer-package-host .template-form .error-message {
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-xs);
+  color: var(--color-error);
+  margin-top: var(--spacing-xs);
+}
+
+.dm-mailer-package-host .template-form .form-row {
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.dm-mailer-package-host .template-form .lang-tabs {
+  margin: var(--spacing-sm) 0 var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+  gap: var(--spacing-sm);
+}
+
+.dm-mailer-package-host .template-form .lang-tab {
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.dm-mailer-package-host .template-form .lang-tab:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface));
+}
+
+.dm-mailer-package-host .template-form .lang-tab.active {
+  border-color: var(--color-border);
+  background: var(--color-surface-muted);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.dm-mailer-package-host .template-form .lang-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dm-mailer-package-host .template-form .ck-wrapper {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.dm-mailer-package-host .template-form .ck-wrapper .ck-editor__editable_inline {
+  min-height: 220px;
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-xs) !important;
+}
+
+.dm-mailer-package-host .template-form .checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.dm-mailer-package-host .template-form .checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.dm-mailer-package-host .template-form .checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.dm-mailer-package-host .template-form .email-form-html-field-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.dm-mailer-package-host .template-form .email-form-html-field-head label {
+  display: inline;
+  margin: 0;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* Material Icons ligatures — FA SVGs in the package are not styled without FA CSS in DM */
+.dm-mailer-package-host .template-form .form-actions .btn.btn-secondary::before,
+.dm-mailer-package-host .template-form .form-actions .btn.btn-primary::before,
+.dm-mailer-package-host .template-form .email-form-preview-open::before,
+.dm-mailer-package-host .email-form-preview-close::before {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: var(--font-size-sm);
+  line-height: 1;
+  -webkit-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
+
+.dm-mailer-package-host .template-form .form-actions .btn.btn-secondary::before {
+  content: "close";
+  margin-inline-end: 2px;
+}
+
+.dm-mailer-package-host .template-form .form-actions .btn.btn-primary::before {
+  content: "save";
+  margin-inline-end: 2px;
+}
+
+.dm-mailer-package-host .template-form .email-form-preview-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dm-mailer-package-host .template-form .email-form-preview-open::before {
+  content: "visibility";
+  font-size: var(--font-size-sm);
+}
+
+.dm-mailer-package-host .preview-modal .email-form-preview-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dm-mailer-package-host .preview-modal .email-form-preview-close::before {
+  content: "close";
+  font-size: var(--font-size-sm);
+}
+
+.dm-mailer-package-host .template-form .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  gap: var(--spacing-sm);
+}
+
+.dm-mailer-package-host .template-form .form-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: var(--font-body) !important;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 6px;
+}
+
+.dm-mailer-package-host .template-form .form-actions .btn.btn-secondary:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+/* Email log detail modal — app globals set `.modal-overlay { pointer-events: none }` for the
+   shared Modal shell (separate backdrop + panel). Restore hit-testing for the mailer modal. */
+.dm-mailer-package-host .modal-overlay {
+  pointer-events: auto;
+  z-index: 600;
+}
+
+.dm-mailer-package-host .modal-content {
+  pointer-events: auto;
+}
+
+/* Preview modal */
+.dm-mailer-package-host .preview-backdrop {
+  background: color-mix(in srgb, var(--color-text) 35%, transparent);
+}
+
+.dm-mailer-package-host .preview-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body) !important;
+}
+
+.dm-mailer-package-host .preview-header {
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+
+.dm-mailer-package-host .preview-body {
+  font-size: var(--font-size-xs);
+  color: var(--color-text);
+}
+
+/* Confirm dialog */
+.dm-mailer-package-host .confirmation-dialog-overlay {
+  background: color-mix(in srgb, var(--color-text) 35%, transparent);
+}
+
+.dm-mailer-package-host .confirmation-dialog {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-family: var(--font-body);
+}
+
+.dm-mailer-package-host .confirmation-dialog-header {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dm-mailer-package-host .confirmation-dialog-header h4 {
+  color: var(--color-text);
+}
+
+.dm-mailer-package-host .confirmation-dialog-body p {
+  color: var(--color-text-muted);
+}
+
+.dm-mailer-package-host .confirmation-dialog-footer {
+  border-top: 1px solid var(--color-border);
+}
+
+/* Package sets inline color on delete confirm — keep on-primary for contrast */
+.dm-mailer-package-host .confirmation-dialog-footer .btn-danger {
+  color: var(--color-on-primary) !important;
+}

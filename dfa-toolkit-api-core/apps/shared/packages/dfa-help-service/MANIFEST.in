@@ -1,0 +1,20 @@
+include README.md
+include requirements.txt
+include requirements-dev.txt
+include LICENSE
+include CHANGELOG.md
+recursive-include docs *.md
+recursive-include examples *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * *.so
+recursive-exclude * .git*
+recursive-exclude * .DS_Store
+recursive-exclude * .idea
+recursive-exclude * .vscode
+recursive-exclude * .pytest_cache
+recursive-exclude * .coverage
+recursive-exclude * htmlcov
+recursive-exclude * dist
+recursive-exclude * build
+recursive-exclude * *.egg-info

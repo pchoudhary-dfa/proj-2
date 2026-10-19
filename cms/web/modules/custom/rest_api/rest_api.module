@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Provides Rest Api functionality.
+ */
+
+use Drupal\rest_api\Service\RestApi;

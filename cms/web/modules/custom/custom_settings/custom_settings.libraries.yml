@@ -1,0 +1,7 @@
+sdg_js:
+  js:
+    js/sdg.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery-once
+    - core/drupalSettings

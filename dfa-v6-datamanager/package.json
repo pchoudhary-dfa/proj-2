@@ -1,0 +1,43 @@
+{
+  "name": "dfa-v6-datamanager",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "predev": "node -e \"const fs=require('fs'),{execSync}=require('child_process');const ps=['packages/dfa-v6-comp-list-view/dist/dfa-v6-comp-list-view.js','packages/dfa-v6-comp-treeview/dist/dfa-v6-comp-treeview.js','packages/dfa-v6-comp-area/dist/dfa-v6-comp-area.js','packages/dfa-v6-comp-indicator/dist/dfa-v6-comp-indicator.js','packages/dfa-v6-comp-timeperiod/dist/dfa-v6-comp-timeperiod.js','packages/dfa-v6-comp-login/dist/dfa-v6-comp-login.js','packages/dfa-email-templates/dist/index.js','packages/dfa-help-admin/dist/index.js','packages/dfa-help-view/dist/cjs/index.js'];if(ps.some(p=>!fs.existsSync(p))){console.log('[predev] Workspace package dist missing; running build:packages...');execSync('npm run build:packages',{stdio:'inherit'});}\"",
+    "dev": "next dev",
+    "build": "next build --webpack",
+    "build:packages": "npm run build --prefix packages/dfa-v6-comp-list-view && npm run build --prefix packages/dfa-v6-comp-treeview && npm run build --prefix packages/dfa-v6-comp-area && npm run build --prefix packages/dfa-v6-comp-indicator && npm run build --prefix packages/dfa-v6-comp-timeperiod && npm run build --prefix packages/dfa-v6-comp-login && npm run build --prefix packages/dfa-email-templates && npm run build --prefix packages/dfa-help-admin && npm run build --prefix packages/dfa-help-view",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@dfa/dfa-help-renderer": "file:./packages/dfa-help-view",
+    "dfa-help-admin": "file:./packages/dfa-help-admin",
+    "dfa-v6-comp-area": "file:./packages/dfa-v6-comp-area",
+    "dfa-v6-comp-indicator": "file:./packages/dfa-v6-comp-indicator",
+    "dfa-v6-comp-list-view": "file:./packages/dfa-v6-comp-list-view",
+    "dfa-v6-comp-login": "file:./packages/dfa-v6-comp-login",
+    "dfa-v6-comp-timeperiod": "file:./packages/dfa-v6-comp-timeperiod",
+    "dfa-v6-comp-treeview": "file:./packages/dfa-v6-comp-treeview",
+    "echarts": "^6.1.0",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "sonner": "^2.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.27",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "next-pwa": "^5.6.0",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5"
+  }
+}

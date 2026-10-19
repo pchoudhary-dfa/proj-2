@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-dm-env
+  namespace: apps-dfa-v6-test
+data:
+  APP_BASE_ID: "DTK_DM"
+  NEXT_PUBLIC_APP_BASE_ID: "DTK_DM"
+  APP_ID: "DFATESTDM"
+  NEXT_PUBLIC_APP_ID: "DFATESTDM"
+  NEXT_PUBLIC_BASE_URL: "https://test.datamanager.dfa6.dataforall.org"
+  NEXT_PUBLIC_API_BASE_URL: "https://test.api.dfa6.dataforall.org"
+  NEXT_PUBLIC_ENABLE_API_PROXY: "false"
+  NEXT_PUBLIC_API_PROXY_URL: "https://test.api.dfa6.dataforall.org"
+  NEXT_PUBLIC_API_KEY: "dfa_dm_fed_app"
+  NEXT_PUBLIC_API_SIGNATURE: "1234567890"
+  NODE_ENV: "production"
+# Secrets are NOT committed. Manage the "test-dm-secrets" Secret out-of-band, e.g.:
+#   kubectl -n apps-dfa-v6-test create secret generic test-dm-secrets \
+#     --from-literal=NEXTAUTH_SECRET=<value> \
+#     --from-literal=DM_API_SIGNING_PRIVATE_KEY=<value>

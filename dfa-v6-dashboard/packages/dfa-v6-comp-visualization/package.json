@@ -1,0 +1,41 @@
+{
+  "name": "dfa-v6-comp-visualization",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    },
+    "./engine": {
+      "types": "./dist/engine.d.ts",
+      "import": "./dist/engine.mjs",
+      "default": "./dist/engine.mjs"
+    },
+    "./styles": "./dist/styles.css"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "vite build && vite build --config vite.embed.config.ts"
+  },
+  "peerDependencies": {
+    "echarts": ">=5",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.6",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.0",
+    "echarts": "^5.5.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.0.0"
+  }
+}

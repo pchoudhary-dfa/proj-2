@@ -1,0 +1,294 @@
+/**
+ * Unit format display rules — mirrors backend unit_data_format.py and unit_format_registry.py.
+ * Formats numeric values by catalog code (NUMBER_FORMAT_CODES + ISO 4217 currencies).
+ */
+
+interface CurrencyFormatSpec {
+  symbol: string;
+  decimal_places: number;
+  symbol_position: 'before' | 'after';
+}
+
+const CURRENCY_FORMAT_BY_CODE: Record<string, CurrencyFormatSpec> = {
+  AED: { symbol: 'د.إ', decimal_places: 2, symbol_position: 'before' },
+  AFN: { symbol: '؋', decimal_places: 2, symbol_position: 'before' },
+  ALL: { symbol: 'L', decimal_places: 2, symbol_position: 'before' },
+  AMD: { symbol: '֏', decimal_places: 2, symbol_position: 'before' },
+  ANG: { symbol: 'ƒ', decimal_places: 2, symbol_position: 'before' },
+  AOA: { symbol: 'Kz', decimal_places: 2, symbol_position: 'before' },
+  ARS: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  AUD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  AWG: { symbol: 'ƒ', decimal_places: 2, symbol_position: 'before' },
+  AZN: { symbol: '₼', decimal_places: 2, symbol_position: 'before' },
+  BAM: { symbol: 'KM', decimal_places: 2, symbol_position: 'before' },
+  BBD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  BDT: { symbol: '৳', decimal_places: 2, symbol_position: 'before' },
+  BGN: { symbol: 'лв', decimal_places: 2, symbol_position: 'before' },
+  BHD: { symbol: '.د.ب', decimal_places: 3, symbol_position: 'before' },
+  BIF: { symbol: 'Fr', decimal_places: 0, symbol_position: 'before' },
+  BMD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  BND: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  BOB: { symbol: 'Bs.', decimal_places: 2, symbol_position: 'before' },
+  BOV: { symbol: 'BOV', decimal_places: 2, symbol_position: 'before' },
+  BRL: { symbol: 'R$', decimal_places: 2, symbol_position: 'before' },
+  BSD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  BTN: { symbol: 'Nu.', decimal_places: 2, symbol_position: 'before' },
+  BWP: { symbol: 'P', decimal_places: 2, symbol_position: 'before' },
+  BYN: { symbol: 'Br', decimal_places: 2, symbol_position: 'before' },
+  BZD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  CAD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  CDF: { symbol: 'Fr', decimal_places: 2, symbol_position: 'before' },
+  CHE: { symbol: 'CHE', decimal_places: 2, symbol_position: 'before' },
+  CHF: { symbol: 'Fr', decimal_places: 2, symbol_position: 'before' },
+  CHW: { symbol: 'CHW', decimal_places: 2, symbol_position: 'before' },
+  CLF: { symbol: 'CLF', decimal_places: 2, symbol_position: 'before' },
+  CLP: { symbol: '$', decimal_places: 0, symbol_position: 'before' },
+  CNY: { symbol: '¥', decimal_places: 2, symbol_position: 'before' },
+  COP: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  COU: { symbol: 'COU', decimal_places: 2, symbol_position: 'before' },
+  CRC: { symbol: '₡', decimal_places: 2, symbol_position: 'before' },
+  CUC: { symbol: 'CUC', decimal_places: 2, symbol_position: 'before' },
+  CUP: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  CVE: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  CZK: { symbol: 'Kč', decimal_places: 2, symbol_position: 'before' },
+  DJF: { symbol: 'Fr', decimal_places: 0, symbol_position: 'before' },
+  DKK: { symbol: 'kr', decimal_places: 2, symbol_position: 'before' },
+  DOP: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  DZD: { symbol: 'د.ج', decimal_places: 2, symbol_position: 'before' },
+  EGP: { symbol: '£', decimal_places: 2, symbol_position: 'before' },
+  ERN: { symbol: 'Nfk', decimal_places: 2, symbol_position: 'before' },
+  ETB: { symbol: 'Br', decimal_places: 2, symbol_position: 'before' },
+  EUR: { symbol: '€', decimal_places: 2, symbol_position: 'before' },
+  FJD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  FKP: { symbol: '£', decimal_places: 2, symbol_position: 'before' },
+  GBP: { symbol: '£', decimal_places: 2, symbol_position: 'before' },
+  GEL: { symbol: '₾', decimal_places: 2, symbol_position: 'before' },
+  GHS: { symbol: '₵', decimal_places: 2, symbol_position: 'before' },
+  GIP: { symbol: '£', decimal_places: 2, symbol_position: 'before' },
+  GMD: { symbol: 'D', decimal_places: 2, symbol_position: 'before' },
+  GNF: { symbol: 'Fr', decimal_places: 0, symbol_position: 'before' },
+  GTQ: { symbol: 'Q', decimal_places: 2, symbol_position: 'before' },
+  GYD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  HKD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  HNL: { symbol: 'L', decimal_places: 2, symbol_position: 'before' },
+  HTG: { symbol: 'G', decimal_places: 2, symbol_position: 'before' },
+  HUF: { symbol: 'Ft', decimal_places: 2, symbol_position: 'before' },
+  IDR: { symbol: 'Rp', decimal_places: 2, symbol_position: 'before' },
+  ILS: { symbol: '₪', decimal_places: 2, symbol_position: 'before' },
+  INR: { symbol: '₹', decimal_places: 2, symbol_position: 'before' },
+  IQD: { symbol: 'ع.د', decimal_places: 3, symbol_position: 'before' },
+  IRR: { symbol: '﷼', decimal_places: 2, symbol_position: 'before' },
+  ISK: { symbol: 'kr', decimal_places: 0, symbol_position: 'before' },
+  JMD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  JOD: { symbol: 'د.ا', decimal_places: 3, symbol_position: 'before' },
+  JPY: { symbol: '¥', decimal_places: 0, symbol_position: 'before' },
+  KES: { symbol: 'Sh', decimal_places: 2, symbol_position: 'before' },
+  KGS: { symbol: 'с', decimal_places: 2, symbol_position: 'before' },
+  KHR: { symbol: '៛', decimal_places: 2, symbol_position: 'before' },
+  KMF: { symbol: 'Fr', decimal_places: 0, symbol_position: 'before' },
+  KPW: { symbol: '₩', decimal_places: 2, symbol_position: 'before' },
+  KRW: { symbol: '₩', decimal_places: 0, symbol_position: 'before' },
+  KWD: { symbol: 'د.ك', decimal_places: 3, symbol_position: 'before' },
+  KYD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  KZT: { symbol: '₸', decimal_places: 2, symbol_position: 'before' },
+  LAK: { symbol: '₭', decimal_places: 2, symbol_position: 'before' },
+  LBP: { symbol: 'ل.ل', decimal_places: 2, symbol_position: 'before' },
+  LKR: { symbol: 'Rs', decimal_places: 2, symbol_position: 'before' },
+  LRD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  LSL: { symbol: 'L', decimal_places: 2, symbol_position: 'before' },
+  LYD: { symbol: 'ل.د', decimal_places: 3, symbol_position: 'before' },
+  MAD: { symbol: 'د.م.', decimal_places: 2, symbol_position: 'before' },
+  MDL: { symbol: 'L', decimal_places: 2, symbol_position: 'before' },
+  MGA: { symbol: 'Ar', decimal_places: 2, symbol_position: 'before' },
+  MKD: { symbol: 'ден', decimal_places: 2, symbol_position: 'before' },
+  MMK: { symbol: 'K', decimal_places: 2, symbol_position: 'before' },
+  MNT: { symbol: '₮', decimal_places: 2, symbol_position: 'before' },
+  MOP: { symbol: 'P', decimal_places: 2, symbol_position: 'before' },
+  MRU: { symbol: 'UM', decimal_places: 2, symbol_position: 'before' },
+  MUR: { symbol: '₨', decimal_places: 2, symbol_position: 'before' },
+  MVR: { symbol: '.ރ', decimal_places: 2, symbol_position: 'before' },
+  MWK: { symbol: 'MK', decimal_places: 2, symbol_position: 'before' },
+  MXN: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  MXV: { symbol: 'MXV', decimal_places: 2, symbol_position: 'before' },
+  MYR: { symbol: 'RM', decimal_places: 2, symbol_position: 'before' },
+  MZN: { symbol: 'MT', decimal_places: 2, symbol_position: 'before' },
+  NAD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  NGN: { symbol: '₦', decimal_places: 2, symbol_position: 'before' },
+  NIO: { symbol: 'C$', decimal_places: 2, symbol_position: 'before' },
+  NOK: { symbol: 'kr', decimal_places: 2, symbol_position: 'before' },
+  NPR: { symbol: '₨', decimal_places: 2, symbol_position: 'before' },
+  NZD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  OMR: { symbol: 'ر.ع.', decimal_places: 3, symbol_position: 'before' },
+  PAB: { symbol: 'B/.', decimal_places: 2, symbol_position: 'before' },
+  PEN: { symbol: 'S/', decimal_places: 2, symbol_position: 'before' },
+  PGK: { symbol: 'K', decimal_places: 2, symbol_position: 'before' },
+  PHP: { symbol: '₱', decimal_places: 2, symbol_position: 'before' },
+  PKR: { symbol: '₨', decimal_places: 2, symbol_position: 'before' },
+  PLN: { symbol: 'zł', decimal_places: 2, symbol_position: 'before' },
+  PYG: { symbol: '₲', decimal_places: 0, symbol_position: 'before' },
+  QAR: { symbol: 'ر.ق', decimal_places: 2, symbol_position: 'before' },
+  RON: { symbol: 'lei', decimal_places: 2, symbol_position: 'before' },
+  RSD: { symbol: 'дин.', decimal_places: 2, symbol_position: 'before' },
+  RUB: { symbol: '₽', decimal_places: 2, symbol_position: 'before' },
+  RWF: { symbol: 'Fr', decimal_places: 0, symbol_position: 'before' },
+  SAR: { symbol: 'ر.س', decimal_places: 2, symbol_position: 'before' },
+  SBD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  SCR: { symbol: '₨', decimal_places: 2, symbol_position: 'before' },
+  SDG: { symbol: 'ج.س.', decimal_places: 2, symbol_position: 'before' },
+  SEK: { symbol: 'kr', decimal_places: 2, symbol_position: 'before' },
+  SGD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  SHP: { symbol: '£', decimal_places: 2, symbol_position: 'before' },
+  SLE: { symbol: 'Le', decimal_places: 2, symbol_position: 'before' },
+  SOS: { symbol: 'Sh', decimal_places: 2, symbol_position: 'before' },
+  SRD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  SSP: { symbol: '£', decimal_places: 2, symbol_position: 'before' },
+  STN: { symbol: 'Db', decimal_places: 2, symbol_position: 'before' },
+  SVC: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  SYP: { symbol: '£', decimal_places: 2, symbol_position: 'before' },
+  SZL: { symbol: 'L', decimal_places: 2, symbol_position: 'before' },
+  THB: { symbol: '฿', decimal_places: 2, symbol_position: 'before' },
+  TJS: { symbol: 'ЅМ', decimal_places: 2, symbol_position: 'before' },
+  TMT: { symbol: 'm', decimal_places: 2, symbol_position: 'before' },
+  TND: { symbol: 'د.ت', decimal_places: 3, symbol_position: 'before' },
+  TOP: { symbol: 'T$', decimal_places: 2, symbol_position: 'before' },
+  TRY: { symbol: '₺', decimal_places: 2, symbol_position: 'before' },
+  TTD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  TWD: { symbol: 'NT$', decimal_places: 2, symbol_position: 'before' },
+  TZS: { symbol: 'Sh', decimal_places: 2, symbol_position: 'before' },
+  UAH: { symbol: '₴', decimal_places: 2, symbol_position: 'before' },
+  UGX: { symbol: 'Sh', decimal_places: 0, symbol_position: 'before' },
+  USD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  USN: { symbol: 'USN', decimal_places: 2, symbol_position: 'before' },
+  UYI: { symbol: 'UYI', decimal_places: 0, symbol_position: 'before' },
+  UYU: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  UYW: { symbol: 'UYW', decimal_places: 2, symbol_position: 'before' },
+  UZS: { symbol: "so'm", decimal_places: 2, symbol_position: 'before' },
+  VED: { symbol: 'VED', decimal_places: 2, symbol_position: 'before' },
+  VES: { symbol: 'Bs.S', decimal_places: 2, symbol_position: 'before' },
+  VND: { symbol: '₫', decimal_places: 0, symbol_position: 'before' },
+  VUV: { symbol: 'Vt', decimal_places: 0, symbol_position: 'before' },
+  WST: { symbol: 'T', decimal_places: 2, symbol_position: 'before' },
+  XAG: { symbol: 'XAG', decimal_places: 2, symbol_position: 'before' },
+  XAU: { symbol: 'XAU', decimal_places: 2, symbol_position: 'before' },
+  XBA: { symbol: 'XBA', decimal_places: 2, symbol_position: 'before' },
+  XBB: { symbol: 'XBB', decimal_places: 2, symbol_position: 'before' },
+  XBC: { symbol: 'XBC', decimal_places: 2, symbol_position: 'before' },
+  XBD: { symbol: 'XBD', decimal_places: 2, symbol_position: 'before' },
+  XCD: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+  XDR: { symbol: 'XDR', decimal_places: 2, symbol_position: 'before' },
+  XOF: { symbol: 'Fr', decimal_places: 0, symbol_position: 'before' },
+  XPD: { symbol: 'XPD', decimal_places: 2, symbol_position: 'before' },
+  XPF: { symbol: 'Fr', decimal_places: 0, symbol_position: 'before' },
+  XPT: { symbol: 'XPT', decimal_places: 2, symbol_position: 'before' },
+  XSU: { symbol: 'XSU', decimal_places: 2, symbol_position: 'before' },
+  XTS: { symbol: 'XTS', decimal_places: 2, symbol_position: 'before' },
+  XUA: { symbol: 'XUA', decimal_places: 2, symbol_position: 'before' },
+  XXX: { symbol: 'XXX', decimal_places: 2, symbol_position: 'before' },
+  YER: { symbol: '﷼', decimal_places: 2, symbol_position: 'before' },
+  ZAR: { symbol: 'R', decimal_places: 2, symbol_position: 'before' },
+  ZMW: { symbol: 'ZK', decimal_places: 2, symbol_position: 'before' },
+  ZWG: { symbol: 'ZWG', decimal_places: 2, symbol_position: 'before' },
+  ZWL: { symbol: '$', decimal_places: 2, symbol_position: 'before' },
+};
+
+const NUMBER_FORMAT_CODES = new Set(['INTEGER', 'DECIMAL', 'PERCENTAGE', 'SCIENTIFIC', 'COMPACT']);
+
+function isNumberFormatCode(code: string): boolean {
+  return NUMBER_FORMAT_CODES.has(code.toUpperCase());
+}
+
+function isCurrencyFormatCode(code: string): boolean {
+  return code.toUpperCase() in CURRENCY_FORMAT_BY_CODE;
+}
+
+function getCurrencyFormat(code: string): CurrencyFormatSpec | undefined {
+  return CURRENCY_FORMAT_BY_CODE[code.toUpperCase()];
+}
+
+function formatGroupedNumber(value: number, decimalPlaces: number, useGrouping: boolean): string {
+  const dp = Math.max(0, decimalPlaces);
+  const rounded = Number(value.toFixed(dp));
+  
+  if (dp === 0) {
+    const intVal = Math.round(rounded);
+    if (useGrouping) {
+      return intVal.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+    return String(intVal);
+  }
+  
+  if (useGrouping) {
+    return rounded.toLocaleString('en-US', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  
+  return rounded.toFixed(dp);
+}
+
+function formatCompact(value: number, decimalPlaces: number): string {
+  const sign = value < 0 ? '-' : '';
+  const n = Math.abs(value);
+  
+  const thresholds: [number, string][] = [
+    [1e12, 'T'],
+    [1e9, 'B'],
+    [1e6, 'M'],
+    [1e3, 'K'],
+  ];
+  
+  for (const [threshold, suffix] of thresholds) {
+    if (n >= threshold) {
+      const scaled = n / threshold;
+      const dp = Math.max(0, decimalPlaces);
+      let formatted = scaled.toFixed(dp);
+      formatted = formatted.replace(/\.?0+$/, '');
+      return `${sign}${formatted}${suffix}`;
+    }
+  }
+  
+  return formatGroupedNumber(value, decimalPlaces, false);
+}
+
+/**
+ * Format a numeric value by unit format catalog code.
+ * Mirrors backend format_value_by_unit_format_code logic.
+ */
+export function formatValueByUnitFormatCode(value: number, code: string): string {
+  const normalized = (code ?? '').trim().toUpperCase();
+  
+  if (!normalized) {
+    return formatGroupedNumber(value, 2, true);
+  }
+  
+  if (normalized === 'INTEGER') {
+    return formatGroupedNumber(value, 0, true);
+  }
+  if (normalized === 'DECIMAL') {
+    return formatGroupedNumber(value, 2, true);
+  }
+  if (normalized === 'PERCENTAGE') {
+    return `${formatGroupedNumber(value, 0, false)}%`;
+  }
+  if (normalized === 'SCIENTIFIC') {
+    return value.toExponential(2).toUpperCase();
+  }
+  if (normalized === 'COMPACT') {
+    return formatCompact(value, 1);
+  }
+  
+  if (isCurrencyFormatCode(normalized)) {
+    const spec = getCurrencyFormat(normalized);
+    if (spec) {
+      const body = formatGroupedNumber(value, spec.decimal_places, true);
+      if (spec.symbol_position === 'after') {
+        return `${body}${spec.symbol}`;
+      }
+      return `${spec.symbol}${body}`;
+    }
+  }
+  
+  if (isNumberFormatCode(normalized)) {
+    return formatGroupedNumber(value, 2, true);
+  }
+  
+  return formatGroupedNumber(value, 2, true);
+}

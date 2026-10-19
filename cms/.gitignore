@@ -1,0 +1,96 @@
+# Drupal project with Composer (document root: web/)
+# @see https://www.drupal.org/docs/develop/using-composer/using-composer-to-manage-drupal-site-dependencies
+
+###################
+# Composer & Drupal (installed by Composer — do not commit)
+###################
+
+/vendor/
+
+/web/core
+/web/modules/contrib/
+/web/themes/contrib/
+/web/profiles/contrib/
+/web/libraries/
+
+/drush/Commands/contrib/
+
+###################
+# Site: generated content & local overrides
+###################
+
+/web/sites/*/files/
+/web/sites/*/private/
+/web/sites/*/translations/
+
+/web/sites/simpletest/
+
+# Local-only config (secrets); default settings.php may stay tracked
+/web/sites/*/settings.local.php
+/web/sites/*/services.local.yml
+
+# Uncomment only if you never commit default settings.php / services.yml:
+# /web/sites/*/settings*.php
+# /web/sites/*/services*.yml
+
+###################
+# Environment
+###################
+
+.env
+.env.*
+!.env.example
+
+###################
+# PHPUnit
+###################
+
+/phpunit.xml
+/phpunit-env.xml
+.phpunit.result.cache
+
+###################
+# Node (keep lockfiles committed for reproducible builds)
+###################
+
+/node_modules/
+
+###################
+# IDE & editors
+###################
+
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+###################
+# OS
+###################
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+###################
+# Logs & caches
+###################
+
+*.log
+*.tmp
+*.cache
+.phpcs-cache
+
+###################
+# Optional: Docker / local tooling (uncomment if needed)
+###################
+
+# docker-compose.override.yml
+# .docker/
+
+# Secrets: never commit real env files or local agent settings
+.env
+.env.*
+!.env.example
+.claude/settings.local.json

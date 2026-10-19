@@ -1,0 +1,4 @@
+name: GET User Rest API
+type: module
+description: Custom RESTful API module with GET method to retrive the workspace specific user list.
+core_version_requirement: ^9 || ^10 || ^11

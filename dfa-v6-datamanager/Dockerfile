@@ -1,0 +1,81 @@
+# ──── Stage 1: Dependencies ────
+FROM node:20-slim AS deps
+WORKDIR /app
+COPY package*.json ./
+COPY packages/ ./packages/
+RUN npm ci
+
+# ──── Stage 2: Base (for development via docker-compose) ────
+FROM deps AS base
+WORKDIR /app
+
+COPY . .
+
+# Defaults (can be overridden at runtime via docker-compose environment)
+ENV APP_BASE_ID=DTK_DM
+ENV NEXT_PUBLIC_APP_BASE_ID=DTK_DM
+ENV APP_ID=DFATSTDM
+ENV NEXT_PUBLIC_APP_ID=DFATSTDM
+ENV NEXT_PUBLIC_BASE_URL=http://localhost:3000
+ENV NEXT_PUBLIC_API_BASE_URL=https://test.api.dfa6.dataforall.org
+ENV NEXT_PUBLIC_ENABLE_API_PROXY=false
+ENV NEXT_PUBLIC_API_PROXY_URL=http://fastapi-service
+ENV NEXT_PUBLIC_API_KEY=dfa_dm_fed_app
+ENV NEXT_PUBLIC_API_SIGNATURE=1234567890
+# DM_API_SIGNING_PRIVATE_KEY is a server-only secret: pass it at runtime (docker run -e / k8s Secret).
+
+LABEL name="DFA DataManager" \
+      description="DFA DataManager - Next.js Application"
+
+# ──── Stage 3: Builder (for production) ────
+FROM node:20-slim AS builder
+WORKDIR /app
+
+ARG APP_BASE_ID
+ARG NEXT_PUBLIC_APP_BASE_ID
+ARG APP_ID
+ARG NEXT_PUBLIC_APP_ID
+ARG NEXT_PUBLIC_BASE_URL
+ARG NEXT_PUBLIC_API_BASE_URL
+ARG NEXT_PUBLIC_ENABLE_API_PROXY
+ARG NEXT_PUBLIC_API_PROXY_URL
+ARG NEXT_PUBLIC_API_KEY
+ARG NEXT_PUBLIC_API_SIGNATURE
+
+ENV APP_BASE_ID=$APP_BASE_ID \
+    NEXT_PUBLIC_APP_BASE_ID=$NEXT_PUBLIC_APP_BASE_ID \
+    APP_ID=$APP_ID \
+    NEXT_PUBLIC_APP_ID=$NEXT_PUBLIC_APP_ID \
+    NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL \
+    NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL \
+    NEXT_PUBLIC_ENABLE_API_PROXY=$NEXT_PUBLIC_ENABLE_API_PROXY \
+    NEXT_PUBLIC_API_PROXY_URL=$NEXT_PUBLIC_API_PROXY_URL \
+    NEXT_PUBLIC_API_KEY=$NEXT_PUBLIC_API_KEY \
+    NEXT_PUBLIC_API_SIGNATURE=$NEXT_PUBLIC_API_SIGNATURE
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages ./packages
+COPY . .
+
+RUN npm run build
+
+# ──── Stage 4: Production runner (minimal image) ────
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+RUN addgroup -S -g 1001 nodejs && \
+    adduser -S -u 1001 -G nodejs nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Standalone output does not include public/ — copy it so /images/*, favicon, and PWA assets are served
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+
+USER nextjs
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]

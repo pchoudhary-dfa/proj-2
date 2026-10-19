@@ -1,0 +1,21 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+<div class="outer-section" id="user_Reset">
+	<div class="inner-section">
+		<div class="login-banner password-reset-banner">
+			<div class="login-wallpaper" aria-hidden="true">
+				<img src="{{ base_path }}{{ directory }}/img/login_page.jpeg" alt="">
+				<div class="over-circle"></div>
+			</div>
+			<div class="login-form password-reset-form-panel">
+				<div class="login-heads">
+					<h2>Réinitialiser le mot de passe</h2>
+					<p>Saisissez votre nouveau mot de passe ci-dessous.</p>
+				</div>
+				{{ page.content }}
+			</div>
+		</div>
+	</div>
+</div>
+
+{% include directory ~ '/templates/footer.html.twig' %}

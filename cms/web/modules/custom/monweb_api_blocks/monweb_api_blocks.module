@@ -1,0 +1,14 @@
+<?php
+function monweb_api_blocks_theme($existing, $type, $theme, $path) {
+  return [
+    'apidatabos_template' => [
+      'variables' => ['test_var' => NULL,'myvariable' => array()]
+      ,
+    ],
+    'apidataseedata_template' => [
+      'variables' => ['test_var' => NULL,'myvariable' => array()]
+      ,
+    ],
+  ];
+}
+?>

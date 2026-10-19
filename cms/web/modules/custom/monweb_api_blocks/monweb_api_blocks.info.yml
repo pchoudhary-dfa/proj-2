@@ -1,0 +1,4 @@
+name: Monweb API Data Handler
+type: module
+description: External rest monitoring API Data handler module to build Sercure Dashboard Data
+core_version_requirement: ^10 || ^11

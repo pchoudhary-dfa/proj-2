@@ -1,0 +1,43 @@
+<VirtualHost *:80>
+    ServerName localhost
+    DocumentRoot /var/www/html/web
+
+    # Connection and timeout settings to prevent ERR_CONNECTION_RESET
+    # Increase timeout for long-running operations (cache clears, page rebuilds)
+    Timeout 300
+    KeepAlive On
+    MaxKeepAliveRequests 100
+    KeepAliveTimeout 15
+
+    <Directory /var/www/html/web>
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+        Require all granted
+        
+        # Enable output buffering to prevent connection resets
+        php_value output_buffering 4096
+        php_flag implicit_flush Off
+        
+        # Handle static files directly
+        <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+            SetHandler None
+            ExpiresActive On
+            ExpiresDefault "access plus 1 month"
+        </FilesMatch>
+    </Directory>
+
+    # Serve static files directly without going through Drupal
+    <LocationMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+        SetHandler None
+        ExpiresActive On
+        ExpiresDefault "access plus 1 month"
+    </LocationMatch>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    # Security headers
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+</VirtualHost>
+

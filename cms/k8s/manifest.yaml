@@ -1,0 +1,119 @@
+# Non-sensitive application env (mirrors keys from repo .env). Tune values per environment.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: guinea-cms-env
+  namespace: apps-guinea
+data:
+  APP_URL: "https://guinea.dataforall.org"
+  DB_PORT: "3306"
+  DB_DRIVER: "mysqli"
+  DB_ISOLATION_LEVEL: "READ COMMITTED"
+  DB_PREFIX: ""
+  DB_NAMESPACE: 'Drupal\mysql\Driver\Database\mysql'
+  DB_AUTOLOAD: 'core/modules/mysql/src/Driver/Database/mysql/'
+  DRUPAL_ENVIRONMENT: "production"
+  DRUPAL_CONFIG_SYNC_DIRECTORY: "sites/default/files/config/sync"
+  DRUPAL_TRUSTED_HOST_PATTERNS: '^guinea$,^guinea\.localhost$,^localhost$,^guinea\.dataforall\.org$'
+  DRUPAL_FILE_PUBLIC_PATH: "sites/default/files"
+  FILE_PUBLIC_PATH: "sites/default/files"
+  FILE_PRIVATE_PATH: ""
+  FILE_TEMP_PATH: "/tmp"
+  DFA_HELP_URL: "https://help-api.dataforall.org/api/keydata"
+  IS_DFA_HELP_ENABLED: "true"
+
+---
+# Secrets expected by Drupal / this Deployment:
+# guinea-db-credentials: DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT (optional), DB_USERNAME
+#   → DB_USER is set below from key DB_USERNAME (settings.php reads DB_USER, not DB_USERNAME).
+# guinea-secrets: SENDGRID_PASSWORD; add DRUPAL_HASH_SALT (recommended).
+#   Avoid duplicate DB_PASSWORD here unless it matches guinea-db-credentials — later envFrom wins.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guinea-cms-portal
+  namespace: apps-guinea
+  labels:
+    app: guinea-cms-portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guinea-cms-portal
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: guinea-cms-portal
+    spec:
+      # OCI block volumes often mount as root; fsGroup matches www-data (33) so Apache can read/write files.
+      securityContext:
+        fsGroup: 33
+        fsGroupChangePolicy: OnRootMismatch
+      containers:
+        - name: guinea-cms-portal
+          image: me-dubai-1.ocir.io/axrfhwznxtja/guinea-cms-portal:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: guinea-cms-env
+            - secretRef:
+                name: guinea-db-credentials
+            - secretRef:
+                name: guinea-secrets
+          env:
+            # settings.php uses DB_USER; many secrets use DB_USERNAME instead.
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: guinea-db-credentials
+                  key: DB_USERNAME
+            # Drupal SMTP module expects SMTP_PASSWORD; map from existing SendGrid secret key.
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: guinea-secrets
+                  key: SENDGRID_PASSWORD
+
+          volumeMounts:
+            - name: drupal-files
+              mountPath: /var/www/html/web/sites/default/files
+
+      volumes:
+        - name: drupal-files
+          persistentVolumeClaim:
+            claimName: guinea-cms-pvc
+
+      imagePullSecrets:
+        - name: ocir-secret
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: guinea-cms-pvc
+  namespace: apps-guinea
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: oci-bv
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: guinea-cms-portal-service
+  namespace: apps-guinea
+spec:
+  selector:
+    app: guinea-cms-portal
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP

@@ -1,0 +1,7 @@
+metadata_api.metadata_settings:
+  path: '/admin/config/metadata-setting'
+  defaults:
+    _form: '\Drupal\metadata_api\Form\MetadataapiForm'
+    _title: 'Metadata Setting Form'
+  requirements:
+    _permission: 'administer site configuration'

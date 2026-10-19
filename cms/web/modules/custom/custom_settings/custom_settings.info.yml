@@ -1,0 +1,4 @@
+name: Custom Settings
+description: This is a module which have all functionalities required by Drupal for custom settings
+type: module
+core_version_requirement: ^11

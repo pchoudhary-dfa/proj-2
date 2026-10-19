@@ -1,0 +1,50 @@
+{
+  "name": "dfa-v6-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "predev": "node -e \"const fs=require('fs'),{execSync}=require('child_process');const p='packages/dfa-v6-comp-login/dist/dfa-v6-comp-login.js';if(!fs.existsSync(p)){console.log('[predev] Building dfa-v6-comp-login...');execSync('npm run build:packages',{stdio:'inherit'});}\"",
+    "dev": "next dev",
+    "build": "npm run build:packages && next build",
+    "build:packages": "npm run build --prefix packages/dfa-v6-comp-login",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.11",
+    "@mui/material": "^7.3.11",
+    "dfa-v6-comp-area": "file:./packages/dfa-v6-comp-area",
+    "dfa-v6-comp-indicator": "file:./packages/dfa-v6-comp-indicator",
+    "dfa-v6-comp-list-view": "file:./packages/dfa-v6-comp-list-view",
+    "dfa-v6-comp-login": "file:./packages/dfa-v6-comp-login",
+    "dfa-v6-comp-subgroup": "file:./packages/dfa-v6-comp-subgroup",
+    "dfa-v6-comp-timeperiod": "file:./packages/dfa-v6-comp-timeperiod",
+    "dfa-v6-comp-treeview": "file:./packages/dfa-v6-comp-treeview",
+    "dfa-v6-comp-visualization": "file:./packages/dfa-v6-comp-visualization",
+    "echarts": "^5.5.0",
+    "next": "16.2.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-grid-layout": "^2.2.3",
+    "sonner": "^2.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5"
+  }
+}

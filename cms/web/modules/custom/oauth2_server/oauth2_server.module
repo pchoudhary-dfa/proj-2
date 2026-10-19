@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * The Oauth2 Server module.
+ */
+
+use Drupal\oauth2_server\Utility;
+
+/**
+ * Implements hook_cron().
+ */
+function oauth2_server_cron() {
+  $request_time = \Drupal::time()->getRequestTime();
+
+  // Delete expired tokens and auth codes.
+  $entity_types = ['oauth2_server_token', 'oauth2_server_authorization_code'];
+
+  foreach ($entity_types as $entity_type) {
+    $query = \Drupal::entityQuery($entity_type);
+    $query->condition('expires', 0, '<>');
+    $query->condition('expires', $request_time, '<=');
+    $query->accessCheck(TRUE);
+    $result = $query->execute();
+
+    if ($result) {
+      /** @var \Drupal\oauth2_server\TokenInterface[] $tokens */
+      $tokens = \Drupal::entityTypeManager()->getStorage($entity_type)
+        ->loadMultiple(array_keys($result));
+      \Drupal::entityTypeManager()->getStorage($entity_type)
+        ->delete($tokens);
+    }
+  }
+
+  // Regenerate the keys once a day. Follows Google's practice described in
+  // https://developers.google.com/accounts/docs/OAuth2Login#validatinganidtoken
+  $needs_keys = Utility::siteNeedsKeys();
+
+  // No need to do anything if hook_cron() is invoked from tests.
+  if ($needs_keys) {
+    $last_generated = \Drupal::state()
+      ->get('oauth2_server.last_generated', 0);
+
+    // Check if the keys were last generated more than 23h30min ago.
+    if ($request_time - $last_generated > 84600) {
+      $keys = Utility::generateKeys();
+      \Drupal::state()->set('oauth2_server.keys', $keys);
+      \Drupal::state()->set('oauth2_server.last_generated', $request_time);
+    }
+  }
+}

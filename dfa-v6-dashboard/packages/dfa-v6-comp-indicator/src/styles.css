@@ -1,0 +1,720 @@
+/*
+ * Indicator select: sidebar + main (search/list/summary).
+ * Uses design tokens from packages/design-tokens/tokens.css when the app loads them.
+ * Variables below either reference tokens or define component-specific values.
+ */
+ :root {
+  /* Global tokens: from packages/design-tokens/tokens.css when the app loads them */
+  /* --color-primary: #FF3366;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f9fafb;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --font-body: Inter, system-ui, sans-serif;
+  --radius-sm: 4px;
+  --spacing-xs: 4px;
+  --spacing-xl: 32px; */
+
+  /* Component-specific (not in tokens.css) */
+  /* Focus ring follows brand primary (from tokens.css); not a fixed legacy pink */
+  --color-focus-ring: color-mix(in srgb, var(--color-primary) 22%, transparent);
+  --radius-control: var(--radius-sm, 4px);
+  --width-indicator-sidebar: 6rem;
+  --font-size-control: 0.75rem;
+  --scrollbar-width: 6px;
+  --size-icon-sm: 1rem;
+  --spacing-input-icon: 0.625rem;
+  --spacing-panel-y: var(--spacing-sm, 0.5rem);
+  --spacing-panel-x: 0.75rem;
+  --spacing-control-y: 0.375rem;
+  --spacing-control-inline: var(--spacing-sm, 0.5rem);
+  --spacing-empty-y: 1.5rem;
+  --spacing-empty-x: 0.75rem;
+}
+
+.dtk-ind-root {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.dtk-ind-sidebar {
+  width: var(--width-indicator-sidebar);
+  flex-shrink: 0;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
+  display: flex;
+  flex-direction: column;
+}
+
+.dtk-ind-tab {
+  padding: var(--spacing-panel-y) var(--spacing-panel-x);
+  text-align: left;
+  font-size: var(--font-size-control);
+  font-weight: 500;
+  color: var(--color-text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.dtk-ind-tab:hover {
+  background: var(--color-surface-muted);
+}
+
+.dtk-ind-tab.dtk-ind-tab-active {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-weight: 600;
+  border-left: 3px solid var(--color-primary);
+}
+
+.dtk-ind-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-ind-content {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-ind-controls {
+  flex-shrink: 0;
+  padding: var(--spacing-panel-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.dtk-ind-controls:empty {
+  display: none;
+}
+
+.dtk-ind-search-wrap {
+  position: relative;
+}
+
+.dtk-ind-search-icon {
+  position: absolute;
+  left: var(--spacing-input-icon);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E") center/contain no-repeat;
+  pointer-events: none;
+}
+
+.dtk-ind-search-clear {
+  position: absolute;
+  right: var(--spacing-input-icon);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.dtk-ind-search-clear:hover {
+  color: var(--color-text);
+}
+
+.dtk-ind-search {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-control-y) var(--spacing-input-icon) var(--spacing-control-y) var(--spacing-xl);
+  font-size: var(--font-size-control);
+  line-height: 1.25;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.dtk-ind-search::placeholder {
+  color: var(--color-text-muted);
+}
+
+.dtk-ind-search:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-focus-ring);
+}
+
+.dtk-ind-label {
+  display: block;
+  font-size: var(--font-size-control);
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.dtk-ind-select {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-control-y) var(--spacing-control-inline);
+  font-size: var(--font-size-control);
+  line-height: 1.25;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.dtk-ind-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.dtk-ind-list-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dtk-ind-list-wrap::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+.dtk-ind-list-wrap::-webkit-scrollbar-track {
+  background: var(--color-surface-muted);
+}
+
+.dtk-ind-list-wrap::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.dtk-ind-empty {
+  padding: var(--spacing-empty-y) var(--spacing-empty-x);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-control);
+}
+
+.dtk-ind-empty.dtk-ind-loading {
+  color: var(--color-text-muted);
+}
+
+.dtk-ind-loading-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+}
+
+.dtk-ind-summary {
+  flex-shrink: 0;
+  height: calc(2 * var(--spacing-control-y) + 1.25em);
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-panel-x);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--font-size-control);
+  line-height: 1.25;
+  color: var(--color-text);
+  background: var(--color-surface);
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.dtk-ind-summary .dtk-ind-count {
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-right: 0.35em;
+}
+
+.dtk-ind-summary.dtk-ind-summary-clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.dtk-ind-summary.dtk-ind-summary-clickable:hover {
+  background-color: var(--color-surface-muted);
+}
+
+.dtk-ind-summary.dtk-ind-summary-clickable:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+/* Selected-only panel (click-triggered slide-up overlay) */
+.dtk-ind-selected-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.25s ease-out, opacity 0.2s ease-out;
+}
+
+.dtk-ind-selected-panel.dtk-ind-selected-panel-is-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.dtk-ind-selected-panel-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-panel-y) var(--spacing-panel-x);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dtk-ind-selected-panel-title {
+  font-size: var(--font-size-control);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.dtk-ind-selected-panel-close {
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dtk-ind-selected-panel-close:hover {
+  color: var(--color-text);
+}
+
+.dtk-ind-selected-panel-list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtk-ind-selected-panel-list .dtk-lv-list-wrap {
+  flex: 1;
+  min-height: 0;
+}
+
+/* IU Tree View (enableSubgroup mode) */
+.dtk-iu-tree-root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.dtk-iu-tree-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dtk-iu-tree-list::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+.dtk-iu-tree-list::-webkit-scrollbar-track {
+  background: var(--color-surface-muted);
+}
+
+.dtk-iu-tree-list::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.dtk-iu-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-control-y) var(--spacing-panel-x);
+  background: var(--color-surface);
+  transition: background-color 0.15s;
+}
+
+.dtk-iu-row:hover {
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.dtk-iu-row-has-selection {
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.dtk-iu-row-has-selection:hover {
+  background: var(--color-surface-muted, rgba(59, 130, 246, 0.15));
+}
+
+.dtk-iu-chevron {
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: transform 0.2s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.dtk-iu-chevron:hover {
+  color: var(--color-text);
+}
+
+.dtk-iu-chevron-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.dtk-iu-checkbox,
+.dtk-iu-subgroup-checkbox {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  accent-color: var(--color-primary);
+}
+
+.dtk-iu-label {
+  font-size: var(--font-size-control);
+  color: var(--color-text);
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dtk-iu-subgroup-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-control-y) var(--spacing-panel-x);
+  padding-left: calc(var(--spacing-panel-x) + 2.5rem);
+  background: var(--color-surface);
+  transition: background-color 0.15s;
+}
+
+.dtk-iu-subgroup-row:hover {
+  background: var(--color-surface-muted);
+}
+
+.dtk-iu-subgroup-label {
+  font-size: var(--font-size-control);
+  color: var(--color-text);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dtk-iu-subgroup-default-badge {
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* IC grouped tree (IC type tabs) */
+.dtk-ic-tree-root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
+.dtk-ic-tree-root::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+.dtk-ic-tree-root::-webkit-scrollbar-track {
+  background: var(--color-surface-muted);
+}
+
+.dtk-ic-tree-root::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.dtk-ic-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.dtk-ic-group-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-control-y) var(--spacing-panel-x);
+  background: var(--color-surface-muted);
+  border: none;
+  cursor: default;
+  text-align: left;
+  width: 100%;
+  transition: background-color 0.15s;
+}
+
+.dtk-ic-group-header:hover {
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface-muted));
+}
+
+.dtk-ic-group-header-open {
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface-muted));
+}
+
+/* Expand/collapse button (chevron only, no text) */
+.dtk-ic-group-toggle {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color 0.15s;
+}
+
+.dtk-ic-group-toggle:hover {
+  color: var(--color-text);
+}
+
+.dtk-ic-group-chevron-svg {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.2s;
+}
+
+.dtk-ic-group-chevron-open {
+  transform: rotate(90deg);
+  color: var(--color-primary);
+}
+
+/* Empty leaf: chevron points down (rotated 90deg), muted and not interactive */
+.dtk-ic-group-chevron-empty {
+  transform: rotate(90deg);
+  opacity: 0.35;
+}
+
+/* Spinning arc for in-flight leaf fetch */
+@keyframes dtk-ic-chevron-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.dtk-ic-group-chevron-spin {
+  animation: dtk-ic-chevron-spin 0.7s linear infinite;
+  opacity: 0.6;
+}
+
+.dtk-ic-group-label {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-control);
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dtk-ic-group-badge {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 5px;
+  border-radius: 9999px;
+  background: var(--color-primary);
+  color: #fff;
+  min-width: 1.2em;
+  text-align: center;
+}
+
+/* Select All / Deselect All text-link row — sits below a leaf IC group header */
+.dtk-ic-group-select-all-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-control-inline, 0.5rem);
+  padding: 2px var(--spacing-panel-x, 0.75rem) 0;
+  background: var(--color-surface);
+}
+
+/* All tab: select-all row + list content */
+.dtk-ind-all-list-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.dtk-ind-all-list-block > .dtk-ic-group-select-all-row {
+  padding-top: var(--spacing-panel-y, 0.5rem);
+  padding-bottom: 0;
+  padding-left: var(--spacing-panel-x, 0.75rem);
+  padding-right: var(--spacing-panel-x, 0.75rem);
+}
+
+/* Tighter gap below select-all + slight list indent (All tab & IC leaf) */
+.dtk-ind-all-list-content {
+  padding-left: 0.5rem;
+}
+
+.dtk-ind-all-list-content .dtk-lv-list,
+.dtk-ic-group-children .dtk-lv-list {
+  padding-top: 2px;
+  padding-left: calc(var(--spacing-panel-x, 0.75rem) + 0.25rem);
+}
+
+.dtk-ic-group-select-all {
+  font-size: var(--font-size-control, 0.75rem);
+  font-weight: 500;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1.4;
+  user-select: none;
+}
+
+.dtk-ic-group-select-all:hover {
+  text-decoration: underline;
+}
+
+.dtk-ic-group-select-all:focus-visible {
+  outline: 2px solid var(--color-focus-ring, var(--color-primary));
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.dtk-ic-group-children {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  /* Match ListView item font size to the IC group's control font size */
+  --font-size-list-item: var(--font-size-control, 0.75rem);
+  animation: dtk-ic-children-fadein 0.15s ease-out;
+}
+
+@keyframes dtk-ic-children-fadein {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dtk-ic-leaf-loading {
+  min-height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem 0;
+  opacity: 0;
+  animation: dtk-ic-loader-fadein 0.25s ease-out 0.3s forwards;
+  font-size: 0.7rem;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.dtk-ic-leaf-loading > * {
+  transform: scale(0.7);
+  transform-origin: center;
+}
+
+@keyframes dtk-ic-loader-fadein {
+  from { opacity: 0; }
+  to { opacity: 0.8; }
+}
+
+/* IU row / subgroup row indentation inside IC group leaf containers.
+   The leaf wrapper div already carries depth-based paddingLeft (inline style),
+   so these rules just add the icon/checkbox offset on top of that. */
+.dtk-ind-all-list-content .dtk-iu-row,
+.dtk-ic-group-children .dtk-iu-row {
+  padding-left: calc(var(--spacing-panel-x, 0.75rem) + 0.25rem);
+}
+
+.dtk-ic-group-children .dtk-iu-subgroup-row {
+  padding-left: calc(var(--spacing-panel-x) + 2.75rem);
+}
+
+/* Override list-wrap overflow for nested lists so the outer dtk-ic-tree-root handles scrolling */
+.dtk-ic-group-children .dtk-iu-tree-root {
+  overflow: unset;
+  height: auto;
+}
+
+.dtk-ic-group-children .dtk-iu-tree-list {
+  overflow: unset;
+  min-height: unset;
+}
+
+/* Nested IC headers: slightly smaller font and lighter background to visually distinguish depth */
+.dtk-ic-group-header-nested {
+  font-size: calc(var(--font-size-control) * 0.95);
+  background: var(--color-surface);
+  border-left: 2px solid var(--color-border);
+}
+
+.dtk-ic-group-header-nested:hover {
+  background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+}
+
+.dtk-ic-group-header-nested.dtk-ic-group-header-open {
+  background: color-mix(in srgb, var(--color-primary) 4%, var(--color-surface));
+}
+
+.dtk-ic-group-header-nested .dtk-ic-group-label {
+  font-weight: 500;
+}
+

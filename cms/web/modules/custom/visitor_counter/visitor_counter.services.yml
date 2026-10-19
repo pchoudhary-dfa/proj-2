@@ -1,0 +1,6 @@
+services:
+  visitor_counter.subscriber:
+    class: Drupal\visitor_counter\EventSubscriber\VisitorCounterSubscriber
+    arguments: ['@database', '@request_stack', '@current_user']
+    tags:
+      - { name: event_subscriber }

@@ -1,0 +1,12 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+<section class="user-administration-page">
+	<div class="inner-section pt-4">
+		<div class="add_user globalusercreate-button">
+			<a href="/admin/people/create?destination=user-administration">Ajouter utilisateur</a>
+		</div>
+	</div>
+	{{ page.content }}
+</section>
+
+{% include directory ~ '/templates/footer.html.twig' %}

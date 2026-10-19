@@ -1,0 +1,63 @@
+{
+  "name": "dfa-toolkit-visualizer",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\"",
+    "build": "npm run clean && next build",
+    "build:embed": "node -e \"require('fs').mkdirSync('public/embed',{recursive:true})\" && vite build --config vite.embed.config.ts",
+    "build:packages": "npm run build --prefix packages/dfa-v6-comp-visualization && npm run build --prefix packages/dfa-v6-comp-list-view && npm run build --prefix packages/dfa-v6-comp-indicator && npm run build --prefix packages/dfa-v6-comp-treeview && npm run build --prefix packages/dfa-v6-comp-area && npm run build --prefix packages/dfa-v6-comp-kw-search && npm run build --prefix packages/dfa-v6-comp-subgroup && npm run build --prefix packages/dfa-v6-comp-login && npm run build --prefix packages/dfa-v6-comp-timeperiod",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^3.1.1",
+    "@mui/icons-material": "^7.3.7",
+    "@mui/material": "^7.3.7",
+    "dfa-v6-comp-area": "file:./packages/dfa-v6-comp-area",
+    "dfa-v6-comp-indicator": "file:./packages/dfa-v6-comp-indicator",
+    "dfa-v6-comp-kw-search": "file:./packages/dfa-v6-comp-kw-search",
+    "dfa-v6-comp-list-view": "file:./packages/dfa-v6-comp-list-view",
+    "dfa-v6-comp-login": "file:./packages/dfa-v6-comp-login",
+    "dfa-v6-comp-subgroup": "file:./packages/dfa-v6-comp-subgroup",
+    "dfa-v6-comp-timeperiod": "file:./packages/dfa-v6-comp-timeperiod",
+    "dfa-v6-comp-treeview": "file:./packages/dfa-v6-comp-treeview",
+    "dfa-v6-comp-visualization": "file:./packages/dfa-v6-comp-visualization",
+    "dompurify": "^3.3.3",
+    "echarts": "^5.5.1",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^0.487.0",
+    "marked": "^18.0.0",
+    "next": "^15.1.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@types/dompurify": "^3.0.5",
+    "@types/marked": "^5.0.2",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.6",
+    "@types/react-dom": "^19.0.3",
+    "ajv": "^8.18.0",
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.1.4",
+    "next-pwa": "^5.6.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.0"
+  }
+}

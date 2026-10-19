@@ -1,0 +1,8 @@
+# Get USER API endpoints
+
+get_user_rest_api.get:
+  path: '/getusers'
+  defaults: { _controller: '\Drupal\get_user_rest_api\Controller\UserAPIController::get_users' }
+  methods:  [GET]
+  requirements:
+    _access: 'TRUE'

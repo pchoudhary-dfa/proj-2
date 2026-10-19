@@ -1,0 +1,9 @@
+parameters:
+  rest_api.service.class: 'Drupal\rest_api\Service\RestApi'
+
+services:
+  rest_api.client:
+    class: 'Drupal\rest_api\Service\RestApi'
+    arguments:
+      - '@http_client'
+      - '@request_stack'

@@ -1,0 +1,178 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+<style>
+  /* Custom message styling for the registration page */
+  .messages-list, .messages {
+    margin-bottom: 20px !important;
+  }
+  .messages--error, .alert-danger, .messages.error, .error-message, [aria-label="Error message"], [aria-label="Message d'erreur"] {
+    color: #cc0000 !important; /* Red */
+    font-weight: bold !important;
+    display: none !important; /* Hide initially to prevent flashing before JS processes them */
+  }
+  .messages--status, .messages--success, .alert-success, .messages.status, .messages.success, .success-message, [aria-label="Status message"], [aria-label="Status messages"], [aria-label="Message de statut"],
+  .messages--status *, .messages--success *, .messages.status *, .messages.success * {
+    color: #006600 !important; /* Dark Green */
+    font-weight: bold !important;
+  }
+  
+  /* Highlight error fields (stronger border and shadow) */
+  input.error, input.is-invalid, select.error, select.is-invalid, textarea.error, textarea.is-invalid {
+    border: 2px solid #cc0000 !important;
+    box-shadow: 0 0 8px rgba(204, 0, 0, 0.6) !important;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // 1. Process server-side errors on load.
+    const messages = document.querySelectorAll('.messages--error, .alert-danger, .messages.error, [aria-label="Error message"], [aria-label="Message d\'erreur"]');
+    
+    messages.forEach(function (msgBlock) {
+      const items = msgBlock.querySelectorAll('li');
+      const errorTexts = [];
+      if (items.length > 0) {
+        items.forEach(function (item) {
+          errorTexts.push({ text: item.textContent.trim(), element: item });
+        });
+      } else {
+        errorTexts.push({ text: msgBlock.textContent.trim(), element: msgBlock });
+      }
+
+      errorTexts.forEach(function (err) {
+        let targetSelector = null;
+        let matched = false;
+        const textLower = err.text.toLowerCase();
+
+        // Email field
+        if (textLower.includes('email') || textLower.includes('courriel')) {
+          targetSelector = '[name="mail"]';
+          matched = true;
+        }
+        // Username field
+        else if (textLower.includes('username') || textLower.includes('nom d\'utilisateur') || textLower.includes('utilisateur')) {
+          targetSelector = '[name="name"]';
+          matched = true;
+        }
+        // First name
+        else if (textLower.includes('prénom') || textLower.includes('first name') || textLower.includes('given name')) {
+          targetSelector = '[name="field_name[0][value]"], [name="field_name"]';
+          matched = true;
+        }
+        // Last name / Surname
+        else if (textLower.includes('nom de famille') || textLower.includes('surname') || textLower.includes('last name')) {
+          targetSelector = '[name="field_surname[0][value]"], [name="field_surname"]';
+          matched = true;
+        }
+        // CAPTCHA
+        else if (textLower.includes('captcha')) {
+          targetSelector = '[name="captcha_response"]';
+          matched = true;
+        }
+
+        if (matched && targetSelector) {
+          const inputField = document.querySelector(targetSelector);
+          if (inputField) {
+            inputField.classList.add('is-invalid');
+
+            const errDiv = document.createElement('div');
+            errDiv.className = 'field-error-message';
+            errDiv.style.color = '#cc0000';
+            errDiv.style.fontSize = '13px';
+            errDiv.style.fontWeight = 'bold';
+            errDiv.style.marginTop = '6px';
+            errDiv.textContent = err.text;
+
+            inputField.parentNode.insertBefore(errDiv, inputField.nextSibling);
+
+            if (err.element) {
+              err.element.style.display = 'none';
+            }
+          }
+        }
+      });
+
+      if (items.length > 0) {
+        const visibleItems = Array.from(msgBlock.querySelectorAll('li')).filter(li => li.style.display !== 'none');
+        if (visibleItems.length === 0) {
+          msgBlock.style.setProperty('display', 'none', 'important');
+        } else {
+          msgBlock.style.setProperty('display', 'block', 'important');
+        }
+      } else {
+        if (msgBlock.style.display === 'none') {
+          msgBlock.style.setProperty('display', 'none', 'important');
+        } else {
+          msgBlock.style.setProperty('display', 'block', 'important');
+        }
+      }
+    });
+
+    // 2. Clear inline errors (both server-side and client-side) when inputs are edited.
+    const allInputs = document.querySelectorAll('input, select, textarea');
+    allInputs.forEach(function (input) {
+      input.addEventListener('input', function () {
+        input.classList.remove('is-invalid');
+        const errDiv = input.parentNode.querySelector('.field-error-message');
+        if (errDiv) {
+          errDiv.remove();
+        }
+      });
+    });
+
+    // 3. Highlight and add red error message on browser invalid event (HTML5 validation).
+    allInputs.forEach(function (input) {
+      input.addEventListener('invalid', function (e) {
+        input.classList.add('is-invalid');
+
+        let existingErr = input.parentNode.querySelector('.field-error-message');
+        if (!existingErr) {
+          const errDiv = document.createElement('div');
+          errDiv.className = 'field-error-message';
+          errDiv.style.color = '#cc0000';
+          errDiv.style.fontSize = '13px';
+          errDiv.style.fontWeight = 'bold';
+          errDiv.style.marginTop = '6px';
+
+          let msg = input.validationMessage || "Ce champ est requis.";
+          const nameAttr = input.getAttribute('name');
+          if (nameAttr === 'field_name[0][value]' || nameAttr === 'field_name') {
+            msg = "Le champ Prénom est requis.";
+          } else if (nameAttr === 'mail') {
+            if (input.validity.valueMissing) {
+              msg = "Le champ Adresse courriel est requis.";
+            } else if (input.validity.typeMismatch) {
+              msg = "L'adresse courriel n'est pas valide.";
+            }
+          } else if (nameAttr === 'name') {
+            msg = "Le champ Nom d'utilisateur est requis.";
+          }
+
+          errDiv.textContent = msg;
+          input.parentNode.insertBefore(errDiv, input.nextSibling);
+        }
+      });
+    });
+    // Align the login link below the register button inside the form wrapper.
+    const formEl = document.querySelector('form.user-register-form, form#user-register-form');
+    const loginLinkContainer = document.querySelector('.login-link-container');
+    if (formEl && loginLinkContainer) {
+      loginLinkContainer.style.marginTop = '20px';
+      loginLinkContainer.style.textAlign = 'left';
+      formEl.appendChild(loginLinkContainer);
+    }
+  });
+</script>
+
+<main>
+  <section class="container my-5">
+    {{ page.content }}
+    <p class="login-link-container" style="text-align: left; margin-top: 20px;">
+      <a href="{{ path('user.login') }}" style="color: #006600; font-weight: bold; text-decoration: underline;">{{ "Déjà un compte ? Se connecter"|t }}</a>
+    </p>
+  </section>
+</main>
+
+{% include directory ~ '/templates/footer.html.twig' %}
+
+

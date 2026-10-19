@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dfav6-dm-service
+spec:
+  selector:
+    app: dfav6-dm
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP

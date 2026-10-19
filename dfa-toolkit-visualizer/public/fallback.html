@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - DFA Visualizer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      padding: 48px 32px;
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .icon {
+      font-size: 72px;
+      margin-bottom: 24px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    h1 {
+      color: #2d3748;
+      font-size: 28px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    p {
+      color: #4a5568;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .btn {
+      background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+      color: white;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(25, 118, 210, 0.4);
+    }
+    .status {
+      margin-top: 24px;
+      padding: 12px;
+      background: #f7fafc;
+      border-radius: 8px;
+      color: #718096;
+      font-size: 14px;
+    }
+    .online { display: none; }
+    body.online .offline { display: none; }
+    body.online .online { display: block; }
+    body.online .status {
+      background: #c6f6d5;
+      color: #22543d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">📡</div>
+    <h1 class="offline">You're Offline</h1>
+    <h1 class="online">Back Online!</h1>
+    <p class="offline">
+      It looks like you've lost your internet connection. 
+      Some features may not be available until you reconnect.
+    </p>
+    <p class="online">
+      Your internet connection has been restored. 
+      Click below to reload the page.
+    </p>
+    <button class="btn" onclick="window.location.reload()">
+      <span class="offline">Try Again</span>
+      <span class="online">Reload Page</span>
+    </button>
+    <div class="status offline">
+      🔴 No Internet Connection
+    </div>
+    <div class="status online">
+      🟢 Connected
+    </div>
+  </div>
+
+  <script>
+    // Monitor online/offline status
+    function updateOnlineStatus() {
+      if (navigator.onLine) {
+        document.body.classList.add('online');
+      } else {
+        document.body.classList.remove('online');
+      }
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+
+    // Auto-reload when back online
+    window.addEventListener('online', function() {
+      setTimeout(function() {
+        window.location.reload();
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

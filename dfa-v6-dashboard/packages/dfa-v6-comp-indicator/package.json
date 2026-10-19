@@ -1,0 +1,40 @@
+{
+  "name": "dfa-v6-comp-indicator",
+  "version": "0.1.0",
+  "description": "Indicator selection UI with categories, search, and list; uses dfa-toolkit-comp-list-view. Accepts baseUrl for API; uses mock when omitted.",
+  "type": "module",
+  "main": "./dist/dfa-v6-comp-indicator.umd.cjs",
+  "module": "./dist/dfa-v6-comp-indicator.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/dfa-v6-comp-indicator.js",
+      "require": "./dist/dfa-v6-comp-indicator.umd.cjs",
+      "default": "./dist/dfa-v6-comp-indicator.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "dfa-v6-comp-list-view": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "dfa-v6-comp-list-view": "file:../dfa-v6-comp-list-view",
+    "@vitejs/plugin-react": "^4.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.0.0"
+  }
+}

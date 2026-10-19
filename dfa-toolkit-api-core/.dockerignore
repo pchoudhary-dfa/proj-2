@@ -1,0 +1,53 @@
+# Git
+.git
+.gitignore
+
+# IDE / Editor
+.idea
+.vscode
+.cursor
+*.swp
+*.swo
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv
+env
+ENV
+.venv
+
+.env
+.env.*
+!.env.example
+
+# Tests and coverage
+tests
+.pytest_cache
+.coverage
+htmlcov
+*.cover
+.tox
+.hypothesis
+
+# Docs and misc
+docs
+*.md
+!README.md
+
+# Scripts and local data (optional: remove if you want these in the image)
+test_scripts/
+*.log
+logs/
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db

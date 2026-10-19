@@ -1,0 +1,130 @@
+/* Global CSS variables for theming */
+:root {
+  --dfa-help-primary-color: #6f42c1;
+  --dfa-help-primary-hover: #5a32a3;
+  --dfa-help-primary-active: #4a2a8a;
+}
+
+/* Global styles for help content */
+.dfa-help-content {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+.dfa-help-content h1,
+.dfa-help-content h2,
+.dfa-help-content h3,
+.dfa-help-content h4,
+.dfa-help-content h5,
+.dfa-help-content h6 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.dfa-help-content p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.dfa-help-content ul,
+.dfa-help-content ol {
+  margin-top: 0;
+  margin-bottom: 1em;
+  padding-left: 2em;
+}
+
+.dfa-help-content li {
+  margin-bottom: 0.25em;
+}
+
+.dfa-help-content code {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  margin: 0;
+  padding: 0.2em 0.4em;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+.dfa-help-content pre {
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+  margin-bottom: 1em;
+}
+
+.dfa-help-content pre code {
+  background-color: transparent;
+  border: 0;
+  display: inline;
+  line-height: inherit;
+  margin: 0;
+  max-width: auto;
+  overflow: visible;
+  padding: 0;
+  word-wrap: normal;
+}
+
+.dfa-help-content blockquote {
+  border-left: 4px solid var(--dfa-help-primary-color, #6f42c1);
+  margin: 0 0 1em 0;
+  padding-left: 1em;
+  color: #666;
+}
+
+.dfa-help-content table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.dfa-help-content th,
+.dfa-help-content td {
+  border: 1px solid #d0d7de;
+  padding: 6px 13px;
+  text-align: left;
+}
+
+.dfa-help-content th {
+  background-color: #f6f8fa;
+  font-weight: 600;
+}
+
+.dfa-help-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.dfa-help-content a {
+  color: var(--dfa-help-primary-color, #6f42c1);
+  text-decoration: none;
+}
+
+.dfa-help-content a:hover {
+  text-decoration: underline;
+}
+
+/* Global editor title styles */
+.dfaHelpTitleOFEditor {
+  font-size: 15px !important;
+  text-align: left !important;
+  margin-top: 10px !important;
+  color: #510c0c !important;
+  font-weight: 500 !important;
+}
+
+h1.TitleOFEditor {
+  font-size: 15px !important;
+  text-align: left !important;
+  margin-top: 10px !important;
+  color: #510c0c !important;
+  font-weight: 500 !important;
+}

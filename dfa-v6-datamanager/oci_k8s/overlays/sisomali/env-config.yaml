@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dfav6-dm-env
+data:
+  APP_BASE_ID: "DTK_DM"
+  NEXT_PUBLIC_APP_BASE_ID: "DTK_DM"
+  APP_ID: "DFASISOMALIADM"
+  NEXT_PUBLIC_APP_ID: "DFASISOMALIADM"
+  NEXT_PUBLIC_BASE_URL: "https://datamanager.sisomali.dataforall.org"
+  NEXT_PUBLIC_API_BASE_URL: "https://sisomali.api.dataforall.org"
+  NEXT_PUBLIC_ENABLE_API_PROXY: false
+  NEXT_PUBLIC_API_PROXY_URL: "https://sisomali.api.dataforall.org"
+  NEXT_PUBLIC_API_KEY: "dfa_dm_fed_app"
+  NEXT_PUBLIC_API_SIGNATURE: "1234567890"
+  NODE_ENV: "production"
+# Secrets are NOT committed. Manage the "sisomali-dfav6-dm-secrets" Secret out-of-band, e.g.:
+#   kubectl -n <namespace> create secret generic sisomali-dfav6-dm-secrets \
+#     --from-literal=NEXTAUTH_SECRET=<value> \
+#     --from-literal=DM_API_SIGNING_PRIVATE_KEY=<value>

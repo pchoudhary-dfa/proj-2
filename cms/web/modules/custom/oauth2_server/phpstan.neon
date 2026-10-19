@@ -1,0 +1,12 @@
+parameters:
+  level: 1
+  paths:
+    - oauth2_server.api.php
+    - oauth2_server.install
+    - oauth2_server.module
+    - src
+    - tests
+  reportUnmatchedIgnoredErrors: false
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static#"

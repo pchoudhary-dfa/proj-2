@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apps-dfa-v6-test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-viz
+  namespace: apps-dfa-v6-test
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: test-viz
+  template:
+    metadata:
+      labels:
+        app: test-viz
+    spec:
+      terminationGracePeriodSeconds: 60
+      imagePullSecrets:
+      - name: ocir-secret
+      containers:
+      - name: test-viz
+        image: me-dubai-1.ocir.io/axrfhwznxtja/test-viz-nextjs:IMAGE_TAG
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: test-viz-env
+        - secretRef:
+            name: test-viz-secrets
+        env:
+        - name: TZ
+          value: "Asia/Kolkata"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "150m"
+        startupProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          failureThreshold: 30
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-viz-service
+  namespace: apps-dfa-v6-test
+spec:
+  selector:
+    app: test-viz
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP

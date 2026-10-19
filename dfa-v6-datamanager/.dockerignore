@@ -1,0 +1,32 @@
+node_modules
+.next
+out
+/dist
+coverage
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.env
+.env.*
+!.env.example
+
+.git
+.gitignore
+.DS_Store
+
+# CI/CD and K8s manifests — not needed in the image
+oci_k8s/
+oci_k8s_test/
+build_spec*.yaml
+
+# IDE and editor config
+.vscode/
+.cursor/
+*.swp
+
+# Documentation
+*.md
+!CHANGELOG.md
+LICENSE

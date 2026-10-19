@@ -1,0 +1,107 @@
+{{ drupal_entity('block_content', '17') }}
+
+<div class="indicater-select-bx">
+	<div class="row">
+		<div class="col-lg-3 col-md-12">
+			<div class="select-bx selCl">
+				<label>{{ 'Classification'|trans }}</label>
+				<select class="wide form-select indicator-select1" aria-label="Default select example">
+					{% for classification in indicators.classification %}
+					{% if indicators.selected_classification != '' %}
+					<option value="{{ classification.gid }}" {% if indicators.selected_classification==classification.gid %} selected="selected" {% endif %}>{{ classification.title }}</option>
+					{% else %}
+					<option value="{{ classification.gid }}">{{ classification.title }}</option>
+					{% endif %}
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+		<div class="col-lg-9 col-md-12">
+			<div class="select-bx selIndicator">
+				<label>{{ 'Sélectionner indicateur'|trans }}</label>
+				<select class="wide form-select indicator-select2" aria-label="Default select example">
+					{% if indicators.list is empty %}
+					<option selected="selected">{{ 'No data found'|trans }}</option>
+					{% else %}
+					{% for indicator in indicators.list %}
+					{% if indicators.selected_indicator != '' %}
+					<option value="{{ indicator.iGid }}" {% if indicators.selected_indicator == indicator.iGid %} selected="selected" {% endif %}>{{ indicator.iName }}</option>
+					{% else %}
+					<option value="{{ indicator.iGid }}">{{ indicator.iName }}</option>
+					{% endif %}
+					{% endfor %}
+					{% endif %}
+				</select>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="indicator-overview">
+		<div class="indicator-header">
+			<div class="indicator-category">
+				{% for classification in indicators.classification %}
+					{% if indicators.selected_classification == classification.gid %}
+						<span>{{ classification.title }}</span>
+					{% endif %}
+				{% endfor %}
+			</div>
+			<h2 class="indicator-name">{{ metadata.indicator_text|default('') }}</h2>
+		</div>
+	</div>
+</div>
+
+<div class="mb-3 non-crimnal-bx">
+	<div class="container">
+		<div class="loader hidden"></div>
+		{% if metadata.data != '' %}
+		<div id="border-non-bx" class="border-non-bx">
+			<h3>{{ metadata.indicator_text }}</h3>
+			<ul id="metadata_icons" class="list-button d-print-none">
+				<li>
+					<a href="{{ url('<front>') }}/download-metadata/{{ indicators.selected_indicator }}">
+						<i class="fas fa-download"></i>
+						<span>Télécharger</span>
+					</a>
+				</li>
+
+				<li class="share">
+					<a class="shareIcons" href="javascript:void(0);">
+						<i class="fas fa-share-nodes"></i>
+						<span>Partager</span>
+					</a>
+					<div class="socialmedia">
+						<div class="mediaContainer">
+							{{ metadata.share }}
+						</div>
+					</div>
+				</li>
+				<li>
+					<a href="javascript:void(0);" id="print_metadata">
+						<i class="fas fa-print"></i>
+						<span>Imprimer</span>
+					</a>
+				</li>
+			</ul>
+
+			<div id="metaDiv">
+				<ul class="crimnal-list">
+					{% for metaval in metadata.data %}
+					<li>
+						<div class="list-data">
+							<strong>{{ metaval.category }}</strong>
+							<div class="list-data-container">{{ metaval.description|raw }}</div>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		{% else %}
+		<div class="border-non-bx">
+			<p class="text-center">{{ 'No data found'|trans }}</p>
+		</div>
+		{% endif %}
+	</div>
+</div>

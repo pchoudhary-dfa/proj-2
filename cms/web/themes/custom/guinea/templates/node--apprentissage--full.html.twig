@@ -1,0 +1,40 @@
+{#
+/**
+ * @file
+ * Full view for Apprentissage story detail.
+ *
+ * @see guinea_preprocess_node()
+ */
+#}
+<div class="story-detail-container">
+  <a href="{{ story_back_url }}" class="story-detail-back d-inline-flex align-items-center gap-2 text-decoration-none text-mineshaft mb-4" id="story-detail-back" aria-label="{{ 'Retour à la page précédente'|t }}">
+    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+    <span>{{ 'Retour'|t }}</span>
+  </a>
+
+  <article class="story-detail-article">
+    <div class="story-detail-hero-img">
+      <img id="story-image" src="{{ story_image_url }}" alt="{{ story_title|e }}" class="w-100 h-100 object-fit-cover" loading="lazy" />
+    </div>
+    <div class="story-detail-content">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <span class="d-inline-flex flex-wrap align-items-center gap-2">
+          <span id="story-tag" class="story-detail-tag {{ story_tag_modifier_class }}">{{ story_tag }}</span>
+          <span id="story-region" class="story-detail-region-tag">{{ story_region }}</span>
+        </span>
+        <span class="story-detail-meta-right text-muted small">
+          <span id="story-author" class="story-detail-author-inline">{% if story_author %}{{ 'Par'|t }} {{ story_author }}{% endif %}</span><span id="story-date-author-sep" class="story-detail-meta-sep-inline" aria-hidden="true">{% if story_author and story_date %}·{% endif %}</span><span id="story-date" class="story-detail-date">{{ story_date }}</span>
+        </span>
+      </div>
+      <h1 id="story-title" class="story-detail-title">{{ story_title }}</h1>
+      <div class="story-detail-share mb-4">
+        <span class="story-detail-share-label text-muted small fw-semibold text-uppercase me-3">{{ 'Partager'|t }}</span>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ story_share_url|url_encode }}" class="story-detail-share-icon" aria-label="{{ 'Partager sur Facebook'|t }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ story_share_url|url_encode }}" class="story-detail-share-icon" aria-label="{{ 'Partager sur LinkedIn'|t }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+        <a href="{{ story_gmail_compose_url }}" class="story-detail-share-icon" aria-label="{{ 'Partager par e-mail'|t }}" target="_blank" rel="noopener noreferrer"><i class="fas fa-envelope"></i></a>
+        <a href="#" class="story-detail-share-icon" id="story-share-print" aria-label="{{ 'Imprimer'|t }}" onclick="window.print(); return false;"><i class="fas fa-print"></i></a>
+      </div>
+      <div id="story-body" class="story-detail-body text-secondary">{{ story_body }}</div>
+    </div>
+  </article>
+</div>

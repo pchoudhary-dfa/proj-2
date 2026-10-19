@@ -1,0 +1,86 @@
+{% include directory ~ '/templates/header.html.twig' %}
+<section class="slider-bx pad-bx-bg about-h mb-3">
+	{% if logged_in %}
+
+	{# --- for info icon ---- #}
+	<div class="dfa-help-info" dfa-help="MON-HOME-SEC_DASH"></div>
+
+	<section class="middleSection monitoring-main securedashmalawi{% if hide_other_icons %} justify-content-center{% endif %}" id="midArea">
+
+		{% if not hide_other_icons %}
+		<div class="gird-20">
+			<div class="dropdown">
+				<a class="monitoring-icon" href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<div class="servicesBox lightGreen">
+						<div class="circleBox">
+							<span class="icon-icon-network"></span>
+						</div>
+						<span>{{ 'cadre'|t }}</span>
+					</div>
+				</a>
+				{{ page.monitoring_api_region }}
+			</div>
+			<!--dropdown ends here -->
+		</div>
+
+		<div class="gird-20">
+			<div class="dropdown">
+				<a class="monitoring-icon" href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<div class="servicesBox lightBlue">
+						<div class="circleBox">
+							<span class="icon-icon-data-search"></span>
+						</div>
+						<span>{{ 'voir les données'|t }}</span>
+					</div>
+				</a>
+				{{ page.monitoring_see_data_api_region }}
+			</div>
+			<!--dropdown ends here -->
+		</div>
+
+		<div class="gird-20">
+			<div class="dropdown">
+				{% if saved_user_filter == '' %}
+				<a href="{{ base_path }}user-administration">
+					{% else %}
+					<a href="{{ base_path }}user-administration{{saved_user_filter}}">
+						{% endif %}
+						<div class="servicesBox darkBlue">
+							<div class="circleBox">
+								<span class="icon-user-management"></span>
+							</div>
+							<span>{{ 'gestion des utilisateurs'|t }}</span>
+						</div>
+					</a>
+			</div>
+			<!--dropdown ends here -->
+		</div>
+		{% endif %}
+
+		<div class="gird-20">
+			<div class="dropdown">
+				<a href="{{ data_manager_url }}" target="_blank" rel="noopener noreferrer">
+					<div class="servicesBox darkGreen">
+						<div class="circleBox">
+							<span class="icon-data-management-img" role="img" aria-label="{{ 'gestionnaire de données'|t }}"></span>
+						</div>
+						<span>{{ 'gestionnaire de données'|t }}</span>
+					</div>
+				</a>
+			</div>
+			<!--dropdown ends here -->
+		</div>
+
+	</section>
+	<!--section-->
+
+	{% else %}
+	<div class="headerPageInfo loginAuthSection pageNotFound">
+		<h3>{{'You are not authorize to access this page. Please'|t }}
+			<a class="login_class" href="{{ base_path }}user/login">{{ 'login'|t }}</a>
+			{{ 'then try again.'|t }}
+		</h3>
+	</div>
+	{% endif %}
+</section>
+{% include directory ~ '/templates/footer.html.twig' %}

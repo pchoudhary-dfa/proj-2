@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Install file for Visitor Counter.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function visitor_counter_schema() {
+  $schema['visitor_counter_visitors'] = [
+    'description' => 'Stores a unique row per real visitor.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+      ],
+      'token' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'first_seen' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Unix timestamp of the first time we saw this visitor.',
+      ],
+      'last_seen' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix timestamp of the last time we saw this visitor.',
+      ],
+      'ua' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ],
+      'ip_hash' => [
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'token' => ['token'],
+    ],
+    'indexes' => [
+      'ip_hash' => ['ip_hash'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Add last_seen for rolling active-visitor analytics.
+ */
+function visitor_counter_update_9001() {
+  $database = \Drupal::database();
+  $schema = $database->schema();
+
+  if (!$schema->fieldExists('visitor_counter_visitors', 'last_seen')) {
+    $schema->addField('visitor_counter_visitors', 'last_seen', [
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'Unix timestamp of the last time we saw this visitor.',
+    ]);
+  }
+
+  // Backfill activity for existing rows.
+  $database->query('UPDATE {visitor_counter_visitors} SET last_seen = first_seen WHERE last_seen = 0');
+}

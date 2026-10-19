@@ -1,0 +1,36 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { resolve } from "path";
+import dts from "vite-plugin-dts";
+
+export default defineConfig({
+  plugins: [
+    react(),
+    dts({
+      include: ["src"],
+      outDir: "dist",
+    }),
+  ],
+  build: {
+    lib: {
+      entry: resolve(__dirname, "src/index.ts"),
+      name: "DfaV6CompListView",
+      fileName: "dfa-v6-comp-list-view",
+      formats: ["es", "umd"],
+    },
+    rollupOptions: {
+      external: ["react", "react-dom", "react/jsx-runtime"],
+      output: {
+        globals: {
+          react: "React",
+          "react-dom": "ReactDOM",
+          "react/jsx-runtime": "jsxRuntime",
+        },
+        assetFileNames: (assetInfo) =>
+          assetInfo.name && String(assetInfo.name).endsWith(".css") ? "styles.css" : assetInfo.name ?? "assets/[name][extname]",
+      },
+    },
+    sourcemap: true,
+    outDir: "dist",
+  },
+});

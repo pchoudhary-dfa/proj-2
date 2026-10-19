@@ -1,0 +1,14 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+<main class="logout-confirm-page" role="main">
+  <section class="inner-section confirm-logout-guinea">
+    <span class="logout-confirm-kicker">Session</span>
+    <h1 class="logout-confirm-title">Se déconnecter</h1>
+    <p class="logout-confirm-text">Êtes-vous sûr de vouloir vous déconnecter ?</p>
+    <div class="logout-button-guinea">
+      {{ page.content }}
+    </div>
+  </section>
+</main>
+
+{% include directory ~ '/templates/footer.html.twig' %}

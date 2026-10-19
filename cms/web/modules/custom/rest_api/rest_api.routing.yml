@@ -1,0 +1,7 @@
+restapi.api-init:
+  path: '/api'
+  defaults:
+    _controller: 'Drupal\rest_api\Controller\RestApiController::apiInit'
+    _title: 'Api page'
+  requirements:
+    _access: 'TRUE'

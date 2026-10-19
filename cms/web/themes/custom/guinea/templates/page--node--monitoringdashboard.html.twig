@@ -1,0 +1,1396 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+<body>
+    <a class="skip" href="#main">Aller au contenu</a>
+    <div class="dash">
+
+        <div class="hdr">
+            <div class="hdr-l">
+                <h1>Suivi des Résultats du Secteur de <br>la Femme, Famille et des Solidarités</h1>
+                <p>Ministère de la Femme, de la Famille et des Solidarités</p>
+            </div>
+        </div>
+
+        <div aria-label="Navigation du tableau de bord" class="nav">
+            <div class="nt active">Vue d'ensemble</div>
+            <div class="nt">Indicateurs</div>
+            <div class="nt">Projets</div>
+            <div class="nt">Budget</div>
+            <div class="nt">Partenaires</div>
+            <div class="nt">Carte</div>
+        </div>
+
+        <main class="content" id="main">
+            <div class="dfa-dashboard-container dfa-dashboard-container-mtndp" data-id="dfa-db-container" data-call="_PUBLIC" data-area="_EXTERNAL" data-dshbrd-type="_PUBLIC">
+
+            <!-- ROW 1: KPI TILES -->
+            <!-- <div class="tiles">
+                <div class="tile tg">
+                    <div class="cc-title">Statut des indicateurs</div>
+                    <div class="t-val"><span>38% </span><span class="auto-style-2">atteints</span></div>
+                    <div class="pb-bar-labels">
+                        <div class="pb-bar-lbl">
+                            <div class="pb-bar-dot auto-style-11"></div>
+                            Atteints
+                            <span class="ind-pct auto-style-6">38%</span>
+                        </div>
+                        <div class="pb-bar-lbl">
+                            <div class="pb-bar-dot auto-style-12"></div>
+                            Moyen
+                            <span class="ind-pct auto-style-7">31%</span>
+                        </div>
+                        <div class="pb-bar-lbl">
+                            <div class="pb-bar-dot auto-style-9"></div>
+                            Faible
+                            <span class="ind-pct auto-style-8">22%</span>
+                        </div>
+                        <div class="pb-bar-lbl">
+                            <div class="pb-bar-dot auto-style-70"></div>
+                            Manquant
+                            <span class="ind-pct auto-style-71">11%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile tr">
+                    <div class="cc-title">Indicateurs à risque</div>
+                    <div class="t-val">31</div>
+                    <div class="t-sub-container">
+                        <div class="t-sub">nécessitent intervention</div>
+                        <span class="badge br">Action requise</span>
+                    </div>
+                </div>
+                <div class="tile to">
+                    <div class="cc-title">Budget mobilisé</div>
+                    <div class="t-val">$1.4M</div>
+                    <div class="t-sub-container">
+                        <div class="t-sub">sur $2.1M requis</div>
+                        <span class="badge ba">67% alloué</span>
+                    </div>
+                </div>
+                <div class="tile tb">
+                    <div class="cc-title">Projets actifs</div>
+                    <div class="t-val">94</div>
+                    <div class="t-sub-container">
+                        <div class="t-sub">dans 4 programmes</div>
+                        <span class="badge bg">+12 ce trimestre</span>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- ROW 2: PROGRAMME BANDS — horizontal layout, clearly different from tiles -->
+            <!-- <div class="sec">Programmes stratégiques</div> -->
+            <!-- <div class="prog-bands"> -->
+            <!-- P1 -->
+            <!-- <div class="prog-band">
+                    <div class="pb-accent auto-style-9 auto-style-bg-35"></div>
+                    <div class="pb-meta">
+                        <div class="pb-num auto-style-8 auto-style-text-35">P19001</div>
+                        <div class="pb-name">Pilotage et soutien</div>
+                    </div>
+                    <div class="pb-score-block">
+                        <div class="pb-score auto-style-8 auto-style-text-35">61%</div>
+                        <div class="pb-trend">
+                            <span class="pb-arrow auto-style-color-39">→</span>
+                            <span class="pb-delta auto-style-color-39">0%</span>
+                        </div>
+                    </div>
+                    <div class="pb-bar-wrap">
+                        <div class="pb-stacked">
+                            <div class="pb-seg auto-style-13">42%</div>
+                            <div class="pb-seg auto-style-14">28%</div>
+                            <div class="pb-seg auto-style-15">30%</div>
+                            <div class="pb-seg auto-style-70 auto-style-width-10">10%</div>
+                        </div>
+                    </div>
+                </div> -->
+            <!-- P2 -->
+            <!-- <div class="prog-band">
+                    <div class="pb-accent auto-style-16 auto-style-bg-36"></div>
+                    <div class="pb-meta">
+                        <div class="pb-num auto-style-17 auto-style-text-36">P19002</div>
+                        <div class="pb-name">Inclusion Sociale, Solidarité & indigence</div>
+                    </div>
+                    <div class="pb-score-block">
+                        <div class="pb-score auto-style-17 auto-style-text-36">74%</div>
+                        <div class="pb-trend">
+                            <span class="pb-arrow auto-style-6">↑</span>
+                            <span class="pb-delta auto-style-6">+6%</span>
+                        </div>
+                    </div>
+                    <div class="pb-bar-wrap">
+                        <div class="pb-stacked">
+                            <div class="pb-seg auto-style-18">42%</div>
+                            <div class="pb-seg auto-style-19">20%</div>
+                            <div class="pb-seg auto-style-20">23%</div>
+                            <div class="pb-seg auto-style-70 auto-style-width-15">15%</div>
+                        </div>
+                    </div>
+                </div> -->
+            <!-- P3 -->
+            <!-- <div class="prog-band">
+                    <div class="pb-accent auto-style-12 auto-style-bg-37"></div>
+                    <div class="pb-meta">
+                        <div class="pb-num auto-style-7 auto-style-text-37">P19003</div>
+                        <div class="pb-name">Protection et bien-être de l'enfant</div>
+                    </div>
+                    <div class="pb-score-block">
+                        <div class="pb-score auto-style-7 auto-style-text-37">52%</div>
+                        <div class="pb-trend">
+                            <span class="pb-arrow auto-style-6">↑</span>
+                            <span class="pb-delta auto-style-6">+3%</span>
+                        </div>
+                    </div>
+                    <div class="pb-bar-wrap">
+                        <div class="pb-stacked">
+                            <div class="pb-seg auto-style-21">33%</div>
+                            <div class="pb-seg auto-style-22">32%</div>
+                            <div class="pb-seg auto-style-23">15%</div>
+                            <div class="pb-seg auto-style-70 auto-style-width-20">20%</div>
+                        </div>
+                    </div>
+                </div> -->
+            <!-- P4 -->
+            <!-- <div class="prog-band">
+                    <div class="pb-accent auto-style-24 auto-style-bg-38"></div>
+                    <div class="pb-meta">
+                        <div class="pb-num auto-style-25 auto-style-text-38">P19004</div>
+                        <div class="pb-name">Promotion des Droits et l’autonomisation des femmes et filles</div>
+                    </div>
+                    <div class="pb-score-block">
+                        <div class="pb-score auto-style-25 auto-style-text-38">39%</div>
+                        <div class="pb-trend">
+                            <span class="pb-arrow auto-style-8">↓</span>
+                            <span class="pb-delta auto-style-8">−2%</span>
+                        </div>
+                    </div>
+                    <div class="pb-bar-wrap">
+                        <div class="pb-stacked">
+                            <div class="pb-seg auto-style-26">25%</div>
+                            <div class="pb-seg auto-style-27">25%</div>
+                            <div class="pb-seg auto-style-28">25%</div>
+                            <div class="pb-seg auto-style-70 auto-style-width-25">25%</div>
+                        </div>
+                    </div>
+                </div> -->
+            <!--  -->
+            <!-- </div> -->
+
+            <!-- PERFORMANCE: stacked chart full width + indicators side by side -->
+            <!-- <div class="sec">Performance par programme &amp; indicateurs clés</div> -->
+            <!-- <div class="two-col"> -->
+            <!-- <div class="chart-card chart-card-topper" data-chart-lazy>
+                    <div class="chart-top-desc">
+                        <div class="cc-hdr">
+                            <div>
+                                <div class="cc-title">Performance des objectifs stratégiques</div>
+                            </div>
+                            <div class="selection-of-indicators">
+                                <select name="" id="">
+                                    <option value="">Programme 1</option>
+                                    <option value="">Programme 2</option>
+                                    <option value="">Programme 3</option>
+                                    <option value="">Programme 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="selection-of-indicators-and-stack-leg">
+                            <div class="stack-leg">
+                                <div class="sl-item">
+                                    <div class="sl-dot auto-style-11"></div>
+                                    Atteints
+                                </div>
+                                <div class="sl-item">
+                                    <div class="sl-dot auto-style-12"></div>
+                                    Moyen
+                                </div>
+                                <div class="sl-item">
+                                    <div class="sl-dot auto-style-9"></div>
+                                    Faible
+                                </div>
+                                <div class="sl-item">
+                                    <div class="sl-dot auto-style-70"></div>
+                                    Manquant
+                                </div>
+                            </div>
+                        </div>
+                        <div class="auto-style-29">
+                            <canvas id="stackedChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="narr">
+                        <ul>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div> -->
+            <!-- =================================================================== -->
+            <!-- <div class="chart-card auto-style-30 chart-card-topper">
+                    <div class="chart-top-desc">
+                        <div class="cc-hdr auto-style-31">
+                            <div>
+                                <div class="cc-title">Réalisation des indicateurs phares</div>
+                            </div>
+                        </div>
+                        <div class="ind-list">
+                            <div class="ind-item">
+                                <div class="ind-meta"><span class="ind-name">Mise en œuvre de la lettre de mission du
+                                        Ministère</span>
+                                    <span class="ind-pctn">82%</span>
+                                </div>
+                                <div class="prog-bar">
+                                    <div class="pf pfg auto-style-32"></div>
+                                </div>
+                            </div>
+                            <div class="ind-item">
+                                <div class="ind-meta"><span class="ind-name">Taux d’inclusion et de couverture sociale
+                                        des personnes vulnérables</span>
+                                    <span class="ind-pctn">58%</span>
+                                </div>
+                                <div class="prog-bar">
+                                    <div class="pf pfo auto-style-33"></div>
+                                </div>
+                            </div>
+                            <div class="ind-item">
+                                <div class="ind-meta"><span class="ind-name">Taux d’enfants couverts par la protection
+                                        sociale</span>
+                                    <span class="ind-pctn">67%</span>
+                                </div>
+                                <div class="prog-bar">
+                                    <div class="pf pfg auto-style-34"></div>
+                                </div>
+                            </div>
+                            <div class="ind-item">
+                                <div class="ind-meta"><span class="ind-name">Proportion des femmes aux postes de prise
+                                        des décisions</span>
+                                    <span class="ind-pctn">71%</span>
+                                </div>
+                                <div class="prog-bar">
+                                    <div class="pf pfg auto-style-35"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="narr">
+                        <ul>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div> -->
+            <!-- =================================================================== -->
+            <!-- <div class="chart-card chart-card-topper" data-chart-lazy>
+                    <div class="chart-top-desc">
+                        <div class="cc-hdr">
+                            <div>
+                                <div class="cc-title">Performance des indicateurs dans le cadre des ODD</div>
+                            </div>
+                            <div class="selection-of-indicators">
+                                <select name="" id="">
+                                    <option value="">ODD 1</option>
+                                    <option value="">ODD 2</option>
+                                    <option value="">ODD 3</option>
+                                    <option value="">ODD 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="stack-leg">
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-11"></div>
+                                Atteints
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-12"></div>
+                                Moyen
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-9"></div>
+                                Faible
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-70"></div>
+                                Manquant
+                            </div>
+                        </div>
+                        <div class="auto-style-29">
+                            <canvas id="sdgHalfDonut"></canvas>
+                        </div>
+                    </div>
+                    <div class="narr">
+                        <ul>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div> -->
+            <!-- =================================================================== -->
+            <!-- <div class="chart-card chart-card-topper" data-chart-lazy>
+                    <div class="chart-top-desc">
+                        <div class="cc-hdr">
+                            <div>
+                                <div class="cc-title">Performance des indicateurs dans le cadre de l'Agenda 2063 de
+                                    l'Union africaine
+                                </div>
+                            </div>
+                            <div class="selection-of-indicators">
+                                <select name="" id="">
+                                    <option value="">Goal 1</option>
+                                    <option value="">Goal 2</option>
+                                    <option value="">Goal 3</option>
+                                    <option value="">Goal 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="stack-leg">
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-11"></div>
+                                Atteints
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-12"></div>
+                                Moyen
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-9"></div>
+                                Faible
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-70"></div>
+                                Manquant
+                            </div>
+                        </div>
+                        <div class="auto-style-29">
+                            <canvas id="visionChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="narr">
+                        <ul>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div> -->
+            <!-- =================================================================== -->
+            <!-- <div class="chart-card chart-card-topper" data-chart-lazy>
+                    <div class="chart-top-desc">
+                        <div class="cc-hdr">
+                            <div>
+                                <div class="cc-title">Performance des indicateurs dans le cadre du Simandou</div>
+                            </div>
+                            <div class="selection-of-indicators">
+                                <select name="" id="">
+                                    <option value="">ODD 1</option>
+                                    <option value="">ODD 2</option>
+                                    <option value="">ODD 3</option>
+                                    <option value="">ODD 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="stack-leg">
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-11"></div>
+                                Atteints
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-12"></div>
+                                Moyen
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-9"></div>
+                                Faible
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-70"></div>
+                                Manquant
+                            </div>
+                        </div>
+                        <div class="auto-style-29">
+                            <canvas id="sdgHalfDonutSimandou"></canvas>
+                        </div>
+                    </div>
+                    <div class="narr">
+                        <ul>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div> -->
+            <!-- =================================================================== -->
+            <!-- <div class="chart-card chart-card-topper" data-chart-lazy>
+                    <div class="chart-top-desc">
+                        <div class="cc-hdr">
+                            <div>
+                                <div class="cc-title">Performance des indicateurs dans le cadre des Politiques
+                                    Sectorielles</div>
+                            </div>
+                            <div class="selection-of-indicators">
+                                <select name="" id="">
+                                    <option value="">Goal 1</option>
+                                    <option value="">Goal 2</option>
+                                    <option value="">Goal 3</option>
+                                    <option value="">Goal 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="stack-leg">
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-11"></div>
+                                Atteints
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-12"></div>
+                                Moyen
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-9"></div>
+                                Faible
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-70"></div>
+                                Manquant
+                            </div>
+                        </div>
+                        <div class="auto-style-29">
+                            <canvas id="sdgHalfDonutSectors"></canvas>
+                        </div>
+                    </div>
+                    <div class="narr">
+                        <ul>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                            <li>
+                                <p><strong>Lecture analytique :</strong> La Gouvernance concentre le plus d'indicateurs
+                                    Atteintss (52%). L'Environnement affiche la plus forte proportion d'indicateurs
+                                    faibles — des financements climatiques additionnels sont urgents.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div> -->
+            <!--  -->
+            <!-- </div> -->
+
+            <!-- Strategic Objective -->
+            <!-- <div class="sec">Performance des indicateurs des objectifs stratégiques</div> -->
+            <!-- <div class="one-col"> -->
+            <!-- <div class="chart-card chart-card-topper"> -->
+            <!-- <div class="cc-hdr">
+                        <div>
+                            <h5 class="h5-subheading">Objective 2</h5>
+                        </div>
+                        <div class="selection-of-indicators">
+                            <select name="" id="">
+                                <option value="">Programme 1</option>
+                                <option value="">Programme 2</option>
+                                <option value="">Programme 3</option>
+                                <option value="">Programme 4</option>
+                            </select>
+                        </div>
+                    </div> -->
+            <!-- =============== -->
+            <!-- <div class="accordion-item parent open">
+                        <div class="accordion-title">
+                            <span>Objectif Stratégique 2.1.1</span>
+                            <div class="arrow-rotater"></div>
+                        </div>
+                        <div class="accordion-content">
+                            <div>
+                                <div class="accordion-inner">
+                                    <div class="accordion-item child">
+                                        <div class="accordion-title">
+                                            <span>Indicator 1</span>
+                                            <div class="arrow-rotater"></div>
+                                        </div>
+                                        <div class="accordion-content">
+                                            <div>
+                                                <div class="accordion-inner">
+                                                    <div class="two-col">
+                                                        <div class="chart-card-accordion">
+                                                            <table class="btbl">
+                                                                <tr>
+                                                                    <th style="width: 100px;"></th>
+                                                                    <th>2023</th>
+                                                                    <th>2024</th>
+                                                                    <th>2025</th>
+                                                                    <th>2026</th>
+                                                                    <th>2027</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>valeur de référence</p>
+                                                                            <span
+                                                                                class="badge-circle badge-baseline"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td></td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>Cible</p>
+                                                                            <span
+                                                                                class="badge-circle badge-target"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>42</td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>Réalisé</p>
+                                                                            <span
+                                                                                class="badge-circle badge-actual"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td>42</td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="chart-card-accordion" data-chart-lazy>
+                                                            <canvas id="indicatorChart" height="130px"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-inner">
+                                    <div class="accordion-item child">
+                                        <div class="accordion-title">
+                                            <span>Indicator 2</span>
+                                            <div class="arrow-rotater"></div>
+                                        </div>
+                                        <div class="accordion-content">
+                                            <div>
+                                                <div class="accordion-inner">
+                                                    <div class="two-col">
+                                                        <div class="chart-card-accordion">
+                                                            <table class="btbl">
+                                                                <tr>
+                                                                    <th style="width: 100px;"></th>
+                                                                    <th>2023</th>
+                                                                    <th>2024</th>
+                                                                    <th>2025</th>
+                                                                    <th>2026</th>
+                                                                    <th>2027</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>valeur de référence</p>
+                                                                            <span
+                                                                                class="badge-circle badge-baseline"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td></td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>Cible</p>
+                                                                            <span
+                                                                                class="badge-circle badge-target"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>42</td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>Réalisé</p>
+                                                                            <span
+                                                                                class="badge-circle badge-actual"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td>42</td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="chart-card-accordion">
+                                                            Graph
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+            <!-- =============== -->
+            <!-- <div class="accordion-item parent">
+                        <div class="accordion-title">
+                            <span>Objectif Stratégique 3.1.1</span>
+                            <div class="arrow-rotater"></div>
+                        </div>
+                        <div class="accordion-content">
+                            <div>
+                                <div class="accordion-inner">
+                                    <div class="accordion-item child">
+                                        <div class="accordion-title">
+                                            <span>Indicator 1</span>
+                                            <div class="arrow-rotater"></div>
+                                        </div>
+                                        <div class="accordion-content">
+                                            <div>
+                                                <div class="accordion-inner">
+                                                    <div class="two-col">
+                                                        <div class="chart-card-accordion">
+                                                            <table class="btbl">
+                                                                <tr>
+                                                                    <th style="width: 100px;"></th>
+                                                                    <th>2023</th>
+                                                                    <th>2024</th>
+                                                                    <th>2025</th>
+                                                                    <th>2026</th>
+                                                                    <th>2027</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>valeur de référence</p>
+                                                                            <span
+                                                                                class="badge-circle badge-baseline"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td></td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>Cible</p>
+                                                                            <span
+                                                                                class="badge-circle badge-target"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>42</td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>Réalisé</p>
+                                                                            <span
+                                                                                class="badge-circle badge-actual"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td>42</td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="chart-card-accordion">
+                                                            Graph
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-inner">
+                                    <div class="accordion-item child">
+                                        <div class="accordion-title">
+                                            <span>Indicator 2</span>
+                                            <div class="arrow-rotater"></div>
+                                        </div>
+                                        <div class="accordion-content">
+                                            <div>
+                                                <div class="accordion-inner">
+                                                    <div class="two-col">
+                                                        <div class="chart-card-accordion">
+                                                            <table class="btbl">
+                                                                <tr>
+                                                                    <th style="width: 100px;"></th>
+                                                                    <th>2023</th>
+                                                                    <th>2024</th>
+                                                                    <th>2025</th>
+                                                                    <th>2026</th>
+                                                                    <th>2027</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>valeur de référence</p>
+                                                                            <span
+                                                                                class="badge-circle badge-baseline"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td></td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>Cible</p>
+                                                                            <span
+                                                                                class="badge-circle badge-target"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>42</td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div class="inner-badge-box">
+                                                                            <p>Réalisé</p>
+                                                                            <span
+                                                                                class="badge-circle badge-actual"></span>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                    <td>42</td>
+                                                                    <td>42</td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="chart-card-accordion">
+                                                            Graph
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+            <!-- ========== -->
+            <!-- </div> -->
+            <!-- </div> -->
+
+            <!-- PROJECTS + REGIONAL -->
+            <!-- <div class="sec">Projets &amp; couverture géographique</div> -->
+            <!-- <div class="two-col">
+                <div class="chart-card chart-card-topper" data-chart-lazy>
+                    <div class="chart-top-desc">
+                        <div class="cc-hdr">
+                            <div>
+                                <div class="cc-title">Statut des 94 projets actifs</div>
+                                <div class="cc-narr">Vue d'ensemble de l'exécution opérationnelle par stade
+                                    d'avancement.
+                                </div>
+                            </div>
+                            <div class="selection-of-indicators">
+                                <select name="" id="">
+                                    <option value="">Programme 1</option>
+                                    <option value="">Programme 2</option>
+                                    <option value="">Programme 3</option>
+                                    <option value="">Programme 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="auto-style-48">
+                            <canvas id="projDonut"></canvas>
+                        </div>
+                        <table class="btbl auto-style-49">
+                            <tr>
+                                <th>Stade</th>
+                                <th>Nb</th>
+                                <th>Budget</th>
+                                <th>Avancement</th>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg">Sur cible</span></td>
+                                <td>42</td>
+                                <td>$610M</td>
+                                <td>
+                                    <div class="bmbw">
+                                        <div class="bmbf auto-style-50"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge ba">En progrès</span></td>
+                                <td>28</td>
+                                <td>$395M</td>
+                                <td>
+                                    <div class="bmbw">
+                                        <div class="bmbf auto-style-51"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge br">En retard</span></td>
+                                <td>16</td>
+                                <td>$280M</td>
+                                <td>
+                                    <div class="bmbw">
+                                        <div class="bmbf auto-style-52"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge br">Bloqué</span></td>
+                                <td>8</td>
+                                <td>$115M</td>
+                                <td>
+                                    <div class="bmbw">
+                                        <div class="bmbf auto-style-53"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="chart-card chart-card-topper" data-chart-lazy>
+                    <div class="chart-top-desc">
+                        <div class="cc-hdr">
+                            <div>
+                                <div class="cc-title">Distribution régionale des interventions</div>
+                                <div class="cc-narr">Couverture géographique des projets actifs par région
+                                    administrative.
+                                </div>
+                            </div>
+                            <div class="selection-of-indicators">
+                                <select name="" id="">
+                                    <option value="">Programme 1</option>
+                                    <option value="">Programme 2</option>
+                                    <option value="">Programme 3</option>
+                                    <option value="">Programme 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="auto-style-39 auto-style-47">
+                            <canvas id="regionalChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="narr">
+                        <ul>
+                            <li>
+                                <p><strong>Conakry concentre 23%</strong> des projets actifs. Les régions forestières
+                                    (N'Zérékoré, Faranah) restent sous-dotées — rééquilibrage territorial recommandé.
+                                </p>
+                            </li>
+                            <li>
+                                <p><strong>Conakry concentre 23%</strong> des projets actifs. Les régions forestières
+                                    (N'Zérékoré, Faranah) restent sous-dotées — rééquilibrage territorial recommandé.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- BUDGET + PARTNERS -->
+            <!-- <div class="sec">Budget &amp; mobilisation des ressources</div> -->
+            <!-- <div class="two-col">
+                <div class="chart-card chart-card-topper" data-chart-lazy>
+                    <div class="chart-top-desc">
+                        <div class="cc-hdr">
+                            <div>
+                                <div class="cc-title">Budget requis vs alloué par programme (M USD)</div>
+                                <div class="cc-narr">Gaps de financement identifiés pour chaque programme.</div>
+                            </div>
+                            <span class="cc-badge ba auto-style-38">Écart $700M</span>
+                        </div>
+                        <div class="stack-leg auto-style-47 auto-style-31">
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-73"></div>
+                                Budget Requis
+                            </div>
+                            <div class="sl-item">
+                                <div class="sl-dot auto-style-72"></div>
+                                Budget Alloué
+                            </div>
+                        </div>
+                        <div class="auto-style-39">
+                            <canvas id="budgetChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="narr">
+                        <ul>
+                            <li>
+                                <p>Le <strong>Programme 1 et le Programme 3</strong> concentrent 80% du gap budgétaire
+                                    total. Un plaidoyer ciblé auprès des partenaires est en cours.
+                                </p>
+                            </li>
+                            <li>
+                                <p>Le <strong>Programme 1 et le Programme 3</strong> concentrent 80% du gap budgétaire
+                                    total. Un plaidoyer ciblé auprès des partenaires est en cours.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="chart-card chart-card-topper">
+                    <div class="chart-top-desc">
+                        <div class="cc-hdr">
+                            <div>
+                                <div class="cc-title">Contribution des partenaires au financement</div>
+                                <div class="cc-narr">Engagements financiers confirmés par source partenaire (Budget
+                                    Alloué).
+                                </div>
+                            </div>
+                        </div>
+                        <div class="prow">
+                            <div class="pname">Banque Mondiale</div>
+                            <div class="pbw">
+                                <div class="pb-hr auto-style-40"></div>
+                            </div>
+                            <div class="pamt">$342M</div>
+                        </div>
+                        <div class="prow">
+                            <div class="pname">AFD</div>
+                            <div class="pbw">
+                                <div class="pb-hr auto-style-41"></div>
+                            </div>
+                            <div class="pamt">$258M</div>
+                        </div>
+                        <div class="prow">
+                            <div class="pname">Budget État</div>
+                            <div class="pbw">
+                                <div class="pb-hr auto-style-42"></div>
+                            </div>
+                            <div class="pamt">$234M</div>
+                        </div>
+                        <div class="prow">
+                            <div class="pname">BAD</div>
+                            <div class="pbw">
+                                <div class="pb-hr auto-style-43"></div>
+                            </div>
+                            <div class="pamt">$168M</div>
+                        </div>
+                        <div class="prow">
+                            <div class="pname">UNICEF</div>
+                            <div class="pbw">
+                                <div class="pb-hr auto-style-44"></div>
+                            </div>
+                            <div class="pamt">$124M</div>
+                        </div>
+                        <div class="prow">
+                            <div class="pname">Bilatéraux</div>
+                            <div class="pbw">
+                                <div class="pb-hr auto-style-45"></div>
+                            </div>
+                            <div class="pamt">$76M</div>
+                        </div>
+                        <div class="prow">
+                            <div class="pname">Secteur Privé</div>
+                            <div class="pbw">
+                                <div class="pb-hr auto-style-46"></div>
+                            </div>
+                            <div class="pamt">$49M</div>
+                        </div>
+                    </div>
+                    <div class="narr auto-style-47">
+                        <ul>
+                            <li>
+                                <p>La Banque Mondiale et l'UE représentent <strong>44% du financement externe</strong>.
+                                    La mobilisation du secteur privé reste un levier à activer prioritairement.
+                                </p>
+                            </li>
+                            <li>
+                                <p>La Banque Mondiale et l'UE représentent <strong>44% du financement externe</strong>.
+                                    La mobilisation du secteur privé reste un levier à activer prioritairement.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Budget by SDG -->
+            <!-- <div class="sec">Budget par ODD</div> -->
+            <!-- <div class="one-col">
+                <div class="chart-card chart-card-topper" data-chart-lazy>
+                    <div class="cc-hdr">
+                        <div>
+                            <div class="cc-narr">Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora illum
+                                sint dignissimos itaque eveniet similique ipsum dolore aut, nesciunt mollitia velit
+                                facilis quas maxime! Nam totam quibusdam eveniet dignissimos veniam!
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="sdgCanvas" width="2200" height="850"></canvas>
+                </div>
+            </div> -->
+
+            <!-- Budget by District -->
+            <!-- <div class="sec">Budget par région</div> -->
+            <!-- <div class="one-col">
+                <div class="chart-card chart-card-topper" data-chart-lazy>
+                    <canvas id="sdgCanvas2" width="2200" height="850"></canvas>
+                </div>
+            </div> -->
+
+            <!-- 3W MAP -->
+            <!-- <div class="sec">Carte 3W · Qui fait Quoi Où</div> -->
+            <!-- <div class="map-wrap">
+                <div class="map-subhdr">
+                    <div class="map-subhdr-l">Interventions actives <span>26 projets · 8 régions</span></div>
+                    <div class="auto-style-54"><span class="auto-style-55"></span><span
+                            class="auto-style-56"></span><span class="auto-style-57"></span></div>
+                </div>
+                <div class="map-tbar">
+                    <span class="fl">Programme :</span>
+                    <button aria-pressed="true" class="fb all on" onclick="mapFilt('all',this)"
+                        type="button">Tous</button>
+                    <button aria-pressed="false" class="fb p1" onclick="mapFilt('p1',this)" type="button">P1 · Capital
+                        Humain</button>
+                    <button aria-pressed="false" class="fb p2" onclick="mapFilt('p2',this)" type="button">P2 ·
+                        Gouvernance</button>
+                    <button aria-pressed="false" class="fb p3" onclick="mapFilt('p3',this)" type="button">P3 ·
+                        Infrastructure &amp; Économie</button>
+                    <button aria-pressed="false" class="fb p4" onclick="mapFilt('p4',this)" type="button">P4 ·
+                        Environnement &amp; Genre</button>
+                </div>
+                <div class="map-ctr"><b id="map-vis-ct">26</b> projets affichés · Cliquer un repère pour les détails
+                </div>
+                <div class="map-body">
+                    <div class="map-svg-area auto-style-58" id="mapArea">
+                        <svg class="auto-style-59" id="mapSvg" viewbox="0 0 700 520" width="100%"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <lineargradient id="seaG" x1="0" x2="1" y1="0" y2="1">
+                                    <stop offset="0%" stop-color="#DBEAFE"></stop>
+                                    <stop offset="100%" stop-color="#BFDBFE"></stop>
+                                </lineargradient>
+                                <lineargradient id="landG" x1="0" x2="0.3" y1="0" y2="1">
+                                    <stop offset="0%" stop-color="#C8E6C9"></stop>
+                                    <stop offset="100%" stop-color="#A5D6A7"></stop>
+                                </lineargradient>
+                                <filter id="gs">
+                                    <fedropshadow dx="0" dy="1" flood-opacity="0.12" stddeviation="3"></fedropshadow>
+                                </filter>
+                            </defs>
+                            <rect fill="url(#seaG)" height="520" width="700"></rect>
+                            <path
+                                d="M 0,0 L 700,0 L 700,130 L 680,370 L 624,418 L 555,488 L 519,470 L 449,424 L 419,394 L 395,384 L 372,363 L 346,332 L 333,298 L 311,265 L 290,258 L 261,258 L 237,306 L 211,325 L 190,350 L 173,329 L 160,312 L 156,284 L 130,258 L 95,227 L 66,193 L 43,178 L 32,165 L 47,153 L 65,149 L 78,124 L 104,113 L 156,98 L 182,83 L 211,16 L 259,26 L 315,36 L 354,71 L 406,82 L 419,83 L 449,72 L 501,64 L 527,32 L 544,37 L 570,50 L 0,0 Z"
+                                fill="#F1F5F9" opacity="0.6"></path>
+                            <path
+                                d="M 32,165 L 47,153 L 65,149 L 78,124 L 104,113 L 156,98 L 182,83 L 211,16 L 259,26 L 315,36 L 354,71 L 406,82 L 419,83 L 449,72 L 501,64 L 527,32 L 544,37 L 570,50 L 594,126 L 613,168 L 626,212 L 648,258 L 654,302 L 679,374 L 624,418 L 579,446 L 555,488 L 519,470 L 493,456 L 449,420 L 419,390 L 395,380 L 372,358 L 346,326 L 333,292 L 311,258 L 290,250 L 261,250 L 237,302 L 211,322 L 190,348 L 173,326 L 160,308 L 156,280 L 130,255 L 95,223 L 66,190 L 43,175 L 32,165 Z"
+                                fill="url(#landG)" filter="url(#gs)" stroke="#fff" stroke-width="1.5"></path>
+                            <g fill="none" opacity="0.7" stroke="#B2DFDB" stroke-dasharray="4,3" stroke-width="0.8">
+                                <line x1="155" x2="200" y1="280" y2="242"></line>
+                                <line x1="104" x2="165" y1="165" y2="237"></line>
+                                <line x1="200" x2="280" y1="242" y2="215"></line>
+                                <line x1="278" x2="295" y1="120" y2="208"></line>
+                                <line x1="295" x2="411" y1="208" y2="240"></line>
+                                <line x1="411" x2="535" y1="240" y2="208"></line>
+                                <line x1="535" x2="577" y1="208" y2="450"></line>
+                                <line x1="411" x2="520" y1="240" y2="376"></line>
+                            </g>
+                            <g font-family="'Segoe UI',system-ui,sans-serif">
+                                <text fill="#1B4332" font-size="9" font-weight="600" opacity="0.8" x="130"
+                                    y="308">Conakry</text>
+                                <text fill="#2D6A4F" font-size="9" font-weight="500" opacity="0.75" x="203"
+                                    y="236">Kindia</text>
+                                <text fill="#2D6A4F" font-size="9" font-weight="500" opacity="0.75" x="82"
+                                    y="161">Boké</text>
+                                <text fill="#2D6A4F" font-size="9" font-weight="500" opacity="0.75" x="256"
+                                    y="118">Labé</text>
+                                <text fill="#2D6A4F" font-size="9" font-weight="500" opacity="0.75" x="268"
+                                    y="206">Mamou</text>
+                                <text fill="#2D6A4F" font-size="9" font-weight="500" opacity="0.75" x="386"
+                                    y="238">Faranah</text>
+                                <text fill="#2D6A4F" font-size="9" font-weight="500" opacity="0.75" x="508"
+                                    y="204">Kankan</text>
+                                <text fill="#1B4332" font-size="9" font-weight="500" opacity="0.75" x="543"
+                                    y="446">N'Zérékoré</text>
+                            </g>
+                            <text fill="#94A3B8" font-family="'Segoe UI',system-ui,sans-serif" font-size="9"
+                                font-style="italic" x="14" y="138">Guinée-Bissau</text>
+                            <text fill="#94A3B8" font-family="'Segoe UI',system-ui,sans-serif" font-size="9"
+                                font-style="italic" x="220" y="14">Sénégal / Mali</text>
+                            <text fill="#94A3B8" font-family="'Segoe UI',system-ui,sans-serif" font-size="9"
+                                font-style="italic" x="618" y="168">Mali</text>
+                            <text fill="#94A3B8" font-family="'Segoe UI',system-ui,sans-serif" font-size="9"
+                                font-style="italic" x="628" y="340">Côte d'Ivoire</text>
+                            <text fill="#94A3B8" font-family="'Segoe UI',system-ui,sans-serif" font-size="9"
+                                font-style="italic" x="535" y="502">Liberia</text>
+                            <text fill="#94A3B8" font-family="'Segoe UI',system-ui,sans-serif" font-size="9"
+                                font-style="italic" x="328" y="508">Sierra Leone</text>
+                            <text fill="#93C5FD" font-family="'Segoe UI',system-ui,sans-serif" font-size="11"
+                                font-style="italic" opacity="0.8" x="16" y="430">Atlantique</text>
+                            <g transform="translate(648,44)">
+                                <circle fill="rgba(255,255,255,0.75)" r="16" stroke="#CBD5E0" stroke-width="0.5">
+                                </circle>
+                                <text fill="#475569" font-family="'Segoe UI',system-ui,sans-serif" font-size="8"
+                                    font-weight="600" text-anchor="middle" x="0" y="-4">N</text>
+                                <polygon fill="#1B4332" points="0,-12 3,-4 0,-6 -3,-4"></polygon>
+                                <polygon fill="#94A3B8" points="0,12 3,4 0,6 -3,4"></polygon>
+                            </g>
+                            <g transform="translate(30,502)">
+                                <rect fill="#94A3B8" height="4" rx="2" width="60"></rect>
+                                <text fill="#64748B" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" x="0"
+                                    y="13">0</text>
+                                <text fill="#64748B" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" x="46"
+                                    y="13">~200km</text>
+                            </g>
+                            <g id="mapPins"></g>
+                        </svg>
+                        <div class="map-legend">
+                            <div class="leg-t">Programme</div>
+                            <div class="leg-r">
+                                <div class="leg-d auto-style-9"></div>P19001
+                            </div>
+                            <div class="leg-r">
+                                <div class="leg-d auto-style-16"></div>
+                                P19002
+                            </div>
+                            <div class="leg-r">
+                                <div class="leg-d auto-style-12"></div>
+                                P19003
+                            </div>
+                            <div class="leg-r">
+                                <div class="leg-d auto-style-24"></div>
+                                P19004
+                            </div>
+                        </div>
+                        <div class="map-tip" id="mapTip"></div>
+                    </div>
+                    <div aria-hidden="true" class="map-sb closed" id="mapSb">
+                        <div class="sb-hdr">
+                            <h3 id="sb-title">Détails du projet</h3>
+                            <button aria-label="Fermer les details du projet" class="sb-x" onclick="closeSb()"
+                                type="button">×</button>
+                        </div>
+                        <div class="sb-body" id="sb-body">
+                            <div class="ph">
+                                <svg fill="none" height="32" stroke="currentColor" stroke-width="1.2"
+                                    viewbox="0 0 24 24" width="32">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z">
+                                    </path>
+                                    <circle cx="12" cy="9" r="2.5"></circle>
+                                </svg>
+                                <p>Cliquez sur un repère pour voir les détails</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="sec">Programmes stratégiques</div>
+
+            <div class="vis-dashboard-outer vis1" id="dashboardIndicators">
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="dfaviz-96316e4e-e817-45ee-af13-e8d882704c2e" class="dfa-viz-bootstrap" data-id="dfa-viz-container" data-vizgid="96316e4e-e817-45ee-af13-e8d882704c2e">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="sec">Performance par programme & indicateurs clés</div>
+
+            <div class="two-col">
+
+                <div class="chart-card chart-card-topper" data-chart-lazy="">
+                    <div class="vis-dashboard-outer vis1" id="dashboardStrategicPerformance">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="dfaviz-b10279e8-712b-4097-8424-9331d77b5c03" class="dfa-viz-bootstrap" data-id="dfa-viz-container" data-vizgid="b10279e8-712b-4097-8424-9331d77b5c03">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card chart-card-topper" data-chart-lazy="">
+                    <div class="vis-dashboard-outer vis1" id="dashboardKeyIndicators">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="dfaviz-a7a4b57c-8ff0-4255-95e9-e1c7bebf37b1" class="dfa-viz-bootstrap" data-id="dfa-viz-container" data-vizgid="a7a4b57c-8ff0-4255-95e9-e1c7bebf37b1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card chart-card-topper" data-chart-lazy="">
+                    <div class="vis-dashboard-outer vis1" id="dashboardODD">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="dfaviz-5bdbb4f0-1b0d-4b4d-9801-84a3111eeeb3" class="dfa-viz-bootstrap" data-id="dfa-viz-container" data-vizgid="5bdbb4f0-1b0d-4b4d-9801-84a3111eeeb3">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card chart-card-topper" data-chart-lazy="">
+                    <div class="vis-dashboard-outer vis1" id="dashboardAgenda2063">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="dfaviz-b72f4f0f-f1f4-4151-b205-6cb091cabffd" class="dfa-viz-bootstrap" data-id="dfa-viz-container" data-vizgid="b72f4f0f-f1f4-4151-b205-6cb091cabffd">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card chart-card-topper" data-chart-lazy="">
+                    <div class="vis-dashboard-outer vis1" id="dashboardSimandou">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="dfaviz-4810f643-5492-423b-badc-dd085ce4b736" class="dfa-viz-bootstrap" data-id="dfa-viz-container" data-vizgid="4810f643-5492-423b-badc-dd085ce4b736">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card chart-card-topper" data-chart-lazy="">
+                    <div class="vis-dashboard-outer vis1" id="dashboardSectoralPolicies">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="dfaviz-3add6fb9-a3da-4b86-9d0e-277fb9571511" class="dfa-viz-bootstrap" data-id="dfa-viz-container" data-vizgid="3add6fb9-a3da-4b86-9d0e-277fb9571511">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="sec">Performance des indicateurs des objectifs stratégique</div>
+
+            <div class="one-col">
+
+                <div class="chart-card chart-card-topper" data-chart-lazy="">
+                    <div class="vis-dashboard-outer vis1" id="dashboardStrategicObjectives">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="dfaviz-c5189eec-107f-4f15-aab6-e06dec8112b6" class="dfa-viz-bootstrap" data-id="dfa-viz-container" data-vizgid="c5189eec-107f-4f15-aab6-e06dec8112b6">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+
+            <!-- For Two Column -->
+            <!-- <div class="two-col">
+                <div class="chart-card chart-card-topper" data-chart-lazy="">Half Column</div>
+                <div class="chart-card chart-card-topper" data-chart-lazy="">Half Column</div>
+            </div> -->
+            
+            <!-- For One Single Column -->
+            <!-- <div class="one-col">
+                <div class="chart-card chart-card-topper" data-chart-lazy="">
+                    Full Column
+                </div>
+            </div> -->
+
+            </div>
+            <div id="react-root"></div>
+        </main>
+        <!--  -->
+        <div class="ftr">
+            <div class="ftr-t">© 2026 Ministère de la Femme, de la Famille et de la Solidarité — République de Guinée.
+            </div>
+            <div class="ftr-logos">
+                <div class="ftr-badge">UNICEF</div>
+            </div>
+        </div>
+        <!--  -->
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="{{ base_path ~ 'themes/custom/guinea/js/mon_dashboard.js' }}"></script>
+</body>
+
+{% include directory ~ '/templates/footer.html.twig' %}

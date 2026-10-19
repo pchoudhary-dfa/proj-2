@@ -1,0 +1,28 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+<!-- Page Label -->
+<div class="banner-head">
+	<div class="inner-section">
+		<h1>{{ 'Metadata'|trans }}</h1>
+		<div class="breadcrumb m-0 d-flex align-items-center">
+			<ul class="w-100">
+				<li>
+					<a href="/">
+						<i class="fa-solid fa-house"></i>
+					</a>
+				</li>
+				<li>
+					<i class="fa-solid fa-angle-right"></i>
+				</li>
+				<li>{{ 'Metadata'|trans }}</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+
+<!-- Body Content -->
+{{page.content}}
+
+
+{% include directory ~ '/templates/footer.html.twig' %}

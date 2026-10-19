@@ -1,0 +1,4 @@
+name: User Managemnet Function Unset
+type: module
+description: This is for unset the parent of the tag from doc tags filter dropdown
+core_version_requirement: ^10 || ^11

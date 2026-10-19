@@ -1,0 +1,38 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+{{ drupal_entity('block_content', '16') }}
+
+<main class="container-fluid px-4 py-5 ressources-main">
+	<!-- Part 1: Publications phares – horizontal tile: image left, content right, Voir button bottom -->
+	<div class="ressources-tiles-wrap">
+		<h2 class="ressources-section-title text-center mb-4">Publications phares</h2>
+		<div class="row ressources-featured-row g-3 g-lg-4">
+			{{ drupal_view('ressources', 'block_1') }}
+		</div>
+	</div>
+
+	<!-- Part 2: Search bar and filters -->
+	<section class="ressources-search-section mt-3 pt-4">
+		<div class="ressources-search-panel bg-white rounded-3 border shadow-sm p-4 p-lg-4">
+			<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+				<h2 class="ressources-search-title mb-0 d-flex align-items-center gap-2"><i class="fas fa-filter ressources-filter-icon" aria-hidden="true"></i> Explorer les publications</h2>
+				<span class="ressources-results-count text-secondary small" aria-live="polite" data-guinea-ressources-count></span>
+			</div>
+			<div class="d-flex flex-wrap align-items-end gap-3">
+				{{page.ressources_search}}
+			</div>
+		</div>
+	</section>
+
+	<!-- Part 3: Reports section – 4 report covers in portrait layout -->
+	<section class="ressources-all-wrap ressources-reports-section mt-4">
+		<div class="ressources-tiles-wrap">
+			<div class="ressources-reports-row">
+				{{page.content}}
+			</div>
+		</div>
+	</section>
+</main>
+
+
+{% include directory ~ '/templates/footer.html.twig' %}

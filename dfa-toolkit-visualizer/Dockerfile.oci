@@ -1,0 +1,57 @@
+# Stage 1: Install dependencies
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+COPY packages/ ./packages/
+RUN npm ci
+
+# Stage 2: Build the application
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+ARG NEXT_PUBLIC_APP_BASE_ID
+ARG NEXT_PUBLIC_APP_ID
+ARG NEXT_PUBLIC_BASE_URL
+ARG NEXT_PUBLIC_API_BASE_URL
+ARG NEXT_PUBLIC_ENABLE_API_PROXY
+ARG NEXT_PUBLIC_API_PROXY_URL
+ARG NEXT_PUBLIC_API_KEY
+ARG NEXT_PUBLIC_API_SIGNATURE
+ARG NEXT_PUBLIC_API_SIGNING_PRIVATE_KEY
+
+ENV NEXT_PUBLIC_APP_BASE_ID=$NEXT_PUBLIC_APP_BASE_ID \
+    NEXT_PUBLIC_APP_ID=$NEXT_PUBLIC_APP_ID \
+    NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL \
+    NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL \
+    NEXT_PUBLIC_ENABLE_API_PROXY=$NEXT_PUBLIC_ENABLE_API_PROXY \
+    NEXT_PUBLIC_API_PROXY_URL=$NEXT_PUBLIC_API_PROXY_URL \
+    NEXT_PUBLIC_API_KEY=$NEXT_PUBLIC_API_KEY \
+    NEXT_PUBLIC_API_SIGNATURE=$NEXT_PUBLIC_API_SIGNATURE \
+    NEXT_PUBLIC_API_SIGNING_PRIVATE_KEY=$NEXT_PUBLIC_API_SIGNING_PRIVATE_KEY
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages ./packages
+COPY . .
+
+RUN npm run build
+
+# Stage 3: Production runner (minimal image)
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Copy only the standalone output + static assets
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+
+USER nextjs
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]

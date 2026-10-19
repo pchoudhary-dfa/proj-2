@@ -1,0 +1,25 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+<div class="outer-section" id="user_Login">
+	<div class="inner-section">
+		<div class="login-banner">
+			<div class="login-wallpaper">
+				<img src="/themes/custom/guinea/img/login_page.jpeg" alt="img">
+				<div class="over-circle"></div>
+			</div>
+			<div class="login-form">
+				<div class="login-heads">
+					<h2>Accédez à votre espace de travail</h2>
+					<p>Vous pouvez gérer vos données en toute sécurité grâce à notre panneau de compte.</p>
+				</div>
+				{{ page.content }}
+				<div class="login-forgot-password" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+					<a href="{{ path('user.register') }}">{{ 'Créer un nouveau compte'|t }}</a>
+					<a href="{{ path('user.pass') }}">{{ 'Mot de passe oublié ?'|t }}</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% include directory ~ '/templates/footer.html.twig' %}

@@ -1,0 +1,142 @@
+[
+  {
+    "event_code": "DATASET_SUBMITTED",
+    "recipient_type": "DATASET_REVIEWERS",
+    "channels": "BOTH",
+    "email_template_key": "dataset_submitted",
+    "i18n": {
+      "en": {
+        "inapp_title": "New dataset submitted for review",
+        "inapp_body": "Dataset '{{ dataset_name }}' was submitted by {{ actor_name }} on {{ submitted_at }}. Please log in to begin your review."
+      },
+      "fr": {
+        "inapp_title": "Nouveau jeu de données soumis pour révision",
+        "inapp_body": "Le jeu de données '{{ dataset_name }}' a été soumis par {{ actor_name }} le {{ submitted_at }}. Veuillez vous connecter pour commencer votre révision."
+      },
+      "ar": {
+        "inapp_title": "تم تقديم مجموعة بيانات جديدة للمراجعة",
+        "inapp_body": "تم تقديم مجموعة البيانات '{{ dataset_name }}' بواسطة {{ actor_name }} في {{ submitted_at }}. يرجى تسجيل الدخول لبدء المراجعة."
+      },
+      "es": {
+        "inapp_title": "Nuevo conjunto de datos enviado para revisión",
+        "inapp_body": "El conjunto de datos '{{ dataset_name }}' fue enviado por {{ actor_name }} el {{ submitted_at }}. Inicie sesión para comenzar su revisión."
+      },
+      "tto": {
+        "inapp_title": "Kuo tuku atu ha dataset foʻou ke vakaiʻi",
+        "inapp_body": "Naʻe tuku atu ʻe {{ actor_name }} ʻa e dataset '{{ dataset_name }}' ʻi he {{ submitted_at }}. Kataki ʻo hū atu ke kamata hoʻo vakaiʻi."
+      }
+    }
+  },
+  {
+    "event_code": "DATASET_SUBMITTED",
+    "recipient_type": "EVENT_ACTOR",
+    "channels": "EMAIL",
+    "email_template_key": "dataset_submitted",
+    "i18n": {
+      "en": {
+        "inapp_title": "Your dataset has been submitted",
+        "inapp_body": "Your dataset '{{ dataset_name }}' has been submitted for review."
+      },
+      "fr": {
+        "inapp_title": "Votre jeu de données a été soumis",
+        "inapp_body": "Votre jeu de données '{{ dataset_name }}' a été soumis pour révision."
+      },
+      "ar": {
+        "inapp_title": "تم تقديم مجموعة بياناتك",
+        "inapp_body": "تم تقديم مجموعة البيانات '{{ dataset_name }}' للمراجعة."
+      },
+      "es": {
+        "inapp_title": "Su conjunto de datos ha sido enviado",
+        "inapp_body": "Su conjunto de datos '{{ dataset_name }}' ha sido enviado para revisión."
+      },
+      "tto": {
+        "inapp_title": "Kuo tuku atu hoʻo dataset",
+        "inapp_body": "Kuo tuku atu hoʻo dataset '{{ dataset_name }}' ke vakaiʻi."
+      }
+    }
+  },
+  {
+    "event_code": "DATASET_RESUBMITTED",
+    "recipient_type": "DATASET_REVIEWERS",
+    "channels": "BOTH",
+    "email_template_key": "review_assigned",
+    "i18n": {
+      "en": {
+        "inapp_title": "Dataset resubmitted for review",
+        "inapp_body": "Dataset '{{ dataset_name }}' has been resubmitted by {{ actor_name }} (revision {{ revision_count }})."
+      },
+      "fr": {
+        "inapp_title": "Jeu de données soumis à nouveau",
+        "inapp_body": "Le jeu de données '{{ dataset_name }}' a été soumis à nouveau par {{ actor_name }} (révision {{ revision_count }})."
+      },
+      "ar": {
+        "inapp_title": "تمت إعادة تقديم مجموعة البيانات للمراجعة",
+        "inapp_body": "تمت إعادة تقديم مجموعة البيانات '{{ dataset_name }}' بواسطة {{ actor_name }} (المراجعة {{ revision_count }})."
+      },
+      "es": {
+        "inapp_title": "Conjunto de datos reenviado para revisión",
+        "inapp_body": "El conjunto de datos '{{ dataset_name }}' ha sido reenviado por {{ actor_name }} (revisión {{ revision_count }})."
+      },
+      "tto": {
+        "inapp_title": "Kuo toe tuku atu ʻa e dataset ke vakaiʻi",
+        "inapp_body": "Kuo toe tuku atu ʻe {{ actor_name }} ʻa e dataset '{{ dataset_name }}' (toe vakaiʻi {{ revision_count }})."
+      }
+    }
+  },
+  {
+    "event_code": "DATASET_RETURNED",
+    "recipient_type": "DATASET_OWNER",
+    "channels": "BOTH",
+    "email_template_key": "dataset_returned",
+    "i18n": {
+      "en": {
+        "inapp_title": "Corrections requested on your dataset",
+        "inapp_body": "{{ corrected_count }} indicator(s) in '{{ dataset_name }}' require correction. Reason: {{ rejection_reasons }}. Reviewer note: {{ reviewer_remarks }}"
+      },
+      "fr": {
+        "inapp_title": "Corrections demandées sur votre jeu de données",
+        "inapp_body": "{{ corrected_count }} indicateur(s) dans '{{ dataset_name }}' nécessitent une correction. Motif : {{ rejection_reasons }}. Note du réviseur : {{ reviewer_remarks }}"
+      },
+      "ar": {
+        "inapp_title": "طُلبت تصحيحات على مجموعة بياناتك",
+        "inapp_body": "{{ corrected_count }} مؤشر(ات) في '{{ dataset_name }}' تتطلب تصحيحاً. السبب: {{ rejection_reasons }}. ملاحظة المراجع: {{ reviewer_remarks }}"
+      },
+      "es": {
+        "inapp_title": "Se solicitaron correcciones en su conjunto de datos",
+        "inapp_body": "{{ corrected_count }} indicador(es) en '{{ dataset_name }}' requieren corrección. Motivo: {{ rejection_reasons }}. Nota del revisor: {{ reviewer_remarks }}"
+      },
+      "tto": {
+        "inapp_title": "Kuo kole ke fakatonutonu hoʻo dataset",
+        "inapp_body": "Oku fiemaʻu ke fakatonutonu ʻa e fakaʻilonga ʻe {{ corrected_count }} ʻi he '{{ dataset_name }}'. ʻUhinga: {{ rejection_reasons }}. Fakamatala ʻo e vakaiʻi: {{ reviewer_remarks }}"
+      }
+    }
+  },
+  {
+    "event_code": "DATASET_APPROVED",
+    "recipient_type": "DATASET_OWNER",
+    "channels": "BOTH",
+    "email_template_key": "dataset_approved",
+    "i18n": {
+      "en": {
+        "inapp_title": "Your dataset has been approved",
+        "inapp_body": "Dataset '{{ dataset_name }}' has been fully approved on {{ approved_on }}."
+      },
+      "fr": {
+        "inapp_title": "Votre jeu de données a été approuvé",
+        "inapp_body": "Le jeu de données '{{ dataset_name }}' a été approuvé le {{ approved_on }}."
+      },
+      "ar": {
+        "inapp_title": "تمت الموافقة على مجموعة بياناتك",
+        "inapp_body": "تمت الموافقة على مجموعة البيانات '{{ dataset_name }}' في {{ approved_on }}."
+      },
+      "es": {
+        "inapp_title": "Su conjunto de datos ha sido aprobado",
+        "inapp_body": "El conjunto de datos '{{ dataset_name }}' fue aprobado por completo el {{ approved_on }}."
+      },
+      "tto": {
+        "inapp_title": "Kuo tali hoʻo dataset",
+        "inapp_body": "Kuo tali tulolo ʻa e dataset '{{ dataset_name }}' ʻi he {{ approved_on }}."
+      }
+    }
+  }
+]

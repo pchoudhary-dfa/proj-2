@@ -1,0 +1,9 @@
+authorize:
+  version: "0.0.1"
+  license:
+    name: GPL-2.0-or-later
+    url: https://www.gnu.org/licenses/old-licenses/gpl-2.0-standalone.html
+    gpl-compatible: true
+  css:
+    component:
+      css/oauth2-server-auth-dialog.css: {}

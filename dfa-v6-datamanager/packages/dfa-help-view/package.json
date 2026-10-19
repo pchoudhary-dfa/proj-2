@@ -1,0 +1,69 @@
+{
+  "name": "@dfa/dfa-help-renderer",
+  "version": "2.1.2",
+  "description": "DFA Help renderer component for Next.js applications",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "style": "dist/cjs/index.css",
+  "files": [
+    "src",
+    "dist",
+    "lib",
+    "styles.css",
+    "package.json",
+    "tsconfig.json",
+    "tsconfig.build.json",
+    "rollup.config.js",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "npm run build:types && npm run build:bundles",
+    "build:types": "tsc --project tsconfig.build.json",
+    "build:bundles": "rollup -c",
+    "dev": "tsc --watch",
+    "clean": "rimraf lib dist"
+  },
+  "keywords": [
+    "react",
+    "nextjs",
+    "dfa",
+    "help",
+    "renderer",
+    "typescript",
+    "javascript"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "peerDependencies": {
+    "next": ">=12.0.0",
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.2.0",
+    "@rollup/plugin-terser": "^0.4.0",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "postcss": "^8.4.0",
+    "rimraf": "^5.0.0",
+    "rollup": "^4.0.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.communitysystemsfoundation.org/scm/hlp/dfa-help-view.git"
+  },
+  "bugs": {
+    "url": "https://git.communitysystemsfoundation.org/scm/hlp/dfa-help-view/issues"
+  },
+  "homepage": "https://git.communitysystemsfoundation.org/scm/hlp/dfa-help-view#readme"
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ subject }}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#F8F6EF;font-family:Arial,Helvetica,sans-serif;color:#2C2C2C;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#F8F6EF;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(44,44,44,0.08);">
+          <tr>
+            <td style="background-color:#588b6b;padding:24px 32px;text-align:center;">
+              {% if logo_url %}
+                <img src="{{ logo_url }}" alt="{{ site_name }}" width="160" style="display:block;margin:0 auto 12px;max-width:160px;height:auto;border:0;">
+              {% endif %}
+              <p style="margin:0;font-size:18px;line-height:1.4;font-weight:bold;color:#ffffff;">{{ site_name }}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px;">
+              <p style="margin:0 0 16px;font-size:16px;line-height:1.5;">Hello {{ greeting_name }},</p>
+              {% if headline %}
+                <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:#2C2C2C;font-weight:bold;">{{ headline }}</h1>
+              {% endif %}
+              <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#444444;">{{ intro|raw }}</p>
+
+              {% if action_url and action_label %}
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 24px;">
+                  <tr>
+                    <td align="center" style="border-radius:6px;background-color:#588b6b;">
+                      <a href="{{ action_url }}" style="display:inline-block;padding:14px 28px;font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;border-radius:6px;">{{ action_label }}</a>
+                    </td>
+                  </tr>
+                </table>
+              {% endif %}
+
+              {% if show_login_details %}
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 24px;background-color:#e9f4ed;border-radius:6px;">
+                  <tr>
+                    <td style="padding:20px;">
+                      <p style="margin:0 0 12px;font-size:14px;line-height:1.5;font-weight:bold;color:#2C2C2C;">{{ 'Vos identifiants de connexion'|t([], {'langcode': langcode}) }}</p>
+                      <p style="margin:0 0 8px;font-size:14px;line-height:1.5;color:#444444;"><strong>{{ "Nom d'utilisateur :"|t([], {'langcode': langcode}) }}</strong> {{ username }}</p>
+                      <p style="margin:0;font-size:14px;line-height:1.5;color:#444444;"><strong>{{ 'Page de connexion :'|t([], {'langcode': langcode}) }}</strong> <a href="{{ login_url }}" style="color:#588b6b;text-decoration:underline;">{{ login_url_label }}</a></p>
+                    </td>
+                  </tr>
+                </table>
+              {% endif %}
+
+              {% if note %}
+                <p style="margin:0 0 24px;font-size:13px;line-height:1.6;color:#767676;">{{ note|raw }}</p>
+              {% endif %}
+
+              <p style="margin:0;font-size:14px;line-height:1.5;color:#444444;">{{ 'Cordialement,'|t([], {'langcode': langcode}) }}<br><strong>{{ "L'équipe @site"|t({'@site': site_name}, {'langcode': langcode}) }}</strong></p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 32px;background-color:#F8F6EF;border-top:1px solid #e9f4ed;text-align:center;">
+              <p style="margin:0;font-size:12px;line-height:1.5;color:#767676;">{{ "Ceci est un message automatique de @site. Veuillez ne pas répondre à cet e-mail."|t({'@site': site_name}, {'langcode': langcode}) }}</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -1,0 +1,24 @@
+name: 'Guinea'
+description: 'Custom theme for Guinea'
+type: 'theme'
+base theme: false
+libraries: 
+ - guinea/guinea-styling
+core_version_requirement: ^11 
+regions:
+  header: 'Header'
+  main_menu: 'Main Menu Section'
+  navigational_links: 'Navigational Links'
+  useful_links: 'Useful Links'
+  ressources_search: 'Ressources Search'
+  apprentissage_search: 'Apprentissage Search'
+  dashboard_search: 'Dashboard Search'
+  global_search: 'Global Search'
+  visitors_count: 'Visitors Count'
+  cookie_consent: 'Cookie Consent'
+  monitoring_api_region: 'Monitoring Api Region'
+  monitoring_see_data_api_region: 'Monitoring See Data Api Region'
+  social_media: 'Social Media'
+  content: 'Content'
+  footer_logo: 'Footer Logo'
+  copyright: 'Copyright'

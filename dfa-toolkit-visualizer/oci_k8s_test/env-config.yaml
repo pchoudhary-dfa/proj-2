@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-viz-env
+  namespace: apps-dfa-v6-test
+data:
+  APP_BASE_ID: "DTK_VIZ"
+  NEXT_PUBLIC_APP_BASE_ID: "DTK_VIZ"
+  APP_ID: "DFATESTVIZ"
+  NEXT_PUBLIC_APP_ID: "DFATESTVIZ"
+  NEXT_PUBLIC_BASE_URL: "https://test.visualizer.dfa6.dataforall.org"
+  NEXT_PUBLIC_API_BASE_URL: "https://test.api.dfa6.dataforall.org"
+  NEXT_PUBLIC_ENABLE_API_PROXY: "true"
+  NEXT_PUBLIC_API_PROXY_URL: "https://test.api.dfa6.dataforall.org"
+  NEXT_PUBLIC_API_KEY: "dfa_viz_fed_app"
+  NEXT_PUBLIC_API_SIGNATURE: "1234567890"
+  NODE_ENV: "production"
+# Secrets are NOT committed. Manage the "test-viz-secrets" Secret out-of-band, e.g.:
+#   kubectl -n apps-dfa-v6-test create secret generic test-viz-secrets \
+#     --from-literal=NEXTAUTH_SECRET=<value> \
+#     --from-literal=API_SIGNING_PRIVATE_KEY=<value>
+# NEXT_PUBLIC_API_SIGNING_PRIVATE_KEY is a build-time arg supplied by the build pipeline (see build_spec_test.yaml).

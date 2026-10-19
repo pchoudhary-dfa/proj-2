@@ -1,0 +1,75 @@
+# DFA Toolkit API - Docker Compose
+# API: http://localhost:8000  |  Docs: http://localhost:8000/docs
+#
+# Use host MySQL/Redis (default):  docker compose up -d
+#   Set in .env: DB_HOST=host.docker.internal, REDIS_HOST=host.docker.internal
+#
+# Full stack (API + MySQL + Redis in Docker):  docker compose --profile stack up -d
+#   Set in .env: DB_HOST=mysql, REDIS_HOST=redis
+#
+# Env: env_file: ${ENV_FILE:-.env}. Override: ENV_FILE=/path/to/.env docker compose up
+
+services:
+  api:
+    build: .
+    container_name: dfa-toolkit-api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount source so code changes apply without rebuild; uvicorn --reload picks them up
+      - .:/app
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    # All values from .env (no defaults here). For full stack use DB_HOST=mysql, REDIS_HOST=redis in .env.
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      - AVAILABLE_LANGUAGES=${AVAILABLE_LANGUAGES:-en}
+    env_file:
+      - ${ENV_FILE:-.env}
+    # Uncomment on Linux so the API container can reach host (MySQL, Redis, data warehouse):
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
+    # When using --profile stack, start mysql/redis first; api does not depend_on them so api-only runs work.
+    restart: unless-stopped
+
+  mysql:
+    profiles:
+      - stack
+    image: mysql:8.0
+    container_name: dfa-toolkit-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ${DB_NAME:-dfa_toolkit_core_20265}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  redis:
+    profiles:
+      - stack
+    image: redis:7-alpine
+    container_name: dfa-toolkit-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  redis_data:

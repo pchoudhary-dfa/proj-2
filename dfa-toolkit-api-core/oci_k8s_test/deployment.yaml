@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apps-dfa-v6-test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dfa-v6-api
+  namespace: apps-dfa-v6-test
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: dfa-v6-api
+  template:
+    metadata:
+      labels:
+        app: dfa-v6-api
+    spec:
+      imagePullSecrets:
+      - name: ocir-secret
+      containers:
+      - name: dfa-v6-api
+        image: me-dubai-1.ocir.io/axrfhwznxtja/test-api-fastapi:IMAGE_TAG
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: dkt-env
+        env:
+        - name: PYTHONDONTWRITEBYTECODE
+          value: "1"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dfav6test-secrets
+              key: DB_PASSWORD
+        - name: SMTP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dfav6test-secrets
+              key: SMTP_PASSWORD
+        resources:
+          requests:
+            memory: "1.5Gi"
+            cpu: "100m"
+          limits:
+            memory: "2Gi"
+            cpu: "150m"
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 40
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dfa-v6-api-service
+  namespace: apps-dfa-v6-test
+spec:
+  selector:
+    app: dfa-v6-api
+  ports:
+  - port: 80
+    targetPort: 8000
+  type: ClusterIP

@@ -1,0 +1,23 @@
+{% include directory ~ '/templates/header.html.twig' %}
+
+<!-- =========================================== -->
+<!-- Hero Section (height aligned with metadata page header) -->
+{{ drupal_entity('block_content', '10') }}
+<!-- =========================================== -->
+<!-- Pourquoi ce portail ? (intro + 3 cards) -->
+{{ drupal_entity('block_content', '11') }}
+<!-- =========================================== -->
+<!-- Mandat institutionnel et pilotage -->
+{{ drupal_entity('block_content', '12') }}
+<!-- =========================================== -->
+<!-- Pourquoi ce portail ? (objectives - image bg + 2x2 grid) -->
+{{ drupal_entity('block_content', '13') }}
+<!-- =========================================== -->
+<!-- À qui s'adresse ce portail ? -->
+{{ drupal_entity('block_content', '14') }}
+<!-- =========================================== -->
+<!-- Circuit des données statistiques -->
+{{ drupal_entity('block_content', '15') }}
+<!-- =========================================== -->
+
+{% include directory ~ '/templates/footer.html.twig' %}

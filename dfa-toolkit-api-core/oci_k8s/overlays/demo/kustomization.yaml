@@ -1,0 +1,43 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: apps-dfa-v6-demo
+
+namePrefix: demo-
+
+resources:
+- ../../base
+- env-config.yaml
+- ingress.yaml
+
+images:
+- name: dfa-v6-api
+  newName: me-dubai-1.ocir.io/axrfhwznxtja/dtk-devops/api-adap
+  newTag: IMAGE_TAG
+
+patches:
+- patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/envFrom
+      value:
+      - configMapRef:
+          name: dkt-env
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: DB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: dfav6-secrets
+            key: DB_PASSWORD
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: SMTP_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: dfav6-secrets
+            key: SMTP_PASSWORD
+  target:
+    kind: Deployment
+    name: dfa-v6-api
